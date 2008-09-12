@@ -1,0 +1,61 @@
+//Cg
+
+/*
+TODO
+
+shader debugging
+*/
+
+void vshader(
+    uniform float4x4 mat_modelproj,
+    in float4 vtx_position : POSITION,
+    in float4 vtx_color : COLOR,
+    out float4 l_my : TEXCOORD0,
+    out float4 l_color : COLOR,
+    out float4 l_position : POSITION)
+{
+    l_color = vtx_color;
+    l_position = mul(mat_modelproj, vtx_position);
+
+    // TODO
+
+    l_my = float4(1.0, 0.0, 1.0, 0.0);
+
+    // TODO
+
+    //l_my = vtx_position;
+
+    /*
+
+    TODO looks a bit odd. What is the reason? When you have on more look at the
+    egg file you will see that the vertex coordinates of the cube have ranges
+    from -1.0 to 1.0. If we apply these coordinates to color directly, what we
+    do in TODO, we have, negative colors. Negative values are clamped to 0.0 by
+    the GPU (the poeple working with the LHC maybe are the only ones ever seen
+    an anti red). But we can help ourself and let it look a bit nicer. The first
+    step is that we divide every component by two, therefore the range is
+    reduced from -0.5 to 0.5. Second step is to add 0.5 to every component. Now
+    the range is from 0.0 to 1.0, exactly what we want. Remember this nifty
+    trick, it may be helpful if you try to write your first shadow mapping
+    algorithm.
+
+    Both of the two following lines are equivalent (perhaps one is faster than
+    the other).
+    */
+
+    //l_my = vtx_position * float4(0.5, 0.5, 0.5, 0.5) + float4(0.5, 0.5, 0.5, 0.5);
+    //l_my = vtx_position * 0.5 + 0.5;
+
+    /*
+    TODO
+    move this calculation to the fragment shader and describe the difference
+    */
+}
+
+void fshader(
+    in float4 l_my : TEXCOORD0,
+    in float4 l_color : COLOR,
+    out float4 o_color : COLOR)
+{
+    o_color = l_my;
+}

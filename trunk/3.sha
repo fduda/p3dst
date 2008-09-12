@@ -1,0 +1,30 @@
+//Cg
+
+/*
+TODO
+*/
+
+void vshader(
+    uniform float4x4 mat_modelproj,
+    in float4 vtx_position : POSITION,
+    in float4 vtx_color : COLOR,
+    out float4 l_color : COLOR,
+    out float4 l_position : POSITION)
+{
+    l_color = vtx_color;
+    l_position = mul(mat_modelproj, vtx_position);
+}
+
+void fshader(
+    in float4 l_color : COLOR,
+    out float4 o_color : COLOR)
+{
+    // TODO
+
+    o_color = l_color;
+
+    // TODO
+
+    //float4 noRed = float4(0.0, 1.0, 1.0, 1.0);
+    //o_color = l_color * noRed;
+}
