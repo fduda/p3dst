@@ -1,0 +1,87 @@
+//Cg
+
+/*
+First we try to understand what this vertex shaders and fragment shaders are
+for. The vertex shader handles vertices, while the fragment shader processes
+fragments. In DirectX they are called vertex shader and pixel shader. There is a
+reason why fragment shader is a better name, but for the moment think of a
+fragment as a pixel.
+
+The vshader function below is called once for every processed vertex, while the
+fshader is once called for every drawn pixel. Because our cube has 24 vertices
+vshader is called 24 times per cube in this example. fshader is called for every
+visible pixel of this cube. The larger the cube on the screen the more often
+fshader needs to be called so we can not say it is called 100 times or 1000
+times per cube. If you the cube is far away, so we only see one pixel on the
+screen, then the vshader is still called 24 times, while the fshader may only be
+called once. The order is always the same first vshader then fshader. Maybe you
+remember the fact that if a vertex is processed this vertex does not know
+anything about any other vertices. The GPU can therefore run the vshader
+multilple times at the same time. You write this function only once, but it is
+called in parallel as often as tha GPU can handle. The same is true for the
+vshader. A extreml powerfull GPU can call fshader for each individual pixel at
+the same time. Maybe you can see that there are some problems. If I have cube
+that fills my whole 800 x 600 screen, a perfect GPU has 480000 seperate
+processors. At least today this is impossible. Each of this small processors
+have to process more than one pixel, problem is here if our shaders are not to
+easy (that may happen faster than you think) the GPU may need to much time to
+process all vertices or pixels and therefore your FPS start to drop. Today
+shaders can be quite complex but one single shader can not have thousands of
+lines. Often you need to write tons of specialced shaders which you apply to
+your scene. The Auto Shader of Panda3D is an example of this. It may be possible
+that each node has another shader. You do not see this because they are
+generated on the fly.
+
+Before you read on, maybe modify the sample 0.py and add a CartoonInk
+postprocess filter to your scene. setCartoonInk is method of the class
+CommonFilters. Post processing means, that after your image is rendered and
+normally finished to display, you start to modify the pixels. More precisly: You
+modify ALL pixels visible on the screen. At least on my computer the FPS varies
+greatly if I have a small window or if I have a large window. A post process
+vertex shader only needs to process 4 vertices (the corners of the window) but
+millions of pixels, therefore this is an example where only the fragment shader
+is limiting the performance of your application (if you are not crazy and write
+your SETI client into the vertex shader).
+*/
+
+/*
+TODO
+
+depth buffer, uniform, mat_modelproj, vtx_position, mul
+
+*/
+void vshader(
+    uniform float4x4 mat_modelproj,
+    in float4 vtx_position : POSITION,
+    out float4 l_position : POSITION)
+{
+    l_position = mul(mat_modelproj, vtx_position);
+}
+
+/*
+Our fshader is called for every pixel that needs to be drawn into the color
+buffer. We then calculate a color and assign it to the o_color variable. The
+GPU then creates a color based on the choosen color depth, and then overwrites
+the color buffer with this new information. The word overwriting is carefully
+choosen here. It may be possible, that in your scene all 3 cubes are not next to
+each other, but in front of each other. There are 2 possible scenarios. First
+the rearmost cube is drawn, and at last the formost cube is drawn. In this case
+it is possible that one pixel need to be overdrawn up to 3 times. The second
+scenario is that first the foremost cube is drawn and at last the rearmost
+cube. In this case the the depth buffer of you GPU discards all pixels of the
+cubes behind the first one, so the fshader needs not be called for this discarded pixels. There is third
+scenario where you have alpha transparency, in this case you have to fully draw
+all the cubes, independent of their order.
+*/
+void fshader(
+    out float4 o_color : COLOR)
+{
+    /*
+    DIRTY
+    The fragment shader is as simple as the previous fragment shader. Because
+    there is still no input we can not do cool things here.
+    */
+    o_color = float4(1.0, 0.0, 1.0, 1.0);
+    //o_color = float4(1.0, 0.0, 0.0, 1.0);
+    //o_color = float4(1.0, 0.0, 0.0, 0.0);
+}
