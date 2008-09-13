@@ -2,8 +2,26 @@
 
 /*
 TODO
+
+One more note about debugging. In the last sample we were talking about the
+depth buffer and that may be possible that a pixel is overdrawn multiples times.
+How can I see this? Here is simple trick. You have to modify your python code
+and add the following lines:
+
+
+
+Then create a simple vertex shader and a fragment shader that only hast the
+folowing statement.
+
+o_color = float4(1.0, 0.0, 0.0, 0.1);
+
+If a pixel is only drawed once, it is
+
 */
 
+/*
+TODO
+*/
 void vshader(
     uniform float4x4 mat_modelproj,
     uniform float4 k_panda3drocks,
@@ -15,6 +33,9 @@ void vshader(
     l_my = k_panda3drocks;
 }
 
+/*
+TODO
+*/
 void fshader(
     in float4 l_my : TEXCOORD0,
     out float4 o_color : COLOR)

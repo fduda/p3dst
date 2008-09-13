@@ -14,11 +14,12 @@ how does the GPU connect e.g. vertex 1 with vertex 2? It only does linear
 interpolation between the two vertices. That is the reason we always see
 something like a straight line between two vertices, never any curves or the
 like. If you like to draw a sphere you have to approximate the sphere with
-simple triangles, although this is rather inefficient.
+simple triangles, although this is rather inefficient (but it is simple an
+generic).
 
 There is one more thing we were not talking about much. With our vertex shader
 we transform our vertices so they look perspectively correct on the screen. But
-vertices have three coordinates and your flat screen has only two dimension. Do
+vertices have three coordinates and your flat screen has only two dimensions. Do
 we throw away the third coordinate (that could easily be done, but read on)?
 Remember the depth buffer? The depth buffer is sometimes called z buffer and now
 you may understand why. When we apply your matrix to a vertex the resulting
@@ -30,7 +31,7 @@ individual positions and z coordinates for possible future fragments (pixels),
 based on our vertex shader output. The graphic card then checks if there is
 already a z coordinate in this buffer. If yes, it compares this old z coordinate
 with the new. If the new z is nearer than the old (this comparison function can
-be changed, but do not care about this yet ), the old is overwritten and the
+be changed, but do not care about this yet), the old is overwritten and the
 fragment is sent to the fragment shader.
 
 What can a vertex shader do in general? It gets some inputs that change per
@@ -48,10 +49,10 @@ we have to craft carefully the vertex shader and the fragment shader.
 */
 
 /*
-We have a new input and a new output vtx_color is exactly the color inside the
+We have a new input and a new output. vtx_color is exactly the color inside the
 egg file. In the simplest case we do not modify this value and directly give it
 back to the GPU. Open "List of Possible Shader Inputs" once more and try to
-understand what the different names mean.
+understand what the names mean.
 */
 void vshader(
     uniform float4x4 mat_modelproj,

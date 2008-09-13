@@ -1,6 +1,7 @@
 
 """
-TODO
+In this example we start to passing our own variables from the vertex shader
+to the fragment shader.
 """
 
 import sys
@@ -35,17 +36,29 @@ Uncomment this line only after you read the comment in the shader.
 
 Each one of the three cubes has a different position. Before Panda3D sends the
 vertices to the graphic card it sends a matrix to the GPU that instructs the GPU
-to move all vertices to the new position. The advantage is that Panda3D can send
-the exact same vertices to the GPU for all three cubes.
-After calling flattenLight we have different situation. Panda3D applies this
-move comment on itself to the vertex. Prior to that every cube need his own
-vertices, because they cannot share their vertices anymore. The output of the
-call to render.analyze may help to see what happens. Advantage in this case is
-that Panda3D does not have to send the GPU a command to move the object around.
-But the vertices now have new values, so the shader would change too.
+to move all vertices to the new position (only if there is no shader, with a
+shader we have to do this on our as you alread my know). The advantage is that
+Panda3D can send the exact same vertices to the GPU for all three cubes. After
+calling flattenLight we have different situation. Panda3D applies this move
+command on itself to the vertex. Prior to this modification every cube need his
+own set vertices, because they cannot share their vertices anymore. The output
+of the call to render.analyze may help to see what happens. Advantage in this
+case is that Panda3D does not have to send the GPU a command to move the object
+around. But the vertices now have new values, so the output of shader may change
+too. Try to understand why the cubes[0].getX() does not display the same value
+before and after the call to flattenLight.
+
+You only can see a visible change if the vertex shader contains the following
+command (the color should depend on the position):
+
+l_my = vtx_position * 0.5 + 0.5;
+
+Try to understand where and why the output differs.
 """
+#print cubes[0].getX()
 #root.flattenLight()
 #render.analyze()
+#print cubes[0].getX()
 
 base.accept("escape", sys.exit)
 base.accept("o", base.oobe)

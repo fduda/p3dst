@@ -30,7 +30,12 @@ for x in [-3.0, 0.0, 3.0]:
 
 shader = loader.loadShader("5.sha")
 root.setShader(shader)
-root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 1.0)
+root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 0.1)
+
+"""
+TODO
+"""
+#root.setTransparency(True)
 
 base.accept("escape", sys.exit)
 base.accept("o", base.oobe)
@@ -38,6 +43,10 @@ base.accept("o", base.oobe)
 def animate(t):
     c = abs(math.cos(math.radians(t)))
     root.setShaderInput("panda3drocks", c, c, c, 1.0)
+
+    """
+    TODO
+    """
 
     #r = abs(math.cos(math.radians(t + 0.0)))
     #g = abs(math.cos(math.radians(t + 10.0)))
