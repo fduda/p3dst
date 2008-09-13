@@ -1,10 +1,10 @@
 
 """
 Our first example with a shader. We only want to show how to load a working
-shader. The shader itself is useless, if you activate it you only see a black
-screen. If the shader has an error after all, Panda3D can not assign it to node,
-obviously, in this case you would see the 3 cubes. But because we see nothing,
-it is an indication that the shader is accepted by the graphic card.
+shader. The shader itself is useless, if you activate it, you only see a black
+screen. If the shader has an error after all, Panda3D cannot assign it to a
+node, obviously, in this case you would see the three cubes. But because we see
+nothing, it is an indication that the shader is accepted by the graphic card.
 """
 
 import sys

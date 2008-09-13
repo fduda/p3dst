@@ -1,6 +1,6 @@
 
 """
-This is a basic example without any shader. If you do not understand a line
+This is a basic example without any shader. If you do not understand a line,
 please have a look at the Panda3D manual, there is not a single bit of magic in
 this file.
 """
@@ -40,17 +40,17 @@ Please open the model with a text editor. Egg files are human readable. We need
 this information later to understand how the vertex shader and the fragment
 shader work. Some insights:
 
-The cube has 6 faces. Each face has 4 different vertices. Therefore the cube has
-24 vertices. Theoretically a cube only need 8 vertices, in this case each vertex
-has to be shared by 3 faces. Problem is, that in this case each vertex can only
-have one color, but what happens if we want that each of the 6 faces has an
-another color? This is impossible if the cube is only defined with 8 vertices.
-There are more disadvantages if we only define the cube with 8 vertices, we talk
+The cube has six faces. Each face has four different vertices. Therefore the cube has
+24 vertices. Theoretically a cube only need eight vertices, here each vertex
+has to be shared by three faces. Problem is, that here each vertex can only
+have one color, but what happens if we want that each of the six faces has an
+another color? This is impossible if the cube is only defined with eight vertices.
+There are more disadvantages if we only define the cube with eight vertices, we talk
 later about. The only advantage with less vertices is that we have to send less
 vertices to the graphic card, but in almost all applications vertices are not a
 limiting factor. The memory consumption of vertices in contrast to the memory
 consumption of textures is negligible. As already written each vertex has one
-associated color. Beside the color there is one UV coordinate for every vertex.
+associated color. Besides the color there is one UV coordinate for every vertex.
 
 It may be useful if you modify the vertices manually and see the results.
 """
@@ -59,21 +59,22 @@ modelCube = loader.loadModel("cube.egg")
 
 """
 One more thing about colors. When you look close at the colors inside the file
-you may see that there are 8 different colors defined. Black, White, Red, Green,
-Blue, Yellow, Purple and Cyan. Each color is repeated three times. When you run
-this sample you may ask yourself, why does this cube has thousands of colors
-then? Who creates this nice gradients along the edges? We use a new word here:
-Linear Interpolation. Look at the readme.txt for some generic information and
-then come back. Today graphic cards are very good at linear interpolation. They
-can do billions of linear interpolations per second. They downside is that
+you may see that there are eight different colors defined. Black, White, Red,
+Green, Blue, Yellow, Purple and Cyan. Each color is repeated three times. When
+you run this sample you may ask yourself, why does this cube has thousands of
+colors then? Who creates this nice gradients along the edges? We use a new word
+here: Linear Interpolation. Look at the readme.txt for some generic information
+and then come back. Today graphic cards are very good at linear interpolation.
+They can do billions of linear interpolations per second. The downside is that
 sometimes the graphic card can ONLY do linear interpolation and you have no
-choice to change that even with a shader. Back to the colors. If you have a red
-color (1.0, 0.0, 0.0) on one vertice and a dark blue color (0.0, 0.0, 0.5) on
-the other vertice the graphic card simply interpolates the color for every pixel
-between this two vertices, even without shaders. For this consideration the
-graphic card does not know that a color consists of a R(ed), G(reen), B(lue) and
-maybe A(lpha) part. The graphic card interpolates each part of a color for
-itselfs. Here is a example what a graphic card does:
+choice to change that, even with a shader. Back to the colors. If you have a red
+color (1.0, 0.0, 0.0) on one vertex and a dark blue color (0.0, 0.0, 0.5) on the
+other vertex the graphic card simply interpolates the color for every pixel
+between this two vertices, even without shaders (only if requested but Panda3D
+ask the graphic card to do this). For this consideration the graphic card does
+not know that a color consists of a R(ed), G(reen), B(lue) and maybe A(lpha)
+part. The graphic card interpolates each part of a color for itself. Here is an
+example what a graphic card does:
 
 100% at red vertex, 0% at dark blue vertex => 1.0, 0.0, 0.0
 75% at red vertex, 25% at dark blue vertex => 0.75, 0.0, 0.125
@@ -102,10 +103,10 @@ neighbors color is. This is a reason why graphic card vendors can improve the
 performance of GPUs faster then CPUs. Vertex and pixel shaders are inherently
 parallel. The disadvantage of this is that if anyone likes to do some
 calculations with respect to the neighborhood he has to create a complex setup
-that often (but not always) is not fast enough for 60+ fps games.
+that often (but not always) is not fast enough for 60+ FPS games.
 
 A blur (like in the glow example) filter is an example of such a setup. You need
-at least 2 passes to create such an effect.
+at least two passes to create such an effect.
 """
 
 cubes = []
@@ -145,7 +146,7 @@ Use oobe mode to move around the camera.
 base.accept("o", base.oobe)
 
 """
-Start an interval that does nothing yet.
+Start an interval that rotate all cubes independent.
 """
 
 def animate(t):
