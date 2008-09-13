@@ -35,7 +35,7 @@ generated on the fly.
 Before you read on, maybe modify the sample 0.py and add a CartoonInk post
 process filter to your scene. setCartoonInk is method of the class
 CommonFilters. Post processing means, that after your image is rendered and
-normally finished to display, you start to modify the pixels. More precisely:
+normally ready to display, you start to modify the pixels. More precisely:
 You modify ALL pixels visible on the screen. At least on my computer the FPS
 varies greatly if I have a small window or if I have a large window. A post
 process vertex shader only needs to process four vertices (the corners of the
@@ -48,10 +48,10 @@ crazy and write your SETI client into the vertex shader).
 First some basic facts after you skimmed the vshader function. As already
 written the vshader function handles each vertex. The only thing a vertex shader
 can do is calculating properties for vertices. One of such a property is the
-position. A vertex shader can move around vertices. In this sample we only do
-move around the vertices, but in the next sample we will calculate some more
+position. A vertex shader can move around vertices. In this sample we only move
+around the vertices, but in the next sample we will calculate some more
 properties for a single vertex. A vertex shader cannot create new vertices, nor
-can it delete vertices. This is a great limitation, so called geometry shaders
+can it delete vertices. This is a great limitation. So called geometry shaders
 try to solve this, but as I write this there is no support in Panda3D for this.
 
 If we look a bit closer to this vertex shader we can see a new line with the
@@ -66,16 +66,22 @@ vertices why can you see then three cubes side by side? The answer is, we have
 to do this ourselves. This whole shader is in fact only here to solve this
 question. We will in one minute try to answer how this is done, but for moment,
 we only try to understand what all this keywords means. At least I hope, that
-you understand that we need only get fed with the raw vtx_position as input from
-Panda3D.
+you understand that Panda3D only sends us the raw vtx_position from the egg
+file.
 
-Next what means this "uniform". "uniform" is like the keyword "in", but an
-uniform is the same for every call to vshader for one cube (The Cg tutorial has
-an exact explanation of an uniform, but for the moment do not care about this).
-While vtx_position changes on every of the 24 calls to vshader, mat_modelproj
-does not change. You can pass an uniform to the vhader or to the fshader, but
-not every uniform is useful in both. We will see later that Panda3D has to
-modify the mat_modelproj uniform for every cube.
+Next what means this "uniform". "uniform" is like the keyword "in", but this
+uniform is the same for every call to vshader for one cube. While vtx_position
+changes on every of the 24 calls to vshader, mat_modelproj does not change. You
+can pass an uniform to the vhader or to the fshader, but not every uniform is
+useful in both. We will see later that Panda3D has to modify the mat_modelproj
+uniform for every cube. More precisly think of an "uniform" as something that is
+initialized by the environment. The environment is Panda3D or you. You may ask
+the following: But vtx_position is also from the environment? That is half of
+the truth. If Panda3D has to deliver each and every vertex to the shader the
+application would be slow. Panda3D only says to the GPU: "Hey dear GPU. Here is
+a list of vertices, they are ordered like this and like that, please process
+them". An "uniform" in contrast has to be set by you or Panda3D, the GPU never
+touches an "uniform".
 
 The type float4x4 is a fixed size array type with 4 * 4 floats or in other words
 16 floats. If we like we can store 16 independent floats in a float4x4 variable,
@@ -88,7 +94,7 @@ matrix multiplication I guess it is not that easy to understand.
 If you look up mat_modelproj in "List of Possible Shader Inputs" you see the
 description "Composed Modelview/Projection Matrix". We roll up the problem from
 behind. If we sum up everything that was written about this shader: We have two
-inputs, once a scary matrix we do not understand and second the raw vertex
+inputs, first a scary matrix we do not understand and second the raw vertex
 positions from the cube. We create an output based on this two inputs, and as
 result we can see three perspectively correct cubes. With perspective I man that
 the further away the cube, the smaller it is. If you look closer you can see
@@ -120,7 +126,7 @@ there is a simpler solution? I add following requirements: I like to rotate the
 cube, I like to scale the cube and I like to shear the cube. You can do this all
 on your own and add tons of uniforms to your shader. But one clever guy, long
 time ago had the brilliant idea to store all this information in a 4x4 matrix.
-Think of a 4x4 matrix as pool that stores positions, rotations, shears and
+Think of a 4x4 matrix as a pool that stores positions, rotations, shears and
 translations, and maybe some fancy things no one can imagine. But do not think
 of it as a divine thing, you cannot do everything this are only 16 floats. The
 Python sample that loads this shader has some lines, which if disabled, can show
@@ -134,21 +140,20 @@ multiples of 90 degree) or use setMat directly on a cubes NodePath.
 As you maybe see I do not try do explain how matrices really work, I hope you
 start to play around with.
 
-To summarize once more with technical terms: This modelview matrix transforms
-all vertices from the model space to view space. Once more: We move every vertex
-to their absolute correct location in the Panda3D world. There are no more
-relative coordinates like there were before. Nor OpenGL neither DirectX know the
-concept of a camera. That means if we move our virtual camera to the left we
-have to move our cubes to the right. We are cheating, that rights. If a player
-runs around in a world, we do not move the player, we move the world. Panda3D
-does well in hiding this fact, nevertheless it is the truth (maybe also from a
-philosophic viewpoint, who knows). Maybe now you understand the term modelview
-better. Model space is the space where the model lives in. View space is the
-space where the viewer lives.
+To summarize with technical terms: This modelview matrix transforms all vertices
+from the model space to view space. Or: We move every vertex to their absolute
+correct location in the Panda3D world. There are no more relative coordinates
+like there were before. Nor OpenGL neither DirectX know the concept of a camera.
+That means if we move our virtual camera to the left we have to move our cubes
+to the right. We are cheating, that rights. If a player runs around in a world,
+we do not move the player, we move the world. Panda3D does well in hiding this
+fact, nevertheless it is the truth (maybe also from a philosophic viewpoint, who
+knows). Maybe now you understand the term modelview better. Model space is the
+space where the model lives in. View space is the space where the viewer lives.
 
 To calculate the mat_modelproj we need one more matrix, the projection matrix.
 Maybe you remember the call to setFov in the Python code. This belongs with the
-camera as well, but as said there is no camera at all, so we even have to do
+camera as well, but as said, there is no camera at all, so we even have to do
 this by ourselves. With a call to setFov Panda3D generates internally a correct
 projection matrix. This projection matrix is a bit harder to understand, because
 if you look at the matrix it is not obvious what happens. The method
@@ -252,14 +257,18 @@ can think of. It is just an idea that has is pros an cons. Maybe you already
 heard something about a quaternions. Quaternion helps to solve some problems you
 sometime have with matrices if you only use matrices. Matrices in general are an
 extremely mighty thing, that are not only helpful in graphic stuff, matrices are
-so powerful that they are the fundamental data type of well math tools like
-scilab (or matlab for the rich ones of us).
+so powerful that they are the fundamental data type of well known math tools
+like scilab (or matlab for the rich ones of us).
 
 May be it is time to open your browser and try to get some information about
 matrices in general and try to do at least one matrix multiplication on
-yourself. Try to multiply a 4x4 matrix with another 4x4 matrix by yourself and
-try to multiply a 4x4 matrix with a 4x vector. the following web page maybe is a
-good starting point, although it handles only 3x3 matrices.
+yourself. Try to multiply a 4x4 matrix with another 4x4 matrix and try to
+multiply a 4x4 matrix with a 4x vector. the following web page maybe is a good
+starting point, although it handles only 3x3 matrices.
 
 http://people.hofstra.edu/Stefan_Waner/realWorld/tutorialsf1/frames3_2.html
+
+You question that may arise. Why is a 3x3 matrix not enough? One possible answer
+is: You cannot do any translations (setPos) with a 3x3 matrix. If you understand
+this answer fully, then you maybe understand matrices quite good.
 */

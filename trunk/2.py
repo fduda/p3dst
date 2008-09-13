@@ -57,7 +57,7 @@ remove the three Python lines above) and load two shaders at the same time. e.g.
 """
 DIRTY
 Do you like to see the modelview matrix of each cube? You may only understand
-this if you reed the comment for vshader in the shader.
+this if you read the comment for vshader in 2.sha.
 """
 for cube in cubes:
     print cube.getMat()
