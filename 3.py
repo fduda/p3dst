@@ -1,6 +1,9 @@
 
 """
-TODO
+This time no modifications on the Python front. What we try to achieve this time
+is to color our models according to the egg file. Your scene should look like
+the scene without shaders. If you start the sample there should be no difference
+to 0.py.
 """
 
 import sys

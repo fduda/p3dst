@@ -15,22 +15,22 @@ they are called, is explained in a later tutorial.
 
 /*
 The only requirement of a vertex shader is that it has to generate a position.
-You sould ask why is there a float4, and not for example a float3? In a Panda3D
-application you can move around your objects in 3 dimensions, therefore it maybe
-true that a float3 may be enough. A float3 is a floating point variable that can
-hold 3 floating point values. It is like a fixed size array of 3 floats. A
-float4 is fixed size array that can hold 4 floats. Back to the question why
-float4? With this fourth value you can do some fancy stuff you can not do if you
-only have a float3. We later see that we multiply this float4 with a matrix that
-consist of 4 float4 or in other words 16 float values. You cannot multiply a
-float3 with a matrix that consists of float4. It is more or less like the fourth
-value in colors, the alpha component. Often you do not need this, but you can do
-some cool things with it.
+You should ask why is there a float4, and not for example a float3? In a Panda3D
+application you can move around your objects in three dimensions, therefore it
+maybe true that a float3 may be enough. A float3 is a floating point variable
+that can hold three floating point values. It is like a fixed size array of
+three floats. A float4 is fixed size array that can hold four floats. Back to
+the question why float4? With this fourth value you can do some fancy stuff you
+cannot do if you only have a float3. We later see that we multiply this float4
+with a matrix that consists of four float4 or in other words 16 float values.
+You cannot multiply a float3 with a matrix that consists of float4. It is more
+or less like the fourth value in colors, the alpha component. Often you do not
+need this, but you can do some cool things with it.
 
 Back to topic. The only thing we are doing here is to assign the variable
-l_position a constant float4. In C/C++/C# you can not assign arrays to arrays
-the way we do it here, but in Cg this is possible, for this fixed sized arrays.
-Can we rename the variable l_position? No we can not. This is a requirement from
+l_position a constant float4. In C/C++/C# you cannot assign arrays to arrays the
+way we do it here, but in Cg this is possible, for this fixed sized arrays. Can
+we rename the variable l_position? No we cannot. This is a requirement from
 Panda3D. Look up this name in the "List of Possible Shader Inputs" in the
 manual.
 
@@ -38,7 +38,7 @@ Why do I have to write "out" in front of l_position? In C/C++/C# every function
 has at most one return value. But with shaders often need to return more than
 one value. The NVIDIA guys then added a "in" keyword and a "out" keyword to Cg.
 "out" means, that it is a return value. "in" means that is an input. This basic
-shader has no inputs at all, and this is one of the main reason why it can not
+shader has no inputs at all, and this is one of the main reason it cannot
 produce any useful results. Here we only output l_position, but in later
 examples we will have more then one output value.
 

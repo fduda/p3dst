@@ -39,7 +39,7 @@ to move all vertices to the new position. The advantage is that Panda3D can send
 the exact same vertices to the GPU for all three cubes.
 After calling flattenLight we have different situation. Panda3D applies this
 move comment on itself to the vertex. Prior to that every cube need his own
-vertices, because they can not share their vertices anymore. The output of the
+vertices, because they cannot share their vertices anymore. The output of the
 call to render.analyze may help to see what happens. Advantage in this case is
 that Panda3D does not have to send the GPU a command to move the object around.
 But the vertices now have new values, so the shader would change too.
