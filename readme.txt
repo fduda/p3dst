@@ -59,7 +59,7 @@ http://www.panda3d.org/wiki/index.php/List_of_Possible_Shader_Inputs
 [Tutorials]
 
 All samples have no fancy input handling mechanisms they are only here to play
-with. There is a DIRTY tag on every line you should get dirty with and modify
+with. There is a DIRTY tag on every section you should get dirty with and modify
 the source yourself.
 
 0.py
