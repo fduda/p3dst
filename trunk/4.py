@@ -10,6 +10,9 @@ import direct.directbase.DirectStart
 base.setBackgroundColor(0.0, 0.0, 0.0)
 base.disableMouse()
 
+base.camLens.setNearFar(1.0, 50.0)
+base.camLens.setFov(45.0)
+
 camera.setPos(0.0, -20.0, 10.0)
 camera.lookAt(0.0, 0.0, 0.0)
 
@@ -31,7 +34,7 @@ DIRTY
 Uncomment this line only after you read the comment in the shader.
 
 Each one of the three cubes has a different position. Before Panda3D sends the
-vertices to the graphiccard it sends a matrix to the GPU that instructs the GPU
+vertices to the graphic card it sends a matrix to the GPU that instructs the GPU
 to move all vertices to the new position. The advantage is that Panda3D can send
 the exact same vertices to the GPU for all three cubes.
 After calling flattenLight we have different situation. Panda3D applies this

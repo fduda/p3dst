@@ -10,6 +10,9 @@ import direct.directbase.DirectStart
 base.setBackgroundColor(0.0, 0.0, 0.0)
 base.disableMouse()
 
+base.camLens.setNearFar(1.0, 50.0)
+base.camLens.setFov(45.0)
+
 camera.setPos(0.0, -20.0, 10.0)
 camera.lookAt(0.0, 0.0, 0.0)
 

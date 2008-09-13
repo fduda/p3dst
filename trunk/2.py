@@ -1,6 +1,6 @@
 
 """
-The first usefull sample. After this tutorial we are able to draw our cubes, so
+The first useful sample. After this tutorial we are able to draw our cubes, so
 that look like cubes. With our knowledge we are not able to color them
 correctly, but we can do some nice stuff and see the result. If everything is
 black this time, something is wrong.
@@ -12,6 +12,9 @@ import direct.directbase.DirectStart
 
 base.setBackgroundColor(0.0, 0.0, 0.0)
 base.disableMouse()
+
+base.camLens.setNearFar(1.0, 50.0)
+base.camLens.setFov(45.0)
 
 camera.setPos(0.0, -20.0, 10.0)
 camera.lookAt(0.0, 0.0, 0.0)
@@ -41,15 +44,23 @@ root.setShader(shader)
 """
 DIRTY
 If you have tested how you can enable/disable a shader on individual nodes, and
-how the scene graphs works with shader, you can modify this lines
-(comment/revmove the 3 Python lines above) and load two shaders at the same
-time. e.g. 2.sha and 1.sha. Apply 2.sha to one cube, and 1.sha to another cube.
-Because 1.sha does nothing the cube with this shader should disappear.
+how the scene graphs works with shader, you can modify this lines (comment or
+remove the 3 Python lines above) and load two shaders at the same time. e.g.
+2.sha and 1.sha. Apply 2.sha to one cube, and 1.sha to another cube. Because
+1.sha does nothing the cube with this shader should disappear.
 """
 #shader1 = loader.loadShader("1.sha")
 #shader2 = loader.loadShader("2.sha")
 #cubes[0].setShader(shader2)
 #cubes[1].setShader(shader1)
+
+"""
+DIRTY
+Do you like to see the modelview matrix of each cube? You may only understand
+this if you reed the comment for vshader in the shader.
+"""
+for cube in cubes:
+    print cube.getMat()
 
 base.accept("escape", sys.exit)
 base.accept("o", base.oobe)

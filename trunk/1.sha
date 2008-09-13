@@ -1,14 +1,14 @@
 //Cg
 
 /*
-We dont explain the details here, only some basics. Not everything here is a
-requirement from Cg, Panda3D has its own requiremens, especially when it comes
+We do not explain the details here, only some basics. Not everything here is a
+requirement from Cg, Panda3D has its own requirements, especially when it comes
 to the names of variables.
 
 The first important thing is the //Cg comment line on the top. If you remove
 this comment, the shader will not compile.
 
-Seoncd. You see a function vshader and fshader. This are the entry points for
+Second. You see a function vshader and fshader. This are the entry points for
 the vertex shader respectively the fragment shader. What they are doing, an when
 they are called, is explained in a later tutorial.
 */

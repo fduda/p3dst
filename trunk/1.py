@@ -4,7 +4,7 @@ Our first example with a shader. We only want to show how to load a working
 shader. The shader itself is useless, if you activate it you only see a black
 screen. If the shader has an error after all, Panda3D can not assign it to node,
 obviously, in this case you would see the 3 cubes. But because we see nothing,
-it is an indication that the shader is accepted by the graphiccard.
+it is an indication that the shader is accepted by the graphic card.
 """
 
 import sys
@@ -13,6 +13,9 @@ import direct.directbase.DirectStart
 
 base.setBackgroundColor(0.0, 0.0, 0.0)
 base.disableMouse()
+
+base.camLens.setNearFar(1.0, 50.0)
+base.camLens.setFov(45.0)
 
 camera.setPos(0.0, -20.0, 10.0)
 camera.lookAt(0.0, 0.0, 0.0)
