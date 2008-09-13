@@ -70,11 +70,12 @@ you understand that we need only get fed with the raw vtx_position as input from
 Panda3D.
 
 Next what means this "uniform". "uniform" is like the keyword "in", but an
-uniform is the same for every call to vshader. While vtx_position changes on
-every of the 24 calls to vshader, vtx_position never changes. You can pass an
-uniform to the vhader or to the fshader, but not every uniform is useful in
-both. We will see later that Panda3D has to modify the mat_modelproj uniform for
-every cube.
+uniform is the same for every call to vshader for one cube (The Cg tutorial has
+an exact explanation of an uniform, but for the moment do not care about this).
+While vtx_position changes on every of the 24 calls to vshader, mat_modelproj
+does not change. You can pass an uniform to the vhader or to the fshader, but
+not every uniform is useful in both. We will see later that Panda3D has to
+modify the mat_modelproj uniform for every cube.
 
 The type float4x4 is a fixed size array type with 4 * 4 floats or in other words
 16 floats. If we like we can store 16 independent floats in a float4x4 variable,
