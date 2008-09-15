@@ -3,11 +3,11 @@
 In this example we render the each cube with one texture. The prerequisite is,
 that we assign our object at least one texture. If we do not assign a texture
 here, the shader cannot access it later. If you read this Python code first you
-can see that we assign two textures, alghough on the visual output you can only
-see ony texture (remember how looks 0.py). Assigning a texture to a NodePath is
-like assigning a shader input. We have to assign a input if have one the shader,
-but only because there is shader input, that does not mean we have to care about
-it in the shader.
+can see that we assign two textures, although on the visual output you can only
+see only texture (remember how looks 0.py). Assigning a texture to a NodePath is
+like assigning a shader input. We have to assign an input if we have shader that
+needs this input, but only because there is a setShaderInput, does not mean we
+have to care about it in the shader.
 """
 
 import sys

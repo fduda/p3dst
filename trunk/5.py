@@ -32,15 +32,15 @@ shader = loader.loadShader("5.sha")
 root.setShader(shader)
 
 """
-This es the only new line here. If you comment/remove this line Panda3D sees
-that there is a problem. Why? The shader in this example still references to a
+This is the only new line here. If you comment/remove this line Panda3D sees
+that there is a problem. Why? The shader in this example still references to an
 uniform, therefore the uniform needs to be set at least once.
 """
 root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 1.0)
 
 """
 DIRTY
-If you enable to following to lines, without modifying the shader you have one
+If you enable to following to lines, without modifying the shader, you have one
 more debug utility that may help in some circumstances. With setTransparency
 Panda3D instruct the GPU to not only overwrite the color buffer. If the fragment
 shader was calculating a color, the GPU reads the old value in the color buffer
@@ -50,14 +50,14 @@ has to reorder all visible nodes, so they are drawn from back to front (or else
 transparency looks not correct). You have to remember this if you "debug" a
 scene like this.
 
-Some facts: The new panda3drocks uniform, you can see below, has a alpha
+Some facts: The new panda3drocks uniform, you can see below, has an alpha
 component with a value lesser than 1.0. The background in this scene is black.
-Back facing triangles are not drawn. What we conclude from this. If the the GPU
+Back facing triangles are not drawn. What we conclude from this. If the GPU
 has to draw the first cube, the only two colors on the screen are black (0.0,
 0.0, 0.0) and a dark purple (0.1, 0.0, 0.1). If the GPU has to draw the second
 cube, and they are not side by side, a new purple (theoretically 0.19, 0.0,
 0.19, practically ~0.18, 0.0, ~0.18) appears that is brighter than its
-predecessor. The more triangles are on top of each other the brighter the scene.
+predecessor. The more triangles are on top of one another the brighter the scene.
 Or in other words, the brighter the scene the more the fragment shader needs to
 be called. Something you should try to avoid.
 """
