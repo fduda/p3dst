@@ -268,7 +268,8 @@ starting point, although it handles only 3x3 matrices.
 
 http://people.hofstra.edu/Stefan_Waner/realWorld/tutorialsf1/frames3_2.html
 
-You question that may arise. Why is a 3x3 matrix not enough? One possible answer
-is: You cannot do any translations (setPos) with a 3x3 matrix. If you understand
-this answer fully, then you maybe understand matrices quite good.
+One question that may arise. Why is a 3x3 matrix not enough, for a vector three
+dimensions are enough? One possible answer is: You cannot do any translations
+(setPos) with a 3x3 matrix. If you understand this answer fully, then you maybe
+understand matrices quite good.
 */

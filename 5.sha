@@ -4,9 +4,9 @@
 We were using setShaderInput in the Python code. setShaderInput does nothing
 more than assign a float4 (there is no possibility to assign a float2 e.g.) to a
 shader uniform. Every manually provided input needs a k_ prefix therefore the
-panda3drocks shader input has to be written as k_panda3drocks.
-If you manually define a uniform in shader, you must at least call
-setShaderInput on an appropriate NodePath that uses this shader.
+panda3drocks shader input has to be written as k_panda3drocks. If you manually
+define an uniform in shader, you must at least call setShaderInput on an
+appropriate NodePath that uses this shader.
 */
 
 void vshader(
@@ -21,7 +21,7 @@ void vshader(
 }
 
 /*
-This example is a bad idead how to waste a TEXCOORD unit. k_panda3drocks is
+This example is a bad idead how to waste a TEXCOORD unit. k_panda3drocks is a
 constant assigned to l_my, when l_my it is passed from the vertex shader to
 fragment shader it is lineraly interpolated. But a linear interpolated constant,
 is a constant. In this sample, it would make more sense if we define our uniform
