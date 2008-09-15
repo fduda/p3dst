@@ -1,6 +1,6 @@
 
 """
-TODO
+The Python code in this sample is exactly the same as in the last sample.
 """
 
 import sys
@@ -24,18 +24,21 @@ textureArrow = loader.loadTexture("arrow.png")
 textureArrow.setWrapU(Texture.WMClamp)
 textureArrow.setWrapV(Texture.WMClamp)
 
+"""
+DIRTY
+Like in the previous example, increate the setSort parameter and see what
+happens, the influence of the order depends on the applied shader. Sometimes you
+can see a difference, sometimes not.
+"""
 stageArrow = TextureStage("Arrow")
 stageArrow.setSort(1)
 
 textureCircle = loader.loadTexture("circle.png")
+textureCircle.setWrapU(Texture.WMClamp)
+textureCircle.setWrapV(Texture.WMClamp)
 
 stageCircle = TextureStage("Circle")
 stageCircle.setSort(2)
-
-"""
-TODO
-exchange setSort
-"""
 
 modelCube = loader.loadModel("cube.egg")
 
@@ -47,6 +50,7 @@ for x in [-3.0, 0.0, 3.0]:
 
 shader = loader.loadShader("7.sha")
 root.setShader(shader)
+
 root.setTexture(stageArrow, textureArrow)
 root.setTexture(stageCircle, textureCircle)
 

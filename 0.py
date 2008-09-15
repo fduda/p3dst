@@ -31,6 +31,8 @@ stageArrow = TextureStage("Arrow")
 stageArrow.setSort(1)
 
 textureCircle = loader.loadTexture("circle.png")
+textureCircle.setWrapU(Texture.WMClamp)
+textureCircle.setWrapV(Texture.WMClamp)
 
 stageCircle = TextureStage("Circle")
 stageCircle.setSort(2)

@@ -1,6 +1,13 @@
 
 """
-TODO
+In this example we render the each cube with one texture. The prerequisite is,
+that we assign our object at least one texture. If we do not assign a texture
+here, the shader cannot access it later. If you read this Python code first you
+can see that we assign two textures, alghough on the visual output you can only
+see ony texture (remember how looks 0.py). Assigning a texture to a NodePath is
+like assigning a shader input. We have to assign a input if have one the shader,
+but only because there is shader input, that does not mean we have to care about
+it in the shader.
 """
 
 import sys
@@ -24,8 +31,20 @@ textureArrow = loader.loadTexture("arrow.png")
 textureArrow.setWrapU(Texture.WMClamp)
 textureArrow.setWrapV(Texture.WMClamp)
 
+"""
+DIRTY
+Try to increase the setSort parameter and look at the results. Somehow we can
+influence the shader, nevertheless the cube is only textured with one texture.
+"""
 stageArrow = TextureStage("Arrow")
 stageArrow.setSort(1)
+
+textureCircle = loader.loadTexture("circle.png")
+textureCircle.setWrapU(Texture.WMClamp)
+textureCircle.setWrapV(Texture.WMClamp)
+
+stageCircle = TextureStage("Circle")
+stageCircle.setSort(2)
 
 modelCube = loader.loadModel("cube.egg")
 
@@ -37,7 +56,13 @@ for x in [-3.0, 0.0, 3.0]:
 
 shader = loader.loadShader("6.sha")
 root.setShader(shader)
+
+"""
+In this sample we assign all three cubes the same textures. Get another image
+and try to assign one cube another texture.
+"""
 root.setTexture(stageArrow, textureArrow)
+root.setTexture(stageCircle, textureCircle)
 
 base.accept("escape", sys.exit)
 base.accept("o", base.oobe)
