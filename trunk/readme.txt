@@ -131,4 +131,3 @@ Matrix/Matrices
 A matrix offers one possibility to apply a transformation to a set of vertices.
 
 http://en.wikipedia.org/wiki/Matrix_(mathematics)
-

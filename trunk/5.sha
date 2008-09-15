@@ -1,27 +1,14 @@
 //Cg
 
 /*
-TODO
-
-One more note about debugging. In the last sample we were talking about the
-depth buffer and that may be possible that a pixel is overdrawn multiples times.
-How can I see this? Here is simple trick. You have to modify your python code
-and add the following lines:
-
-
-
-Then create a simple vertex shader and a fragment shader that only hast the
-folowing statement.
-
-o_color = float4(1.0, 0.0, 0.0, 0.1);
-
-If a pixel is only drawed once, it is
-
+We were using setShaderInput in the Python code. setShaderInput does nothing
+more than assign a float4 (there is no possibility to assign a float2 e.g.) to a
+shader uniform. Every manually provided input needs a k_ prefix therefore the
+panda3drocks shader input has to be written as k_panda3drocks.
+If you manually define a uniform in shader, you must at least call
+setShaderInput on an appropriate NodePath that uses this shader.
 */
 
-/*
-TODO
-*/
 void vshader(
     uniform float4x4 mat_modelproj,
     uniform float4 k_panda3drocks,
@@ -34,7 +21,11 @@ void vshader(
 }
 
 /*
-TODO
+This example is a bad idead how to waste a TEXCOORD unit. k_panda3drocks is
+constant assigned to l_my, when l_my it is passed from the vertex shader to
+fragment shader it is lineraly interpolated. But a linear interpolated constant,
+is a constant. In this sample, it would make more sense if we define our uniform
+in the fragment shader than in the vertex shader.
 */
 void fshader(
     in float4 l_my : TEXCOORD0,
