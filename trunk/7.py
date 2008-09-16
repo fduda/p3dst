@@ -26,7 +26,7 @@ textureArrow.setWrapV(Texture.WMClamp)
 
 """
 DIRTY
-Like in the previous example, increate the setSort parameter and see what
+Like in the previous example, increase the setSort parameter and see what
 happens, the influence of the order depends on the applied shader. Sometimes you
 can see a difference, sometimes not.
 """
