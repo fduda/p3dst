@@ -65,18 +65,17 @@ you may see that there are eight different colors defined. Black, White, Red,
 Green, Blue, Yellow, Purple and Cyan. Each color is repeated three times. When
 you run this sample you may ask yourself, why does this cube has thousands of
 colors then? Who creates this nice gradients along the edges? We use a new word
-here: Linear Interpolation. Look at the readme.txt for some generic information
-and then come back. Today graphic cards are very good at linear interpolation.
-They can do billions of linear interpolations per second. The downside is that
-sometimes the graphic card can ONLY do linear interpolation and you have no
-choice to change that, even with a shader. Back to the colors. If you have a red
-color (1.0, 0.0, 0.0) on one vertex and a dark blue color (0.0, 0.0, 0.5) on the
-other vertex the graphic card simply interpolates the color for every pixel
-between this two vertices, even without shaders (only if requested but Panda3D
-ask the graphic card to do this). For this consideration the graphic card does
-not know that a color consists of a R(ed), G(reen), B(lue) and maybe A(lpha)
-part. The graphic card interpolates each part of a color for itself. Here is an
-example what a graphic card does:
+here: Linear Interpolation. Today graphic cards are very good at linear
+interpolation. They can do billions of linear interpolations per second. The
+downside is that sometimes the graphic card can ONLY do linear interpolation and
+you have no choice to change that, even with a shader. Back to the colors. If
+you have a red color (1.0, 0.0, 0.0) on one vertex and a dark blue color (0.0,
+0.0, 0.5) on the other vertex the graphic card simply interpolates the color for
+every pixel between this two vertices, even without shaders (only if requested
+but Panda3D ask the graphic card to do this). For this consideration the graphic
+card does not know that a color consists of a R(ed), G(reen), B(lue) and maybe
+A(lpha) part. The graphic card interpolates each part of a color for itself.
+Here is an example what a graphic card does:
 
 100% at red vertex, 0% at dark blue vertex => 1.0, 0.0, 0.0
 75% at red vertex, 25% at dark blue vertex => 0.75, 0.0, 0.125
