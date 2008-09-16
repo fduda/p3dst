@@ -33,3 +33,11 @@ void fshader(
 {
     o_color = l_my;
 }
+
+/*
+I have to admit here a unknowingness. GLSL does often interpolate perspectively
+correct (not exactly linear), but I do not know in which circumstances this
+applies to Cg. It may be possible that I repeat the word linearly interpolated
+over and over again although it is not always true. If anyone has indepth
+information about this I am happy if you share this knowledge.
+*/
