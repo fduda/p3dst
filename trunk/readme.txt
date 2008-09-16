@@ -97,37 +97,3 @@ Apply one texture to your models. Do not care anymore about the colors.
 7.py
 
 Apply two textures to your models.
-
-[Keywords]
-
-Most math topics on Wikipedia are awfull, they are obviously written by
-mathematicians. http://mathworld.wolfram.com often has in-depth information for
-the enlightened ones where an explanation is a waste of HD space.
-
-Scene Graph
-
-TODO
-
-Linear Interpolation
-
-TODO
-
-http://en.wikipedia.org/wiki/Linear_interpolation
-
-Translation
-
-Another word for moving objects and or vertices around.
-
-Transformation
-
-A transformation move vertices from one position to another position. Most often
-this mean rotation, translation and scaling, but it is possible to do far more
-complex things.
-
-http://en.wikipedia.org/wiki/Transformation_(geometry)
-
-Matrix/Matrices
-
-A matrix offers one possibility to apply a transformation to a set of vertices.
-
-http://en.wikipedia.org/wiki/Matrix_(mathematics)

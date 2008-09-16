@@ -61,8 +61,8 @@ predecessor. The more triangles are on top of one another the brighter the scene
 Or in other words, the brighter the scene the more the fragment shader needs to
 be called. Something you should try to avoid.
 """
-root.setTransparency(True)
-root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 0.1)
+#root.setTransparency(True)
+#root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 0.1)
 
 base.accept("escape", sys.exit)
 base.accept("o", base.oobe)
