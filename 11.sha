@@ -1,0 +1,62 @@
+//Cg
+
+/*
+TODO
+*/
+
+/*
+TODO
+*/
+void vshader(
+    uniform float4x4 mat_modelproj,
+    in float4 vtx_position : POSITION,
+    in float3 vtx_normal : NORMAL,
+    in float4 vtx_color : COLOR,
+    out float4 l_color : COLOR,
+    out float3 l_myposition : TEXCOORD0,
+    out float3 l_mynormal : TEXCOORD1,
+    out float4 l_position : POSITION)
+{
+    l_position = mul(mat_modelproj, vtx_position);
+
+    l_myposition = vtx_position.xyz;
+    l_mynormal = normalize(vtx_normal);
+
+    l_color = vtx_color;
+}
+
+float lit(float3 lightposition, float3 modelposition, float3 normal)
+{
+    float3 direction = lightposition - modelposition;
+    float distance = length(direction);
+    float diffuse = saturate(dot(normalize(normal), normalize(direction)));
+    float a = 0.0;
+    float b = 0.0;
+    float c = 1.0;
+    /*
+    TODO saturate
+    */
+    float attenuation = 1.0 / (a + b * distance + c * distance * distance);
+    return attenuation * diffuse;
+}
+
+/*
+TODO
+*/
+void fshader(
+    uniform float4 mspos_light0,
+    uniform float4 mspos_light1,
+    uniform float4 mspos_light2,
+    in float3 l_myposition : TEXCOORD0,
+    in float3 l_mynormal : TEXCOORD1,
+    in float4 l_color : COLOR,
+    out float4 o_color : COLOR)
+{
+    float brightness = 0.0;
+
+    brightness += lit(mspos_light0.xyz, l_myposition, l_mynormal);
+    brightness += lit(mspos_light1.xyz, l_myposition, l_mynormal);
+    brightness += lit(mspos_light2.xyz, l_myposition, l_mynormal);
+
+    o_color = l_color * brightness;
+}
