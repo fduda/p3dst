@@ -11,7 +11,6 @@ have to care about it in the shader.
 """
 
 import sys
-import math
 
 import direct.directbase.DirectStart
 from pandac.PandaModules import Texture, TextureStage

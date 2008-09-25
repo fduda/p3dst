@@ -78,8 +78,7 @@ def animate(t):
 
     As an aside: The setHpr method of a NodePath accepts angles in degrees. But
     Python and Cg internally work with radians (Every FPU known to more than
-    0xff people probably internally works with radians. Who the has invented
-    degrees and aside who invented infix notation?).
+    0xff people internally works with radians).
     """
     #r = abs(math.cos(math.radians(t + 0.0)))
     #g = abs(math.cos(math.radians(t + 10.0)))

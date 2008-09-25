@@ -4,7 +4,6 @@ The Python code in this sample is exactly the same as in the last sample.
 """
 
 import sys
-import math
 
 import direct.directbase.DirectStart
 from pandac.PandaModules import Texture, TextureStage

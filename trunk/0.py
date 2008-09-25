@@ -153,7 +153,7 @@ Start an interval that rotates all cubes independent.
 
 def animate(t):
     for i in range(len(cubes)):
-        cubes[i].setH(t * (i + 1))
+        cubes[i].setH(t * (2.0 ** i))
 
 interval = LerpFunc(animate, 5.0, 0.0, 360.0)
 

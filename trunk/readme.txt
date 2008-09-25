@@ -97,3 +97,21 @@ Apply one texture to your models. Do not care anymore about the colors.
 7.py
 
 Apply two textures to your models.
+
+8.py
+
+Per vertex diffuse lighting with one Point light, without shaders. Explain
+details about diffuse lighting.
+
+9.py
+
+Per vertex diffuse lighting with one point light, with shaders.
+
+10.py
+
+Per pixel lighting with one point light. Normalization problems that may arise
+are explained here.
+
+11.py
+
+Per pixel lighting with multiple point lights and attenuation.
