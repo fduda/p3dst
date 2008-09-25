@@ -1,5 +1,83 @@
 
 """
+Like 0.py we restart from scratch and create a basic example with one
+PointLight, that only supports diffuse lighting. There is no shader attached to
+this example. If you do not understand this sample then open the Panda3D manual
+and e.g. try to understand the Disco-Lights sample.
+
+When we talk about lighting we talk about an "effect" that we can see with our
+eyes. Live is a game, just with better graphic. Lighting is still something you
+may do your own research and invent a cool new idea, no one had before.
+Currently we only can approximate lighting. For better lighting we often need to
+precalculate some values in a often slow pre process. We start here only with
+one basic lighting model: Diffuse Lighting.
+
+The basic idea of diffuse lighting is: The steeper the angle between the light
+and a surface, the less light particles can reach the surface. The following
+figures show an example with a directional light and a wall.
+
+1. 100% of the light reaches the wall.
+2. ~50% of the light reaches the wall.
+3. 0% of the light reaches the wall.
+
+      |           /
+1. -> |    2. -> /     3. -> ---
+      |         /
+
+If no light reaches a wall, the wall cannot reflect any light particles and
+therefore you can not see anything. This idea is only one basic idea. This idea
+e.g. says nothing about the fact that if a wall reflects some light, it may be
+possible that this light reaches another wall, which may reflect this light
+particles once more.
+
+Given that there is one wall behind another wall:
+
+   |    |
+-> |    |
+   |    |
+
+If we translate our idea to this situation, it means, that both walls got the
+same amount of light, because the angle between the light surface and the light
+source is equal for both walls. This is of course dead wrong, because the first
+wall occludes the second wall, so there is more or less no light at all.
+
+The default lighting model the fixed function pipelines offers to Panda3D has
+tons of flaws, even though it helps to increase realism. Let us stick to this
+mediocre lighting model for now.
+
+To calculate how much light reaches our triangle (or wall) we need a tool that
+helps us to distinguish if a triangle looks torward a light source or not. One
+possibility to do this is a surface normal. In the preceding examples we assumed
+that the surface normal is perpendicular to the surface. This is not always
+true, as we see later, therefore we like to define a normal at least for each
+triangle (or face). When you have a look at the cube.egg once more you see that
+for every polygon a normal is specified. If Panda3D needs to triangulate the
+model for the GPU it assigns every triangle that belongs to the same polygon the
+same normal.
+
+That is not the whole truth, in fact, the GPU likes to have a normal for every
+vertex. Why this is a good idea is shown by another example. Open the enclosed
+figures.svg or figures.png and look at figure 8-1. If we have a cube, there are
+at least two possibilities to assign normals. The visual difference you may see
+later is that the left cube has sharp edges, while the right cube has smooth
+edges (on the right cube, the normals on each corner have a small gap inbetween,
+this gap is only here to see that every vertex has a normal). Metal like objects
+may have sharper edges while wooden objects may not. An artist may influence how
+a model looks like (with lighting enabled) if he/she modifies the normals. Back
+to our "whole truth" problem. As you can see it is impossible to create a smooth
+cube if every polygon or triangle only has one normal. We need at least one
+normal for every vertex.
+
+The cube.egg model is an example of cube with sharp edges, while the
+cube-smooth.egg model is an example of a cube with smooth edges. Try to see the
+difference between this two files.
+
+The fixed function pipeline of the a GPU (that is the pipeline Panda3D uses if
+there is no call to setShader or setAutoShader) is not that sophisticated.
+Better said the GPUs were not powerfull enough to calculate this very simple
+lighting per fragment/pixel, they only can calculate it per vertex. The larger
+your triangles on your screen, the falser the result.
+
 TODO
 """
 
