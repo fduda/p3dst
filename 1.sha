@@ -35,10 +35,10 @@ Panda3D. Look up this name in the "List of Possible Shader Inputs" in the
 manual.
 
 Why do I have to write "out" in front of l_position? In C/C++/C# every function
-has at most one return value. But with shaders often need to return more than
-one value. The NVIDIA guys then added a "in" keyword and a "out" keyword to Cg.
-"out" means, that it is a return value. "in" means that is an input. This basic
-shader has no inputs at all, and this is one of the main reason it cannot
+has at most one return value. But shaders often need to return more than one
+value. The NVIDIA guys then added a "in" keyword and a "out" keyword to Cg.
+"out" means, that it is a return value. "in" means that is an input value. This
+basic shader has no inputs at all, and this is one of the main reason it cannot
 produce any useful results. Here we only output l_position, but in later
 examples we will have more then one output value.
 
@@ -48,7 +48,8 @@ register here, it may not be precise). The GPU knows that the output to POSITION
 it has to later draw on the screen. Currently the GPU does not know what color
 the pixels will have, but it can calculate a position on the screen for every
 given POSITION. The GPU itself is not as smart as one think, we need to do some
-not so simple math first, to help the GPU.
+not so simple math first, to help the GPU calculate this a correct position on
+the screen.
 */
 void vshader(
     out float4 l_position : POSITION)
@@ -71,7 +72,7 @@ void vshader(
     DIRTY
     Do some more useless math. After change a line, restart your application,
     although you will not see anything, start to play around and see if you can
-    compile it at least. You can also assign more than once a flaot4 to
+    compile it at least. You can also assign more than once a float4 to
     l_position.
     */
     //float4 zero = float4(0.0, 0.0, 0.0, 0.0);
@@ -98,7 +99,6 @@ bit color depth.
 void fshader(
     out float4 o_color : COLOR)
 {
-
     /*
     DIRTY
     Try to modify this line like in the vertex shader, although you will not see

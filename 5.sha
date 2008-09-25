@@ -8,7 +8,6 @@ panda3drocks shader input has to be written as k_panda3drocks. If you manually
 define an uniform in shader, you must at least call setShaderInput on an
 appropriate NodePath that uses this shader.
 */
-
 void vshader(
     uniform float4x4 mat_modelproj,
     uniform float4 k_panda3drocks,

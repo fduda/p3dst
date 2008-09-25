@@ -11,37 +11,36 @@ The vshader function below is called once for every processed vertex, while the
 fshader is once called for every drawn pixel. Because our cube has 24 vertices
 vshader is called 24 times per cube in this example. fshader is called for every
 visible pixel of this cube. The larger the cube on the screen the more often
-fshader needs to be called so we cannot say it is called 100 times or 1000
-times per cube. If the cube is far away, so we only see one pixel on the screen,
-then the vshader is still called 24 times, while the fshader may only be called
-once. The order is always the same first vshader then fshader. Maybe you
-remember the fact that if a vertex is processed this vertex does not know
-anything about any other vertices. The GPU can therefore run the vshader
-multiple times at the same time. You write this function only once, but it is
-called in parallel as often as the GPU can handle. The same is true for the
-vshader. An extremely powerful GPU can call fshader for each individual pixel at
-the same time. Maybe you can see that there are some problems. If I have a cube
-that fills my whole 800 x 600 screen, a perfect GPU has 480000 separate
-processors. At least today this is impossible. Each of this small processors
-have to process more than one pixel, problem is here if our shaders are not to
-easy (that may happen faster than you think) the GPU may need too much time to
-process all vertices or pixels and therefore your FPS start to drop. Today
-shaders can be rather complex, but one single shader cannot have thousands of
-lines. Often you need to write tons of specialized shaders which you apply to
-your scene. The Auto Shader of Panda3D is an example of this. It may be possible
-that each node has another shader. You do not see this because they are
-generated on the fly.
+fshader needs to be called. We cannot say it is called 100 times or 1000 times
+per cube. If the cube is far away, so we only see one pixel on the screen, then
+the vshader is still called 24 times, while the fshader may only be called once.
+The vshader is always called before vshader is called. Maybe you remember the
+fact that if a vertex is processed this vertex does not know anything about any
+other vertices. The GPU can therefore run the vshader multiple times at the same
+time. You write this function only once, but it is called in parallel as often
+as the GPU can handle. The same is true for the vshader. An extremely powerful
+GPU can call fshader for each pixel at the same time. Maybe you can see that
+there are some problems. If I have a cube that fills your whole 800 x 600
+screen, a perfect GPU needs 480000 separate processors. At least today this is
+impossible. Each of this small processors have to process more than one pixel,
+problem is here if our shaders are not too easy (that may happen faster than you
+think) the GPU may need too much time to process all vertices or pixels and
+therefore your FPS start to drop. Today shaders can be rather complex, but one
+single shader cannot process thousands of lines. Often you need to write tons of
+specialized shaders which you apply carefully to your scene. The Auto Shader of
+Panda3D is an example of this. It may be possible that each node has another
+shader. You do not see this because they are generated on the fly.
 
 Before you read on, maybe modify the sample 0.py and add a CartoonInk post
 process filter to your scene. setCartoonInk is method of the class
 CommonFilters. Post processing means, that after your image is rendered and
-normally ready to display, you start to modify the pixels. More precisely:
-You modify ALL pixels visible on the screen. At least on my computer the FPS
-varies greatly if I have a small window or if I have a large window. A post
-process vertex shader only needs to process four vertices (the corners of the
-window) but millions of pixels, therefore this is an example where only the
-fragment shader is limiting the performance of your application (if you are not
-crazy and write your SETI client into the vertex shader).
+ready to display, you start to modify the each pixel. More precisely: You modify
+ALL pixels visible on the screen. At least on my computer the FPS varies greatly
+if I have a small window or if I have a large window. A post process vertex
+shader only needs to process four vertices (the corners of the window) but
+millions of pixels, therefore this is an example where only the fragment shader
+is limiting the performance of your application (if you are not crazy and write
+your SETI client into the vertex shader).
 */
 
 /*
@@ -51,8 +50,8 @@ can do is calculating properties for vertices. One of such a property is the
 position. A vertex shader can move around vertices. In this sample we only move
 around the vertices, but in the next sample we will calculate some more
 properties for a single vertex. A vertex shader cannot create new vertices, nor
-can it delete vertices. This is a great limitation. So called geometry shaders
-try to solve this, but as I write this there is no support in Panda3D for this.
+can it delete vertices. This is a limitation. So called geometry shaders try to
+solve this, but as I write this there is no support in Panda3D for this.
 
 If we look a bit closer to this vertex shader we can see a new line with the
 keyword "uniform" and a line the with the "in" keyword. The "in" keyword means
@@ -81,7 +80,7 @@ the truth. If Panda3D has to deliver each and every vertex to the shader the
 application would be slow. Panda3D only says to the GPU: "Hey dear GPU. Here is
 a list of vertices, they are ordered like this and like that, please process
 them". An "uniform" in contrast has to be set by you or Panda3D, the GPU never
-touches an "uniform".
+modifies an "uniform".
 
 The type float4x4 is a fixed size array type with 4 * 4 floats or in other words
 16 floats. If we like we can store 16 independent floats in a float4x4 variable,
@@ -106,7 +105,7 @@ mat_modelproj must contain something that is responsible that the cubes are side
 by side and this mat_modelproj must contain something that make your cubes look
 perspectively correct. Maybe you thought the GPU cares about this perspective
 thing but this is not true (and that is a good thing, because it gives us the
-possibility to do calculations that are no perspectively correct).
+possibility to do calculations that are not perspectively correct).
 
 mat_modelproj is a composite from a so called modelview matrix, and from a so
 called projection matrix. There is a second vertex shader in this sample that is
@@ -117,25 +116,26 @@ Ok therefore we need to understand what this modelview matrix is first. I repeat
 myself maybe to often, but remember that this lazy dumb GPU (a bit too wicked,
 the NVIDIA/ATI engineers are damn smart people) only gives us the raw vertices
 from the egg file (Ok there is Panda3D between that cares about this tedious
-task). The first thing we have to do is to move each cube to his position. So
-you may ask why we do not feed the vshader with the cubes position (not the
-vertex positions this time)? The answer is, yes we can do this on your own, if
+task). The first thing we have to do is to move each cube to its position. So
+you may ask: "Why we do not feed the vshader with the cubes position (not the
+vertex positions this time)?" The answer is, yes we can do this on your own, if
 we really like it (After you read the tutorials 0.py up to 5.py you should be
 able to do this on your own). Why then this complicated modelview matrix, if
 there is a simpler solution? I add following requirements: I like to rotate the
-cube, I like to scale the cube and I like to shear the cube. You can do this all
-on your own and add tons of uniforms to your shader. But one clever guy, long
-time ago had the brilliant idea to store all this information in a 4x4 matrix.
-Think of a 4x4 matrix as a pool that stores positions, rotations, shears and
-translations, and maybe some fancy things no one can imagine. But do not think
-of it as a divine thing, you cannot do everything this are only 16 floats. The
-Python sample that loads this shader has some lines, which if disabled, can show
-you the modelview matrix of every node. If you read those matrices carefully you
-see that only one number differs for each of the three cubes. If you are brave
-try to use setScale (only with one parameter, not three) in Python on one of
-your cubes and look at the matrices and the output onto your screen. The braver
-ones start to setShear and the bravest ones start to use setHpr (start with
-multiples of 90 degree) or use setMat directly on a cubes NodePath.
+cube, I like to scale the cube, I like to translate (move) the cube and I like
+to shear the cube. You can do this all on your own and add tons of uniforms to
+your shader. But one clever guy, long time ago had the brilliant idea to store
+all this information in a 4x4 matrix. Think of a 4x4 matrix as a pool that
+stores positions, rotations, shears and translations, and maybe some fancy
+things no one can imagine. But do not think of it as a divine thing, you cannot
+do everything this are only 16 floats. The Python sample that loads this shader
+has some lines, which if disabled, can show you the modelview matrix of every
+node. If you read those matrices carefully you see that only one number differs
+for each of the three cubes. If you are brave, try to use setScale (only with
+one parameter, not three) in Python on one of your cubes and look at the
+matrices and the output onto your screen. The braver ones start to use setShear
+and the bravest ones start to use setHpr (start with multiples of 90 degree) or
+use setMat directly on a cubes NodePath.
 
 As you maybe see I do not try do explain how matrices really work, I hope you
 start to play around with.
@@ -153,25 +153,23 @@ space where the model lives in. View space is the space where the viewer lives.
 
 To calculate the mat_modelproj we need one more matrix, the projection matrix.
 Maybe you remember the call to setFov in the Python code. This belongs with the
-camera as well, but as said, there is no camera at all, so we even have to do
+camera as well, but as said, there is no camera at all, so we even need to do
 this by ourselves. With a call to setFov Panda3D generates internally a correct
 projection matrix. This projection matrix is a bit harder to understand, because
 if you look at the matrix it is not obvious what happens. The method
 getProjectionMat of the class PerspectiveLens or the same method of the
 OrthographicLens class may help. If your application uses PerspectiveLens (this
 examples does because that is the default) just have to remember that anyone has
-to care that a face that is further away has to be smaller than a face that is
+to care, that a face that is further away has to be smaller than a face that is
 nearer to the viewer. This information is stored in the projection matrix.
 
 Now we have both those matrices. One cool thing about matrices is the following
 possibility. You can apply the modelview matrix to every vertex and then apply
 the projection matrix to every vertex. Or you can first multiply the projection
 matrix with the modelview matrix (but care about the order). What is the
-difference? The more vertices you have the faster is the second method, because
+difference? The more vertices you have the faster is the second method because
 we have to do less multiplications.
 */
-
-
 void vshader(
     uniform float4x4 mat_modelproj,
     in float4 vtx_position : POSITION,
@@ -219,7 +217,7 @@ void fshader(
     The fragment shader is as simple as the previous fragment shader. Because
     there is still no input we cannot do cool things here, but at least we can
     see a color, because the vertex shader now works. One more thing that is
-    typical of shader, the shader itself does not know which pixel it is
+    typical to shaders, the shader itself does not know which pixel it is
     drawing. If you need this information you have to generated it yourself
     (which we are not able to do know).
     */
@@ -232,17 +230,20 @@ void fshader(
     Here we calculate more constant colors, but this time with the help of a
     function. Cg include some function that help to do basic math that is often
     used in 3D graphic applications. Most of this function you can write in Cg
-    yourself, but they are often then slower. Try as often as possible to use
-    included functions. lerp is an example of such an included function. It
-    linearly interpolates to two first parameters. The third parameters says how
-    near or far away you like a value to be calculated by the function. A
-    reference of all Cg functions is available on:
+    yourself, but they are often slower then. Try as often as possible to use
+    included functions.
+
+    lerp is an example of such an included function. It linearly interpolates the
+    first two parameters. The third parameters says how near or far away from
+    the first and second parameter you like a value to be calculated by the
+    function. A reference of all Cg functions is available on:
 
     http://http.developer.nvidia.com/CgTutorial/cg_tutorial_appendix_e.html
 
-    Depending on the commented lines you can see all cubes in red, blue, or dark
-    purple. Try to understand why it is dark purple and not bright purple (Hint:
-    Read the section about linear interpolation in 0.py once more).
+    Depending on the commented lines you can see all cubes in bright red, bright
+    blue, or dark purple. Try to understand why it is dark purple and not bright
+    purple (Hint: Read the section about linear interpolation in 0.py once
+    more).
     */
     //float4 red = float4(1.0, 0.0, 0.0, 1.0);
     //float4 blue = float4(0.0, 0.0, 1.0, 1.0);
@@ -254,7 +255,7 @@ void fshader(
 /*
 Only as a final side node, a matrix is maybe not the best solution that humanity
 can think of. It is just an idea that has is pros an cons. Maybe you already
-heard something about a quaternions. Quaternion helps to solve some problems you
+heard something about quaternions. Quaternions helps to solve some problems, you
 sometime have with matrices if you only use matrices. Matrices in general are an
 extremely mighty thing, that are not only helpful in graphic stuff, matrices are
 so powerful that they are the fundamental data type of well known math tools

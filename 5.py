@@ -40,7 +40,7 @@ root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 1.0)
 
 """
 DIRTY
-If you enable to following to lines, without modifying the shader, you have one
+If you enable to following two lines, without modifying the shader, you have one
 more debug utility that may help in some circumstances. With setTransparency
 Panda3D instruct the GPU to not only overwrite the color buffer. If the fragment
 shader was calculating a color, the GPU reads the old value in the color buffer
@@ -52,14 +52,14 @@ scene like this.
 
 Some facts: The new panda3drocks uniform, you can see below, has an alpha
 component with a value lesser than 1.0. The background in this scene is black.
-Back facing triangles are not drawn. What we conclude from this. If the GPU
-has to draw the first cube, the only two colors on the screen are black (0.0,
-0.0, 0.0) and a dark purple (0.1, 0.0, 0.1). If the GPU has to draw the second
-cube, and they are not side by side, a new purple (theoretically 0.19, 0.0,
-0.19, practically ~0.18, 0.0, ~0.18) appears that is brighter than its
-predecessor. The more triangles are on top of one another the brighter the scene.
-Or in other words, the brighter the scene the more the fragment shader needs to
-be called. Something you should try to avoid.
+Back facing triangles are not drawn. What we conclude from this. If the GPU has
+to draw the first cube, the only two colors on the screen are black (0.0, 0.0,
+0.0) and a dark purple (0.1, 0.0, 0.1). If the GPU has to draw the second cube,
+and they are not side by side, a new purple (theoretically 0.19, 0.0, 0.19,
+practically ~0.18, 0.0, ~0.18) appears that is brighter than its predecessor.
+The more triangles are on top of one another the brighter the scene. Or in other
+words, the brighter the scene the more the fragment shader needs to be called.
+Something you should try to avoid.
 """
 #root.setTransparency(True)
 #root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 0.1)
@@ -78,8 +78,8 @@ def animate(t):
 
     As an aside: The setHpr method of a NodePath accepts angles in degrees. But
     Python and Cg internally work with radians (Every FPU known to more than
-    0xff people probably internally works with radians. Who the hell has
-    invented degrees and aside who invented infix notation?).
+    0xff people probably internally works with radians. Who the has invented
+    degrees and aside who invented infix notation?).
     """
     #r = abs(math.cos(math.radians(t + 0.0)))
     #g = abs(math.cos(math.radians(t + 10.0)))
@@ -107,8 +107,8 @@ base.accept("q", move, [0.0, 0.0, -1.0])
 run()
 
 """
-On more note abount blending. If you enable transparency of a node, Panda3D has
-to blend the node together with the exsiting scene. If you read the Panda3D
+On more note abount blending. If you enable transparency on a node, Panda3D has
+to blend the node together with the existing scene. If you read the Panda3D
 manual about this topic, you can see that this is a expensive operation, because
 Panda3D has to reorder the scene. So how does this blending work? There is more
 than one possibility to blend nodes together. As far as I know Panda3D only uses
@@ -133,8 +133,8 @@ SourceColor = 1.0, 0.0, 1.0
 
 We assume that the GPU always is calculating with floating point buffers, but
 this is not always true. In todays application the color buffer is often not a
-floating point buffer, so we same inaccuracies here. That is the reason why in
-the example above I have once written theoretically and then practically.
+floating point buffer, so we see some inaccuracies here. That is the reason why
+in the example above I have once written theoretically and then practically.
 
 Why do I explain all this stuff here? Maybe you recognized that this stuff is
 once more linear interpolation, but there is no possiblity to influence this
