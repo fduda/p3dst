@@ -2,7 +2,7 @@
 
 /*
 The vertex shader has not changed. If you like to apply another UV set for the
-second texture you have to pass the vtx_texcoord0 variable from the vertex
+second texture you have to pass the vtx_texcoord1 variable from the vertex
 shader to the fragment shader.
 */
 void vshader(
@@ -17,10 +17,10 @@ void vshader(
 }
 
 /*
-With TEXUNIT1 we can access the second texture unit. How many texture unit can
-use depends on your GPUs. The bad thing about this is that you need a fallback
-mechanisms if you use more texture units than the GPU of your applications users
-may have.
+With TEXUNIT1 we can access the second texture unit. How many texture unit you
+can use depends on your GPU. The bad thing about this is that you need a
+fallback mechanisms if you use more texture units than the GPU of your
+applications users may have.
 */
 void fshader(
     uniform sampler2D tex_0 : TEXUNIT0,
@@ -38,7 +38,8 @@ void fshader(
     /*
     DIRTY
     Here we play a bit and modify the arrow texture based on the red component
-    of the circle texture.
+    of the circle texture (The circle texture only has gray colors, therefore it
+    does not matter if you use R, G or B part).
     */
     //float4 arrow = tex2D(tex_0, l_my);
     //float4 circle = tex2D(tex_1, l_my);

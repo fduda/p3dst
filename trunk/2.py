@@ -3,7 +3,7 @@
 The first useful sample. After this tutorial we are able to draw our cubes,
 which looks like cubes. With our knowledge we are not able to color them
 correctly, but we can do some nice stuff and see the result. If everything is
-black this time, something is wrong.
+black this time, something must be wrong.
 """
 
 import sys
@@ -44,7 +44,7 @@ root.setShader(shader)
 """
 DIRTY
 If you have tested how you can enable/disable a shader on individual nodes, and
-how the scene graph works with shader, you can modify this lines (comment or
+how the scene graph works with shaders, you can modify this lines (comment or
 remove the three Python lines above) and load two shaders at the same time. e.g.
 2.sha and 1.sha. Apply 2.sha to one cube, and 1.sha to another cube. Because
 1.sha does nothing the cube with this shader should disappear.

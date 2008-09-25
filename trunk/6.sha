@@ -3,15 +3,16 @@
 /*
 Think of a 2D texture of something like a 2D array with values. We can use a 2D
 texture for tinting meshes (as we do here), or for a function with two
-parameters. If this function is extremely hard to calculate, this may be indeed
-be a good idea, so we can offload the work to a pre process. Textures often
-contain a color with a R, G and B component. But it is possible that a texture
-contains an additional alpha value, or only contains one value at all. Besides
-2D textures, there are 1D textures and 3D textures. One fragment/pixel is often
-called a texel. UV coordinates address a texel on a 2D texture. It is like if
-your home made RPG is only flat and needs no Z coordinate to position your
-character, then you need only XY. XY in texture language means UV. If you use a
-3D texture there is an additional W parameter which leads to UVW coordinates.
+parameters. If this function is extremely hard to calculate, this may indeed be
+a good idea, so we can offload the work to a pre process. Textures often contain
+a color with a R, G and B component. But it is possible that a texture contains
+an additional alpha value, or only contains one value at all. Besides 2D
+textures, there are 1D textures and 3D textures. One fragment/pixel on a texture
+is often called a texel. UV coordinates address a texel on a 2D texture. It is
+like if your home made RPG is only flat and needs no Z coordinate to position
+your character, then you need only XY. XY in texture language means UV. If you
+use a 3D texture there is an additional W parameter which leads to UVW
+coordinates.
 */
 
 /*
@@ -28,7 +29,7 @@ the variable l_my, or whatever we name it, and let it interpolate by the GPU.
 One more thing about this UV sets. Maybe you think they are only useful for
 textures, but think of this sets as additional properties of a vertex. The
 designers maybe only thought that this UV sets are for texturing but you may use
-them for any cool idea you have. UV coordinates are especially suited for that
+them for any cool idea you have. UV coordinates are especially suited for that,
 because you can have more than one, in contrast to a color where you only can
 have one color (OpenGL has the possibility to use a secondary color, but as far
 as I know Panda3D does not support it, because there is no need for it, in the
@@ -62,11 +63,11 @@ void vshader(
 
     uniform float4x4 mat_modelview,
 
-    You have access to a matrix to only contains the modelview transformations,
-    without the projection as with the modelproj matrix. If calculate the
-    texture coordinates based on this transformation (this is a form of texture
-    generation), the texture should always be at the same location, move around
-    the scene to see what happens exactly.
+    You have access to a matrix that only contains the modelview
+    transformations, without the projection as with the modelproj matrix. If you
+    calculate the texture coordinates based on this transformation (this is a
+    form of texture generation), the texture should always be at the same
+    location, move around the scene to see what happens exactly.
     */
     //l_my = mul(mat_modelview, vtx_position);
 }
@@ -87,11 +88,15 @@ TextureStage.
 Finally there is this tex2D function. This function exists in multiple versions
 (overloaded variants). The simplest one is where you have to specify a sampler2D
 as first parameter and a float2 as second parameter, the one we use here. Based
-on this input the GPU fetches a texel from the texture. If it is linearly
-interpolate depends on the settings on the texture unit which you have to apply
-in the Python code. setWrapU and setWrapV are two examples. If you enable
-anisotropic filtering (if you store function values in texture then carefully
-chose the texture filtering options) there are some hidden parameters to tex2D.
+on this input the GPU fetches a texel from the texture. How it is interpolated
+depends on the settings on the texture unit which you have to apply in the
+Python code. setWrapU and setWrapV are two examples (if you store function
+values in texture then carefully chose the texture filtering options). Sometimes
+it also depends on some graphic driver settings. Often graphic drivers have
+often to override any application setting, in our case they do not care what
+Panda3D or we like.
+
+If you enable anisotropic filtering there are some hidden parameters to tex2D.
 Especially for anisotropic filtering the results depends on the vendors
 implementation. ATI and NVIDIA both harmlessly blamed each other for their GPUs
 worse texture filtering capabilities.

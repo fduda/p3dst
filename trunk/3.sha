@@ -11,11 +11,10 @@ need three vertices. So vshader is called three times. If this triangle is large
 our fshader is called 100'000 times and more. What happens here between? The GPU
 starts to render a triangle (that is one thing a GPU can without any help). But
 how does the GPU connect e.g. vertex 1 with vertex 2? It only does linear
-interpolation between the two vertices. That is the reason we always see
-something like a straight line between two vertices, never any curves or the
-like. If you like to draw a sphere you have to approximate the sphere with
-simple triangles, although this is rather inefficient (but it is simple and
-generic).
+interpolation between the two vertices. That is the reason why we always see a
+straight line between two vertices, never any curves or the like. If you like to
+draw a sphere you have to approximate the sphere with simple triangles, although
+this is rather inefficient (but it is simple and generic).
 
 There is one more thing we were not talking about much. With our vertex shader
 we transform our vertices so they look perspectively correct on the screen. But
@@ -36,10 +35,10 @@ function can be changed, but do not care about this yet), the old is overwritten
 and the fragment is sent to the fragment shader.
 
 What can a vertex shader do in general? It gets some inputs that change per
-vertex (vtx_position, vtx_color), some uniforms that often only change between
-objects (mat_modelproj) and some outputs (l_color, l_position). Based on the
-input we calculate the outputs. The GPU then interpolates all outputs and most
-of them we can read back in the fragment shader.
+vertex (vtx_position, vtx_color, ...), some uniforms that often only change
+between objects (mat_modelproj, ...) and some outputs (l_color, l_position,
+...). Based on the input we calculate the outputs. The GPU then interpolates all
+outputs and most of them we can read back in the fragment shader.
 
 If we make our own shader and we can solve something with linear interpolation,
 we always should consider to do this in the vertex shader, and let the GPU do
