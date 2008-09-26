@@ -1,7 +1,11 @@
 //Cg
 
 /*
-TODO
+We now try to implement what was written in the introduction in 8.py. To
+summarize: We like to calculate our lighting equation for each vertex. For this
+we need the position of the light and the normal of the vertex.
+
+TODO model space, world space
 */
 
 /*
@@ -20,9 +24,9 @@ void vshader(
 
     float3 lightposition = mspos_light.xyz;
     float3 modelposition = vtx_position.xyz;
-    float3 normal = vtx_normal;
-    float3 direction = lightposition - modelposition;
-    float brightness = saturate(dot(normalize(normal), normalize(direction)));
+    float3 normal = normalize(vtx_normal);
+    float3 direction = normalize(lightposition - modelposition);
+    float brightness = saturate(dot(normal, direction));
 
     l_color = vtx_color * brightness;
 }

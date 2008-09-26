@@ -3,14 +3,15 @@
 Like 0.py we restart from scratch and create a basic example with one
 PointLight, that only supports diffuse lighting. There is no shader attached to
 this example. If you do not understand this sample then open the Panda3D manual
-and e.g. try to understand the Disco-Lights sample.
+and try to understand e.g. the Disco-Lights sample.
 
 When we talk about lighting we talk about an "effect" that we can see with our
 eyes. Live is a game, just with better graphic. Lighting is still something you
 may do your own research and invent a cool new idea, no one had before.
-Currently we only can approximate lighting. For better lighting we often need to
-precalculate some values in a often slow pre process. We start here only with
-one basic lighting model: Diffuse Lighting.
+We often only approximate lighting and invent new terms that do not exist in
+reality e.g. there is no specular light in real live. For better lighting we
+often need to precalculate some values in a often slow pre process. We start
+here only with one basic lighting model: Diffuse Lighting.
 
 The basic idea of diffuse lighting is: The steeper the angle between the light
 and a surface, the less light particles can reach the surface. The following
@@ -51,9 +52,9 @@ possibility to do this is a surface normal. In the preceding examples we assumed
 that the surface normal is perpendicular to the surface. This is not always
 true, as we see later, therefore we like to define a normal at least for each
 triangle (or face). When you have a look at the cube.egg once more you see that
-for every polygon a normal is specified. If Panda3D needs to triangulate the
-model for the GPU it assigns every triangle that belongs to the same polygon the
-same normal.
+for every polygon, a normal is specified. If Panda3D needs to triangulate the
+model for the GPU it assigns every triangle, that belongs to the same polygon,
+the same normal.
 
 That is not the whole truth, in fact, the GPU likes to have a normal for every
 vertex. Why this is a good idea is shown by another example. Open the enclosed
@@ -75,10 +76,43 @@ difference between this two files.
 The fixed function pipeline of the a GPU (that is the pipeline Panda3D uses if
 there is no call to setShader or setAutoShader) is not that sophisticated.
 Better said the GPUs were not powerfull enough to calculate this very simple
-lighting per fragment/pixel, they only can calculate it per vertex. The larger
-your triangles on your screen, the falser the result.
+lighting mocdl per fragment/pixel, they only can calculate it per vertex. The
+larger your triangles on your screen, the falser the result.
 
-TODO
+One more definition for diffuse lighting is, that it does not depend on the
+viewers position. That is not true for all effects e.g. the "output" of a mirror
+depends on the viewers position. Specular lighting simulates a mirror like
+effect for lights and therefore depends on the viewers position.
+
+Diffuse lighting is especially suited for rough surfaces, because of our
+definition that the surfaces should distribute light in any direction,
+independenant of any other environmental effects.
+
+Back to our problem: We have a surface normal, we have a light position and we
+say that only this two things should matter. We now can calculate a direction
+vector from the light to our triangle. Because it is a point light, that
+distributes light in any direction, this assumption is correct. After this first
+operation we calculate the angle between this direction and surface normal.
+Based on this angle we can calculate how much diffuse light we have on a
+triangle.
+
+        |          |
+1. -> <-|    2. -> |->
+        |          |
+
+In example 1. we have 100% diffuse light while in the example 2. there is 0%
+diffuse lighting.
+
+There are two possibilities to calculate this angle. We do some trigonometry, or
+we use the dot product. Both ideas are equivalent, but the second is faster to
+calculate.
+
+Read the following page to get in-depth information.
+
+http://en.wikipedia.org/wiki/Dot_product
+
+We will later see how we exactly calculate each of this steps. I only like to
+introduce some concepts here.
 """
 
 import sys
@@ -100,15 +134,22 @@ camera.lookAt(0.0, 0.0, 0.0)
 root = render.attachNewNode("Root")
 
 """
-TODO
+We setup a default point light here. You may modify the color of the light, but
+in the next examples we assume, that the light has no attenuation and is white.
+
+There is a dummy model attached to this node, to see where the light should be.
+Because this light is parented to render, and we only enable light on the cubes,
+this model does not influces the lighting nor is it lit by the light itself.
 """
-TODOlight = PointLight("Light")
-light = render.attachNewNode(TODOlight)
+pointlight = PointLight("Light")
+light = render.attachNewNode(pointlight)
 modelLight = loader.loadModel("misc/Pointlight.egg.pz")
 modelLight.reparentTo(light)
 
 """
-TODO (smooth non smooth)
+DIRTY
+Replace cube.egg with cube-smooth.egg and try to understand why both outputs
+looks different.
 """
 modelCube = loader.loadModel("cube.egg")
 
@@ -123,8 +164,14 @@ base.accept("escape", sys.exit)
 base.accept("o", base.oobe)
 
 """
-TODO
-TODO radius 4.3?
+We move around our light. Because this basic application only supports per
+vertex lighting you often can see some odd artifacts if only one vertex of face
+is lit.
+
+The bounding box around all cubes franges from (-4.0, -1.0, -1.0) to (4.0, 1.0,
+1.0). Therefore we set the radius of the virtual sphere (the motion path of the
+light) to something that is only a little bit larger than 4.0. This helps later
+to see the visual difference from per vertex lighting to per pixel lighting.
 """
 def animate(t):
     radius = 4.3
