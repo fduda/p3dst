@@ -2,6 +2,9 @@
 
 /*
 TODO
+
+TODO Normalization Issues
+
 */
 
 /*
@@ -20,6 +23,16 @@ void vshader(
     l_position = mul(mat_modelproj, vtx_position);
 
     l_myposition = vtx_position.xyz;
+
+    /*
+    DIRTY
+    As alredy written, remove normalize in the following line only (and only the
+    next line, not the next but one line) if your nomals in the egg file are
+    perfectly normalized. Try to modify the six face normale in cube.egg.
+    Without a modification they all have an exact length of 1.0. Try to assign
+    different lengths. With the call to normalize you shoud not see any visual
+    difference. After modifiying the normals remove the call to normalize.
+    */
     l_mynormal = normalize(vtx_normal);
 
     l_color = vtx_color;
@@ -37,9 +50,9 @@ void fshader(
 {
     float3 lightposition = mspos_light.xyz;
     float3 modelposition = l_myposition;
-    float3 normal = l_mynormal;
-    float3 direction = lightposition - modelposition;
-    float brightness = saturate(dot(normalize(normal), normalize(direction)));
+    float3 normal = normalize(l_mynormal);
+    float3 direction = normalize(lightposition - modelposition);
+    float brightness = saturate(dot(normal, direction));
 
     o_color = l_color * brightness;
 }

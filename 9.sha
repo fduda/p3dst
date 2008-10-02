@@ -6,6 +6,8 @@ summarize: We like to calculate our lighting equation for each vertex. For this
 we need the position of the light and the normal of the vertex.
 
 TODO model space, world space
+
+TODO explain dot product, and why normalization is needed
 */
 
 /*
@@ -32,7 +34,7 @@ void vshader(
 }
 
 /*
-TODO
+If something has to be explained here then something went wrong.
 */
 void fshader(
     in float4 l_color : COLOR,

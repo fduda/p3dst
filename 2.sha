@@ -187,11 +187,34 @@ of this version is that it is never as fast as the preceding version.
 // void vshader(
 //    uniform float4x4 mat_modelview,
 //    uniform float4x4 mat_projection,
+//    uniform float4x4 trans_model_to_world,
+//    uniform float4x4 trans_world_to_apiview,
+//    uniform float4x4 trans_apiview_to_apiclip,
 //    in float4 vtx_position : POSITION,
 //    out float4 l_position : POSITION)
 //{
 //    float4x4 my_mat_modelproj = mul(mat_projection, mat_modelview);
 //    l_position = mul(my_mat_modelproj, vtx_position);
+//
+//    or
+//
+//    float4 x = vtx_position;
+//    x = mul(mat_modelview, x);
+//    x = mul(mat_projection, x);
+//    l_position = x;
+//
+//    or
+//
+//    float4x4 my_mat_modelproj = mul(trans_apiview_to_apiclip, mul(trans_world_to_apiview, trans_model_to_world));
+//    l_position = mul(my_mat_modelproj, vtx_position);
+//
+//    or
+//
+//    float4 x = vtx_position;
+//    x = mul(trans_model_to_world, x);
+//    x = mul(trans_world_to_apiview, x);
+//    x = mul(trans_apiview_to_apiclip, x);
+//    l_position = x;
 //}
 
 /*
