@@ -15,9 +15,9 @@
    inkscape:version="0.46"
    sodipodi:docname="figures.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="D:\p3dst.png"
-   inkscape:export-xdpi="90.104782"
-   inkscape:export-ydpi="90.104782">
+   inkscape:export-filename="D:\p3dst\figures.png"
+   inkscape:export-xdpi="110.99"
+   inkscape:export-ydpi="110.99">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -45,10 +45,10 @@
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-global="true"
-     inkscape:window-width="1253"
-     inkscape:window-height="945"
-     inkscape:window-x="73"
-     inkscape:window-y="106"
+     inkscape:window-width="1280"
+     inkscape:window-height="975"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
      showguides="true"
      inkscape:guide-bbox="true">
     <inkscape:grid
@@ -259,7 +259,7 @@
          id="tspan2425"
          x="25"
          y="177.3622"
-         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Verdana;-inkscape-font-specification:Verdana Bold">Figure TODO: Nonuniform Scaling of Normals</tspan></text>
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Verdana;-inkscape-font-specification:Verdana Bold">Figure 10-1: Nonuniform Scaling of Normals</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Verdana;-inkscape-font-specification:Verdana Bold"
@@ -270,7 +270,7 @@
          sodipodi:role="line"
          id="tspan2429"
          x="25"
-         y="377.36218">Figure TODO: Normalize Vertexes in the Vertex Shader and in the Fragment Shader not only in the Fragment Shader</tspan></text>
+         y="377.36218">Figure 10-2: Normalize Vertexes in the Vertex Shader and in the Fragment Shader not only in the Fragment Shader</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Verdana;-inkscape-font-specification:Verdana Bold"
@@ -282,7 +282,7 @@
          id="tspan2421"
          x="25"
          y="27.362183"
-         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Verdana;-inkscape-font-specification:Verdana Bold">Figure TODO: Solid Cube and Smooth Cube</tspan></text>
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Verdana;-inkscape-font-specification:Verdana Bold">Figure 8-1: Solid Cube and Smooth Cube</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 50,77.362193 L 50,127.36218 L 100,127.36218 L 100,77.362193 L 50,77.362193 z"

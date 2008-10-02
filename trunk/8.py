@@ -134,12 +134,13 @@ camera.lookAt(0.0, 0.0, 0.0)
 root = render.attachNewNode("Root")
 
 """
-We setup a default point light here. You may modify the color of the light, but
+We set up a default point light here. You may modify the color of the light, but
 in the next examples we assume, that the light has no attenuation and is white.
 
 There is a dummy model attached to this node, to see where the light should be.
-Because this light is parented to render, and we only enable light on the cubes,
-this model does not influces the lighting nor is it lit by the light itself.
+Because this light is parented to render, and we only will enable light on the
+cubes, this model does not influce the lighting nor is it lit by the light
+itself.
 """
 pointlight = PointLight("Light")
 light = render.attachNewNode(pointlight)
@@ -149,7 +150,7 @@ modelLight.reparentTo(light)
 """
 DIRTY
 Replace cube.egg with cube-smooth.egg and try to understand why both outputs
-looks different.
+differ.
 """
 modelCube = loader.loadModel("cube.egg")
 
@@ -165,8 +166,8 @@ base.accept("o", base.oobe)
 
 """
 We move around our light. Because this basic application only supports per
-vertex lighting you often can see some odd artifacts if only one vertex of face
-is lit.
+vertex lighting you often can see some odd artifacts if only one vertex of a
+face is lit.
 
 The bounding box around all cubes franges from (-4.0, -1.0, -1.0) to (4.0, 1.0,
 1.0). Therefore we set the radius of the virtual sphere (the motion path of the

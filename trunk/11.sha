@@ -30,6 +30,10 @@ float lit(float3 lightposition, float3 modelposition, float3 normal)
     float3 direction = lightposition - modelposition;
     float distance = length(direction);
     float diffuse = saturate(dot(normalize(normal), normalize(direction)));
+    /*
+    Normally you would define this constants in Python source and pass them this
+    shader. We are a bit lazy here and hard code them in this function.
+    */
     float a = 0.0;
     float b = 0.0;
     float c = 1.0;
