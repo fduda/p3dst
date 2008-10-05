@@ -1,9 +1,9 @@
 
 """
 This time we start with diffuse lighting on our own. There should be no
-difference between 8.py and this example.
-If there is a difference, than it is possible that your GPU does not emulate the
-old fixed function pipeline with shaders.
+difference between 8.py and this example. If there is a small difference, than
+it is possible that your GPU does not emulate the old fixed function pipeline
+with shaders.
 """
 
 import sys
