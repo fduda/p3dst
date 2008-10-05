@@ -183,6 +183,8 @@ DIRTY
 We have an alternative vertex shader that does the exactly same thing as his
 predecessor, but this time we create the mat_modelproj on our own. The downside
 of this version is that it is never as fast as the preceding version.
+You dont need to understand all of them, we will later talk in more detail about
+so called spaces.
 */
 // void vshader(
 //    uniform float4x4 mat_modelview,
@@ -196,14 +198,14 @@ of this version is that it is never as fast as the preceding version.
 //    float4x4 my_mat_modelproj = mul(mat_projection, mat_modelview);
 //    l_position = mul(my_mat_modelproj, vtx_position);
 //
-//    or
+//    or (do each multiplication on itself)
 //
 //    float4 x = vtx_position;
 //    x = mul(mat_modelview, x);
 //    x = mul(mat_projection, x);
 //    l_position = x;
 //
-//    or
+//    or (all matrices that influence the final postion)
 //
 //    float4x4 my_mat_modelproj = mul(trans_apiview_to_apiclip, mul(trans_world_to_apiview, trans_model_to_world));
 //    l_position = mul(my_mat_modelproj, vtx_position);

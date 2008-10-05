@@ -35,8 +35,6 @@ It helps you understand the concept of the Depth Buffer, and why you need it at
 all. If you at anytime like to do shadow mapping, you need to understand very
 well, how the depth buffer works.
 
-TODO fix link
-
 http://www.panda3d.net/wiki/index.php/Depth_Test_and_Depth_Write
 
 
@@ -105,7 +103,8 @@ details about diffuse lighting.
 
 9.py
 
-Per vertex diffuse lighting with one point light, with shaders.
+Per vertex diffuse lighting with one point light, with shaders. The concept of
+spaces is introduced here.
 
 10.py
 

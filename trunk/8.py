@@ -44,7 +44,8 @@ wall occludes the second wall, so there is more or less no light at all.
 
 The default lighting model the fixed function pipelines offers to Panda3D has
 tons of flaws, even though it helps to increase realism. Let us stick to this
-mediocre lighting model for now.
+mediocre lighting model for now (better lighting models are often extremly slow
+and only with tricks you may use them in 60 FPS applications).
 
 To calculate how much light reaches our triangle (or wall) we need a tool that
 helps us to distinguish if a triangle looks torward a light source or not. One
@@ -111,7 +112,7 @@ Read the following page to get in-depth information.
 
 http://en.wikipedia.org/wiki/Dot_product
 
-We will later see how we exactly calculate each of this steps. I only like to
+We will later see how to exactly calculate each of this steps. I only like to
 introduce some concepts here.
 """
 
@@ -138,9 +139,8 @@ We set up a default point light here. You may modify the color of the light, but
 in the next examples we assume, that the light has no attenuation and is white.
 
 There is a dummy model attached to this node, to see where the light should be.
-Because this light is parented to render, and we only will enable light on the
-cubes, this model does not influce the lighting nor is it lit by the light
-itself.
+Because this light is parented to render, and we only enable light on the cubes,
+this model does not influce the lighting nor is it lit by the light itself.
 """
 pointlight = PointLight("Light")
 light = render.attachNewNode(pointlight)
