@@ -1,14 +1,12 @@
 //Cg
 
 /*
-TODO
-
 TODO Normalization Issues
-
 */
 
 /*
-TODO
+Because we do our calculations in the pixel shader we need the vertex position
+and the vertex normal in the pixel shader.
 */
 void vshader(
     uniform float4x4 mat_modelproj,
@@ -26,10 +24,10 @@ void vshader(
 
     /*
     DIRTY
-    As alredy written, remove normalize in the following line only (and only the
-    next line, not the next but one line) if your nomals in the egg file are
-    perfectly normalized. Try to modify the six face normale in cube.egg.
-    Without a modification they all have an exact length of 1.0. Try to assign
+    As alredy written, remove normalize in the following line only if your
+    nomals in the egg file are normalized.
+    Without a modification all normals in the cube.egg have an exact length of
+    1.0. Try to modify the six face normale in the cube.egg file and assign
     different lengths. With the call to normalize you shoud not see any visual
     difference. After modifiying the normals remove the call to normalize.
     */
@@ -39,7 +37,19 @@ void vshader(
 }
 
 /*
-TODO
+We do the same calculations here as in the vertex shader in the previous sample.
+You may ask: "We have the same equations here, and only moved around some
+code?". We are a bit lazy here. The calculation of the direction vector
+introduces no nonlinearity so it is possible to move this calculation entirely
+to the vertex shader (try it on your own, I have not done it here because it
+makes things more complex). The problem here is the dot function with the
+cosine. If we we calculate the cosine in the vertex shader, the GPU than
+interpolate it and we finally use it in the fragment shader, the result is not
+exactly the cosine, as if we calculate it in the fragment shader.
+
+If you are able to move only the direction calculation to the vertex shader,
+without introducing any visual artifacts, I probably can not teach you anything
+more about Cg itself. Congratulation if your attempt was successful.
 */
 void fshader(
     uniform float4 mspos_light,
@@ -56,3 +66,32 @@ void fshader(
 
     o_color = l_color * brightness;
 }
+
+/*
+Some notes about normalizing normals. If you create an sphere e.g. in Blender
+with a length of 1.0 then all vertices should have coordinates, as if the lay on
+a perfect sphere, altough the whole sphere is only an approximation. Because the
+sphere has a radius of 1.0 the length of each vertex should be exactly 1.0. The
+same is true for normals. On a smooth sphere every normal should exactly point
+outwards and should have a length of 1.0. If you think about it, you come to the
+conclusion that the vertex and the normal should have equal coordinates. But if
+I export the sphere with Blender there are some differences between the normal
+and vertex coordinates. The next problem is that the egg File is human readable
+and numbers therefore are stored in decimal system. An FPU internally stores a
+float in a binary system, so we loose some precision here. What I like to say:
+Maybe it is sometimes not a bad idea to normalize your normals (only in this
+unmodified example, sometimes, you trow away accuarcy if you normalize a
+vector), even if you think they should be already normalized.
+
+Here is a small hint if you were brave enough to implement your own vertex
+shader that passes around the direction instead of the light position and the
+model position. For this special case you should not normalize your direction
+vector in the vertex shader. Try to draw two 2D directions vector on paper, one
+4 times longer than the other one. First interpolate between these two vectors
+without normalization, then with normalization, maybe you see that the direction
+that lays in between is not the same in both cases.
+
+You may start to see that the greatest problem in writing shaders is not Cg. The
+problem is that even simple shaders, often need a lot of brain power to craft
+them more or less correctly.
+*/
