@@ -12,12 +12,12 @@ Each cube has his own model space. Maybe you have read the example 2.sha more
 closely and have seen that there is a second, commented, vertex shader. In this
 shader the most elaborate version transform each vertex from model space to
 world space, then from world space to view space and last to the so called clip
-space. The light itself is a node like any other, but without any assigend
+space. The light itself is a node like any other, but without any assigned
 vertices. So a light has its own "model" space like any other node. When we move
 around a cube, we do not modify the cubes model space, nor do we change the
 model space of a light if we move the light around. Maybe you see already a new
 problem that arises. If we take the blindly take the light and the cubes and
-start to do some fancy lighting, we do not get a usefull result. What we have to
+start to do some fancy lighting, we do not get a useful result. What we have to
 do first is to transform the cube and/or the light in a space where can do our
 calculations in respect to each other. Maybe you think: "Why do we not take the
 world space then?". World space sound nice because in this space, the distance
@@ -34,7 +34,7 @@ the cubes on your screen. But should we change the lighting only because the
 cubes are far away or not? Ok, back to our world space. If we transform our
 model to world space, we also have to transform the normals. If you have rotated
 your model e.g. the normals of your model also have to be rotated. This may lead
-to a problem, that needs some indepth matrix math. In the next sample I try to
+to a problem, that needs some in depth matrix math. In the next sample I try to
 explain what the problem is, but for the moment we stick to another possibility.
 Instead of transforming your cubes and lights into world space, we can transform
 the lights into model space. But because each cube has its own model space, we
@@ -45,11 +45,11 @@ is problem if we need to transform normals. But with this version, we do not
 need to modify the normals because we transform the light position to the cubes
 model space. One more question we may answer here: "We do talk about this world
 space transformations if it calls for problems anyway?". The answer depends on
-what you like todo. In more complicated shaders you often need to transform your
-vertices anyway into world space e.g. for reflections. The other problems if you
-e.g. have a static light e.g. a sun. If there is no sunrise and sunset in your
-application you maybe encode your light position directly as constant into the
-shader. For this case it would be a bit cumbersome to apply the correct
+what you like to do. In more complicated shaders you often need to transform
+your vertices anyway into world space e.g. for reflections. The other problems
+if you e.g. have a static light e.g. a sun. If there is no sunrise and sunset in
+your application you maybe encode your light position directly as constant into
+the shader. For this case it would be a bit cumbersome to apply the correct
 transformation, because you have to do anything on your own. Now we need to now
 we transform our light to model space. Long section, simple solution: You create
 a uniform called "mspos_light". That means that Panda3D transform the position
@@ -63,7 +63,7 @@ http://www.panda3d.net/wiki/index.php/Shaders_and_Coordinate_Spaces
 
 Now we have two positions and a normal and all this things are in the same
 space. If you remember, we like to do a diffuse lighting effect. For this effect
-we need the angle between the vertex normal and the directrion from the light to
+we need the angle between the vertex normal and the direction from the light to
 our vertex. The direction we get when we subtract both positions, the normal we
 already have. Sometimes it helps to draw a 2D draft on a paper to see what
 happens.
@@ -77,17 +77,18 @@ vertex is (-6, 0).
 
 If you imagine this two directions (-1, 0) and (-6, 0) they both lay on each
 other, that means the angle between this two directions is 0 degree. If you have
-read the wiki article about the dot product you may have seen a cosine there. If
-we now take the consine of 0 degree we get 1. 1 is the maximum a consine can
-yield, therefore 1 must mean maximal lighting. If you look back at our draft you
-can see that this is exactly what we want here. Here is another example.
+read the Wikipedia article about the dot product you may have seen a cosine
+there. If we now take the cosine of 0 degree we get 1. 1 is the maximum a
+consine can yield, therefore 1 must mean maximal lighting. If you look back at
+our draft you can see that this is exactly what we want here. Here is another
+example.
 
      ^
      |
  L   V
 
 The Light is at (1, 5), the vertex is at (5, 5) and the vertex normal points
-torward (0, 1). The direction between the light and vertex is (-4, 0). But this
+toward (0, 1). The direction between the light and vertex is (-4, 0). But this
 time the angle between this two directions is 90 degree. The cosine of 90 degree
 is 0. Imagine a light beam that travels to a face where all vertex normal look
 upwards like in the drawing. This light beam will not touch a single point on
@@ -98,17 +99,17 @@ With saturate we can trim it to 0 - 1.
 
 There is one final question about this vertex shader. There are two calls to
 normalize. Normalize modifies a vector so it has a exact length of one unit
-afterwards. There are tons of reaons why you should normalize, here we talk only
-about one reason. Wikipedia says the following about the dot product:
+afterwards. There are tons of reasons why you should normalize, here we talk
+only about one reason. Wikipedia says the following about the dot product:
 
 dot(a, b) = length(a) * length(b) * cos(phi)
 
 Do you see the problem? We only care about cos(phi). Not even phi itself
 interests us. But if a and b are not normalized, the length of this two
 direction vector may be large. With other words, the further away our light, the
-brigther our light shines. Normally we want the exact oppositve, but in this
-example we say it is point sunlight so we have no attuenation at all. If we
-normalize our vectors correctly, theyr length is by defintion exactly 1, there
+brighter our light shines. Normally we want the exact opposite, but in this
+example we say it is point sunlight so we have no attenuation at all. If we
+normalize our vectors correctly, their length is by definition exactly 1, there
 neither length(a) nor length(b) will influence the dot product.
 
 The only problem here is that normalize is an expensive function because it
@@ -117,17 +118,16 @@ function normalize is defined as follow:
 
 def normalize(n):
     return n / length(n)
-
 */
 
 /*
-Besides the mathemical problems in this sample, there is nothing really new
+Besides the mathematical problems in this sample, there is nothing really new
 here. Only the uniform vtx_normal and the uniform mspos_light are new here, but
 I hope they are already explained enough.
 
 Maybe you remember the sample 2.sha. There was more than one vertex shader,
-altough all had an identical result. If you are a brave one, try to rewrite this
-shader so it works with world positions. I have written that there are some
+although all had an identical result. If you are a brave one, try to rewrite
+this shader so it works with world positions. I have written that there are some
 problems if we transform the normals, but for the moment forget this (it is only
 a problem in some circumstances). The following uniforms may help you:
 
@@ -143,7 +143,8 @@ python sample. If you have modified the vertex shader make screenshot of our
 output and compare it with the unmodified shader here. Only if there is no
 visual difference between them you have done everything right. After you have
 modified the shader, use the method setHpr (e.g. setH(90.0)) on any cube and
-look once more to you example. Still no difference?
+look once more to you example (do not use setScale or setShear for this test).
+Still no difference?
 */
 void vshader(
     uniform float4x4 mat_modelproj,
@@ -177,3 +178,15 @@ void fshader(
 {
     o_color = l_color;
 }
+
+/*
+A small note why some calculations are done in world space or model space. This
+two spaces, behave (at least in Panda3D) like our physical space (relativity
+disregarded).
+
+http://en.wikipedia.org/wiki/Euclidean_geometry
+
+E.g. If you have two cubes with a distance of 10 units you can transform them in
+any other space with euclidean properties, and the distance between the two
+cubes are still 10 units.
+*/

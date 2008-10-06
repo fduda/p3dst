@@ -1,6 +1,6 @@
 
 """
-TODO
+Nothing new here. It is the same as 9.py.
 """
 
 import sys
@@ -26,7 +26,12 @@ modelLight = loader.loadModel("misc/Pointlight.egg.pz")
 modelLight.reparentTo(light)
 
 """
-TODO (smooth non smooth)
+After reading 10.sha replace cube.egg with cube-smooth.egg once more. Because we
+now have per pixel lighting, you see a great visual difference if a light only
+covers a small portion of face.
+The smaller the faces are, the less you see a difference between per pixel and
+per vertex lighting. But if you have large triangles, that may cover your whole
+screen, you can see a great difference between this two lighting methods.
 """
 modelCube = loader.loadModel("cube.egg")
 
