@@ -1,11 +1,13 @@
 //Cg
 
 /*
-TODO
+Cg does not offers lot of high level contructs like classes in C++. It is more
+like C. Functions are therefore possible, and are used in this example.
 */
 
 /*
-TODO
+Like in the previous shader we do all our work in the pixel shader, therefore we
+do not have to add anything to our vertex shader.
 */
 void vshader(
     uniform float4x4 mat_modelproj,
@@ -38,14 +40,22 @@ float lit(float3 lightposition, float3 modelposition, float3 normal)
     float b = 0.0;
     float c = 1.0;
     /*
-    TODO saturate
+    DIRTY
+    If you like to achieve the same results as the fixed function pipeline you
+    should add a saturate here. But I personally think, that I looks quite nice,
+    if you get extremly bright spots when a light source is near a face, even is
+    the face is dark.
     */
     float attenuation = 1.0 / (a + b * distance + c * distance * distance);
     return attenuation * diffuse;
 }
 
 /*
-TODO
+Because we have extended the lighting equations in a separate function, the
+fragment shader looks clean. It would be simple to add more lights. The only
+limits here is that every GPU only supports a limited amount of uniforms. So you
+maybe can not add more than 256 lights, besides that it takes an endless amount
+of time to do per pixel lighting with 256 lights.
 */
 void fshader(
     uniform float4 mspos_light0,

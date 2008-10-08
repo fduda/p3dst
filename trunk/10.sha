@@ -1,7 +1,50 @@
 //Cg
 
 /*
-TODO Normalization Issues
+Besided that we have moved most of the source from the vertex shader to the
+fragment shader, there is nothing new here. I like to talk about a generic
+problem about normalization of normals (not about direction vectors). As I
+already explained, one reason why normalization, is because the dot product only
+yields usefull results for ligthing equations if vectors are normalized.
+
+We start with our first problem, that we sometimes need to do our calculations in
+world space. It is possible that a cube has is rotated. Therefore we need to
+rotate the normals too. The most obvious, but wrong, idea is to transform the
+normals with the modelview matrix, like the vertices. Open the figures.svg or
+figures.png once more. In figure 10-1 we have a face that consists of two
+vertices. Both vertices have a normal. Given that you apply a non uniform
+setScale to your model. With non uniform we mean, that you do not scale your
+model in each direction with the same scale. In the second picture in figure
+10-1 we have a modelview matrix that only scale our model in one direction. If
+you know apply the same matrix to your model, the normals look like the red
+normals. Even if you normalize them, they look at the wrong direction. If you
+apply a better matrix to the normals, they would look like in the third image in
+figure 10-1.
+There are two possibilities. Never apply non uniform scaling to your models. If
+you can avoid using setScale at all, you maybe even do not need a call to
+normalize if you like to use your modelview matrix. It is a bit to much math
+here if I like to explain how you have to build our own correct normalization
+matrix. Google for the term gl_NormalMatrix. The OpenGL Shading Language GLSL
+has matrix that solves exactly this problems, and it is not too much magic to
+recreate it in Panda3D after you understand the math behind it. The main reason
+why I have added this chapter is that you are warned. It is easy to add subtle
+(the normals are not completly wrong in the figure even with a non uniform
+scaling) errors to your shader if you forget it.
+
+Now to our second problem. If you look closer at the the vertex shader and the
+fragment shader you may see that we normalize the normal twice. When you look at
+figure 10-2 you see two blue normals in the first image. The left most normal is
+not normalized, while the right most is. If the GPU now sends this normals from
+the vertex shader to the pixel shader, the normals are linearly interpolated.
+But even after normalizing them in the fragment shader you can see that they are
+still facing in the wrong direction. If we first normalize both blue normals,
+the result may look like in the third image. The normals are not normalized, but
+after we do this, the are pointing in the intended direction.
+
+Maybe whenever you design your own shaders, try to draw different cases on a
+sheet of paper. Think of some worst cases, and do the interpolation on your own.
+A simple graphic program may be helpfull, because if you scale your models, most
+vector drawing programs, scale your drawings also linearly.
 */
 
 /*
@@ -90,6 +133,10 @@ vector in the vertex shader. Try to draw two 2D directions vector on paper, one
 4 times longer than the other one. First interpolate between these two vectors
 without normalization, then with normalization, maybe you see that the direction
 that lays in between is not the same in both cases.
+This vertex shader has one drawback that needs a note. If you have eight lights,
+you need to pass around eight direction vectors. But every GPU has its own
+limitations about the maximum TEXCOORDS that may be used. It is a tradeoff
+between speed and GPU requirements.
 
 You may start to see that the greatest problem in writing shaders is not Cg. The
 problem is that even simple shaders, often need a lot of brain power to craft
