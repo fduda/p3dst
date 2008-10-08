@@ -1,6 +1,6 @@
 
 """
-TODO
+Instead of only one light, we added here another two lights.
 """
 
 import sys
@@ -29,9 +29,6 @@ for i in range(3):
     modelLight.reparentTo(light)
     lights += [ light ]
 
-"""
-TODO (smooth non smooth)
-"""
 modelCube = loader.loadModel("cube.egg")
 
 cubes = []
