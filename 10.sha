@@ -1,11 +1,11 @@
 //Cg
 
 /*
-Besided that we have moved most of the source from the vertex shader to the
+Beside that we have moved most of the source from the vertex shader to the
 fragment shader, there is nothing new here. I like to talk about a generic
 problem about normalization of normals (not about direction vectors). As I
 already explained, one reason why normalization, is because the dot product only
-yields usefull results for ligthing equations if vectors are normalized.
+yields useful results for lighting equations if vectors are normalized.
 
 We start with our first problem, that we sometimes need to do our calculations in
 world space. It is possible that a cube has is rotated. Therefore we need to
@@ -28,7 +28,7 @@ matrix. Google for the term gl_NormalMatrix. The OpenGL Shading Language GLSL
 has matrix that solves exactly this problems, and it is not too much magic to
 recreate it in Panda3D after you understand the math behind it. The main reason
 why I have added this chapter is that you are warned. It is easy to add subtle
-(the normals are not completly wrong in the figure even with a non uniform
+(the normals are not completely wrong in the figure even with a non uniform
 scaling) errors to your shader if you forget it.
 
 Now to our second problem. If you look closer at the the vertex shader and the
@@ -43,7 +43,7 @@ after we do this, the are pointing in the intended direction.
 
 Maybe whenever you design your own shaders, try to draw different cases on a
 sheet of paper. Think of some worst cases, and do the interpolation on your own.
-A simple graphic program may be helpfull, because if you scale your models, most
+A simple graphic program may be helpful, because if you scale your models, most
 vector drawing programs, scale your drawings also linearly.
 */
 
@@ -67,12 +67,12 @@ void vshader(
 
     /*
     DIRTY
-    As alredy written, remove normalize in the following line only if your
-    nomals in the egg file are normalized.
+    As already written, remove normalize in the following line only if your
+    normals in the egg file are normalized.
     Without a modification all normals in the cube.egg have an exact length of
     1.0. Try to modify the six face normale in the cube.egg file and assign
-    different lengths. With the call to normalize you shoud not see any visual
-    difference. After modifiying the normals remove the call to normalize.
+    different lengths. With the call to normalize you should not see any visual
+    difference. After modifying the normals remove the call to normalize.
     */
     l_mynormal = normalize(vtx_normal);
 
@@ -113,17 +113,17 @@ void fshader(
 /*
 Some notes about normalizing normals. If you create an sphere e.g. in Blender
 with a length of 1.0 then all vertices should have coordinates, as if the lay on
-a perfect sphere, altough the whole sphere is only an approximation. Because the
-sphere has a radius of 1.0 the length of each vertex should be exactly 1.0. The
-same is true for normals. On a smooth sphere every normal should exactly point
-outwards and should have a length of 1.0. If you think about it, you come to the
-conclusion that the vertex and the normal should have equal coordinates. But if
-I export the sphere with Blender there are some differences between the normal
-and vertex coordinates. The next problem is that the egg File is human readable
-and numbers therefore are stored in decimal system. An FPU internally stores a
-float in a binary system, so we loose some precision here. What I like to say:
-Maybe it is sometimes not a bad idea to normalize your normals (only in this
-unmodified example, sometimes, you trow away accuarcy if you normalize a
+a perfect sphere, although the whole sphere is only an approximation. Because
+the sphere has a radius of 1.0 the length of each vertex should be exactly 1.0.
+The same is true for normals. On a smooth sphere every normal should exactly
+point outwards and should have a length of 1.0. If you think about it, you come
+to the conclusion that the vertex and the normal should have equal coordinates.
+But if I export the sphere with Blender there are some differences between the
+normal and vertex coordinates. The next problem is that the egg File is human
+readable and numbers therefore are stored in decimal system. An FPU internally
+stores a float in a binary system, so we loose some precision here. What I like
+to say: Maybe it is sometimes not a bad idea to normalize your normals (only in
+this unmodified example, sometimes, you throw away accuracy if you normalize a
 vector), even if you think they should be already normalized.
 
 Here is a small hint if you were brave enough to implement your own vertex

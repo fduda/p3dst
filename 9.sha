@@ -7,7 +7,7 @@ we need the position of the light and the normal of the vertex.
 
 To achieve this task we need to first talk about spaces. As you already should
 now, the vertex shader is feed with the raw vertices (vtx_vertices) from the egg
-file, the normals that are introcuded here are also unmodified (vtx_normal).
+file, the normals that are introduced here are also unmodified (vtx_normal).
 Each cube has his own model space. Maybe you have read the example 2.sha more
 closely and have seen that there is a second, commented, vertex shader. In this
 shader the most elaborate version transform each vertex from model space to
@@ -40,7 +40,7 @@ Instead of transforming your cubes and lights into world space, we can transform
 the lights into model space. But because each cube has its own model space, we
 need to transform each light into each cubes model space. This sounds
 complicated, but remember, until yet, every transformation we have done, we have
-done with a matrix, and Pand3D never forsake us. I ve already written that there
+done with a matrix, and Pand3D never forsake us. I have already written that there
 is problem if we need to transform normals. But with this version, we do not
 need to modify the normals because we transform the light position to the cubes
 model space. One more question we may answer here: "We do talk about this world
@@ -79,7 +79,7 @@ If you imagine this two directions (-1, 0) and (-6, 0) they both lay on each
 other, that means the angle between this two directions is 0 degree. If you have
 read the Wikipedia article about the dot product you may have seen a cosine
 there. If we now take the cosine of 0 degree we get 1. 1 is the maximum a
-consine can yield, therefore 1 must mean maximal lighting. If you look back at
+cosine can yield, therefore 1 must mean maximal lighting. If you look back at
 our draft you can see that this is exactly what we want here. Here is another
 example.
 
@@ -139,7 +139,7 @@ two new call to the function mul are needed (You may send me the result if you
 like).
 
 you only need to modify the vertex shader for this. You do not have to touch the
-python sample. If you have modified the vertex shader make screenshot of our
+python sample. If you have modified the vertex shader make screen shot of our
 output and compare it with the unmodified shader here. Only if there is no
 visual difference between them you have done everything right. After you have
 modified the shader, use the method setHpr (e.g. setH(90.0)) on any cube and
@@ -187,6 +187,6 @@ disregarded).
 http://en.wikipedia.org/wiki/Euclidean_geometry
 
 E.g. If you have two cubes with a distance of 10 units you can transform them in
-any other space with euclidean properties, and the distance between the two
+any other space with Euclidean properties, and the distance between the two
 cubes are still 10 units.
 */

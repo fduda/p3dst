@@ -75,7 +75,7 @@ difference between this two files.
 
 The fixed function pipeline of the a GPU (that is the pipeline Panda3D uses if
 there is no call to setShader or setAutoShader) is not that sophisticated.
-Better said the GPUs were not powerfull enough to calculate this very simple
+Better said the GPUs were not powerful enough to calculate this very simple
 lighting model per fragment/pixel, they only can calculate it per vertex. The
 larger your triangles on your screen, the falser the result.
 
@@ -139,7 +139,7 @@ in the next examples we assume, that the light has no attenuation and is white.
 
 There is a dummy model attached to this node, to see where the light should be.
 Because this light is parented to render, and we only enable light on the cubes,
-this model does not influce the lighting nor is it lit by the light itself.
+this model does not influence the lighting nor is it lit by the light itself.
 """
 pointlight = PointLight("Light")
 light = render.attachNewNode(pointlight)
@@ -168,7 +168,7 @@ We move around our light. Because this basic application only supports per
 vertex lighting you often can see some odd artifacts if only one vertex of a
 face is lit.
 
-The bounding box around all cubes franges from (-4.0, -1.0, -1.0) to (4.0, 1.0,
+The bounding box around all cubes ranges from (-4.0, -1.0, -1.0) to (4.0, 1.0,
 1.0). Therefore we set the radius of the virtual sphere (the motion path of the
 light) to something that is only a little bit larger than 4.0. This helps later
 to see the visual difference from per vertex lighting to per pixel lighting.

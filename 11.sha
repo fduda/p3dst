@@ -53,9 +53,10 @@ float lit(float3 lightposition, float3 modelposition, float3 normal)
 /*
 Because we have extended the lighting equations in a separate function, the
 fragment shader looks clean. It would be simple to add more lights. The only
-limits here is that every GPU only supports a limited amount of uniforms. So you
-maybe can not add more than 256 lights, besides that it takes an endless amount
-of time to do per pixel lighting with 256 lights.
+limits here is that every GPU only supports a limited amount of uniforms and
+shader instructions. So you maybe can not add more hunderds of lights, besides
+that it takes an endless amount of time to do per pixel lighting with hundred
+lights.
 */
 void fshader(
     uniform float4 mspos_light0,

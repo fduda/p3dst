@@ -25,7 +25,7 @@ camera.lookAt(0.0, 0.0, 0.0)
 root = render.attachNewNode("Root")
 
 """
-Because we calculate our own light we do not need a Panda3D pointlight anymore.
+Because we calculate our own light we do not need a Panda3D point light anymore.
 But we create a dummy node to see where the light is.
 """
 light = render.attachNewNode("Light")
