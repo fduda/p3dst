@@ -34,13 +34,13 @@ void fshader(
 }
 
 /*
-I have to admit here a unknowingness. GLSL does interpolate perspectively
+I have to admit here an unknowingness. GLSL does interpolate perspectively
 correct (based on the depth buffer the linear interpolation gets a correction),
 but I do not know in which circumstances this applies to Cg. It may be possible
 that I repeat the word linearly interpolated over and over again although it is
 not always exactly true. Both the GLSL manual and the Cg manual only have the
 word perspectively correction on one line, there is no explanation. If anyone
-has indepth information about this I am happy if you share this knowledge.
+has in depth information about this I am happy if you share this knowledge.
 
 Both GLSL and Cg support a keyword noproject to disable this correction. But
 Panda3D currently does not support it.
@@ -56,7 +56,7 @@ be enabled according to the manual.
 http://www.opengl.org/sdk/docs/man/xhtml/glHint.xml
 
 I bet that it depends on the GPU vendors daily mood, the moon phase and the
-google result to: "number of horns on a unicorn multiplied by the answer to
+Google result to: "number of horns on a unicorn multiplied by the answer to
 life, the universe and everything".
 */
 
@@ -68,13 +68,13 @@ calculated. Only if we transform a triangle to our screen we know how much
 pixels the triangle will cover. If we like to interpolate in 3D we maybe
 interpolate millions of position that are reduced to one pixel if the triangle
 is far away, this is obviously infeasible. Open the figures.svg of figures.png
-file and look at figure 5.1. If you look at the first image you can see a quad
-that consits of two triangles. You can look at this image from two view points.
-First it is possible that is a perspective plane in 3D, second it is a
+file and look at the figure 5.1. If you look at the first image you can see a
+quad that consists of two triangles. You can look at this image from two view
+points. First it is possible that is a perspective plane in 3D, second it is a
 trapezoid in 2D. Because we talk about linear interpolation in 2D, think of it
 as a trapezoid. There are two yellow lines in the image. This lines divide the
-trapezoid exactly in the center. May be you already see a problem, this is only
-true in 2D. In 3D the center of the trapezoid is bit above the current center.
+trapezoid exactly in the center. Maybe you already see a problem, this is only
+true in 2D. In 3D the center of the trapezoid is a bit above the current center.
 Further on there are five marked intersections. We need this numbers for the
 later images:
 
@@ -118,7 +118,7 @@ gradient now, all vertical lines should have the exact same color, but this is
 not true. Point 2, 4 and 5 have the same color, but they are not on the same
 line.
 
-In the fifth image you can see the final result. May be it is not that obivous
+In the fifth image you can see the final result. Maybe it is not that obvious
 but the green line, tries to show how the 50% line looks like.
 
 The image 2 and 3 show you the problem if you do not apply a perspective
@@ -127,5 +127,5 @@ quads, into automatically into triangles. If you draw a trapezoid in Blender
 e.g. and assign the trapezoid a texture and assign the following UV coordinates
 of a grid like texture to the four vertices: (0,0) (1,0) (0,1) (1,1) you can see
 the distortion more clearly. But this distortion has nothing to do with
-persepctive and is only here to show the difference.
+perspective and is only here to show the difference.
 */

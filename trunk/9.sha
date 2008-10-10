@@ -24,7 +24,7 @@ world space then?". World space sound nice because in this space, the distance
 between two nodes can be calculated easily if you use the length function. If
 you move the light 10 units further away from a node, the output of length to
 this light is increased by 10. Problem here is that we have to transform all
-model and and all lights to world space. In our shaders we never have done this,
+model and all lights to world space. In our shaders we never have done this,
 because there was no need for it. But we always transformed our models from
 model space to clip space with the mat_modelproj matrix. You may ask then: "So
 why do we not do our lighting calculations in clip space". Problem is that clip
@@ -40,28 +40,28 @@ Instead of transforming your cubes and lights into world space, we can transform
 the lights into model space. But because each cube has its own model space, we
 need to transform each light into each cubes model space. This sounds
 complicated, but remember, until yet, every transformation we have done, we have
-done with a matrix, and Pand3D never forsake us. I have already written that there
-is problem if we need to transform normals. But with this version, we do not
-need to modify the normals because we transform the light position to the cubes
-model space. One more question we may answer here: "We do talk about this world
-space transformations if it calls for problems anyway?". The answer depends on
-what you like to do. In more complicated shaders you often need to transform
-your vertices anyway into world space e.g. for reflections. The other problems
-if you e.g. have a static light e.g. a sun. If there is no sunrise and sunset in
-your application you maybe encode your light position directly as constant into
-the shader. For this case it would be a bit cumbersome to apply the correct
-transformation, because you have to do anything on your own. Now we need to now
-we transform our light to model space. Long section, simple solution: You create
-a uniform called "mspos_light". That means that Panda3D transform the position
-of the node with the name light into model space. Panda3D changes this matrix
-for each cube automagically.
+done with a matrix, and Pand3D never forsake us. I have already written that
+there is problem if we need to transform normals. But with this version, we do
+not need to modify the normals because we transform the light position to the
+cubes model space. One more question we may answer here: "We do talk about this
+world space transformations if it calls for problems anyway?". The answer
+depends on what you like to do. In more complicated shaders you often need to
+transform your vertices anyway into world space e.g. for reflections. The other
+problems if you e.g. have a static light e.g. a sun. If there is no sunrise and
+sunset in your application you maybe encode your light position directly as
+constant into the shader. For this case it would be a bit cumbersome to apply
+the correct transformation, because you have to do anything on your own. Now we
+need to now we transform our light to model space. Long section, simple
+solution: You create a uniform called "mspos_light". That means that Panda3D
+transform the position of the node with the name light into model space. Panda3D
+changes this matrix for each cube automagically.
 
 Now it is a good time to read some more information about spaces and the
 flexibility of Panda3D:
 
 http://www.panda3d.net/wiki/index.php/Shaders_and_Coordinate_Spaces
 
-Now we have two positions and a normal and all this things are in the same
+Now we have two positions and a normal and all these things are in the same
 space. If you remember, we like to do a diffuse lighting effect. For this effect
 we need the angle between the vertex normal and the direction from the light to
 our vertex. The direction we get when we subtract both positions, the normal we
@@ -98,7 +98,7 @@ clamps a value to the range 0 - 1. A cosine yields a number between -1 and +1.
 With saturate we can trim it to 0 - 1.
 
 There is one final question about this vertex shader. There are two calls to
-normalize. Normalize modifies a vector so it has a exact length of one unit
+normalize. Normalize modifies a vector so it has an exact length of one unit
 afterwards. There are tons of reasons why you should normalize, here we talk
 only about one reason. Wikipedia says the following about the dot product:
 
@@ -106,9 +106,9 @@ dot(a, b) = length(a) * length(b) * cos(phi)
 
 Do you see the problem? We only care about cos(phi). Not even phi itself
 interests us. But if a and b are not normalized, the length of this two
-direction vector may be large. With other words, the further away our light, the
-brighter our light shines. Normally we want the exact opposite, but in this
-example we say it is point sunlight so we have no attenuation at all. If we
+direction vectors may be large. With other words, the further away our light,
+the brighter our light shines. Normally we want the exact opposite, but in this
+example we say it is a point sunlight so we have no attenuation at all. If we
 normalize our vectors correctly, their length is by definition exactly 1, there
 neither length(a) nor length(b) will influence the dot product.
 
