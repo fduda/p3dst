@@ -1,16 +1,16 @@
 """
-Like 0.py we restart from scratch and create a basic example with one
-point light, that only supports diffuse lighting. There is no shader attached to
-this example. If you do not understand this sample then open the Panda3D manual
-and try to understand e.g. the Disco-Lights sample.
+Like 0.py we restart from scratch and create a basic example with one point
+light, that only supports diffuse lighting. There is no shader attached to this
+example. If you do not understand this sample then open the Panda3D manual and
+try to understand e.g. the Disco-Lights sample.
 
 When we talk about lighting we talk about an "effect" that we can see with our
 eyes. Live is a game, just with better graphic. Lighting is still something you
-may do your own research and invent a cool new idea, no one had before.
-We often only approximate lighting and invent new terms that do not exist in
-reality e.g. there is no specular light in real live. For better lighting we
-often need to pre calculate some values in a often slow pre process. We start
-here only with one basic lighting model: Diffuse Lighting.
+may do your own research and invent a cool new idea, no one had before. We often
+only approximate lighting and invent new terms that do not exist in reality e.g.
+there is no specular light in real live. For better lighting we often need to
+pre calculate some values in an often slow pre process. We start here only with
+one basic lighting model: Diffuse Lighting.
 
 The basic idea of diffuse lighting is: The steeper the angle between the light
 and a surface, the less light particles can reach the surface. The following
@@ -25,7 +25,7 @@ figures show an example with a directional light and a wall.
       |         /
 
 If no light reaches a wall, the wall cannot reflect any light particles and
-therefore you can not see anything. This idea is only one basic idea. This idea
+therefore you cannot see anything. This idea is only one basic idea. This idea
 e.g. says nothing about the fact that if a wall reflects some light, it may be
 possible that this light reaches another wall, which may reflect this light
 particles once more.
@@ -73,11 +73,11 @@ The cube.egg model is an example of cube with sharp edges, while the
 cube-smooth.egg model is an example of a cube with smooth edges. Try to see the
 difference between this two files.
 
-The fixed function pipeline of the a GPU (that is the pipeline Panda3D uses if
-there is no call to setShader or setAutoShader) is not that sophisticated.
-Better said the GPUs were not powerful enough to calculate this very simple
-lighting model per fragment/pixel, they only can calculate it per vertex. The
-larger your triangles on your screen, the falser the result.
+The fixed function pipeline of a GPU (that is the pipeline Panda3D uses if there
+is no call to setShader or setAutoShader) is not that sophisticated. Better said
+the GPUs were not powerful enough to calculate this very simple lighting model
+per fragment/pixel, they only can calculate it per vertex. The larger your
+triangles on your screen, the falser the result.
 
 One more definition for diffuse lighting is, that it does not depend on the
 viewers position. That is not true for all effects e.g. the "output" of a mirror
@@ -111,7 +111,7 @@ Read the following page to get in-depth information.
 
 http://en.wikipedia.org/wiki/Dot_product
 
-We will later see how to exactly calculate each of this steps. I only like to
+We will later see how to calculate exactly each of this steps. I only like to
 introduce some concepts here.
 """
 
