@@ -17,8 +17,8 @@
    sodipodi:docname="figures.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="D:\p3dst\figures.png"
-   inkscape:export-xdpi="140.00999"
-   inkscape:export-ydpi="140.00999">
+   inkscape:export-xdpi="140.01132"
+   inkscape:export-ydpi="140.01132">
   <defs
      id="defs4">
     <linearGradient
@@ -86,17 +86,17 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="6.4250794"
-     inkscape:cx="568.33321"
-     inkscape:cy="977.05667"
+     inkscape:zoom="1.5691859"
+     inkscape:cx="371.98309"
+     inkscape:cy="523.41763"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-global="true"
-     inkscape:window-width="1190"
-     inkscape:window-height="691"
-     inkscape:window-x="70"
-     inkscape:window-y="315"
+     inkscape:window-width="1280"
+     inkscape:window-height="975"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
      showguides="true"
      inkscape:guide-bbox="true">
     <inkscape:grid
@@ -318,7 +318,7 @@
          sodipodi:role="line"
          id="tspan2429"
          x="25"
-         y="477.36215">Figure 10-2: Normalize Vertexes in the Vertex Shader and in the Fragment Shader not only in the Fragment Shader</tspan></text>
+         y="477.36215">Figure 10-2: Normalize Normals in the Vertex Shader and in the Fragment Shader</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Verdana;-inkscape-font-specification:Verdana Bold"
