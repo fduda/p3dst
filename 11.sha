@@ -1,7 +1,7 @@
 //Cg
 
 /*
-Cg does not offers lot of high level contructs like classes in C++. It is more
+Cg does not offers lot of high level constructs like classes in C++. It is more
 like C. Functions are therefore possible, and are used in this example.
 */
 
@@ -33,8 +33,9 @@ float lit(float3 lightposition, float3 modelposition, float3 normal)
     float distance = length(direction);
     float diffuse = saturate(dot(normalize(normal), normalize(direction)));
     /*
-    Normally you would define this constants in Python source and pass them this
-    shader. We are a bit lazy here and hard code them in this function.
+    Normally you would define the following constants in Python source and pass
+    them this shader. We are a bit lazy here and hard code them in this
+    function.
     */
     float a = 0.0;
     float b = 0.0;
@@ -42,9 +43,9 @@ float lit(float3 lightposition, float3 modelposition, float3 normal)
     /*
     DIRTY
     If you like to achieve the same results as the fixed function pipeline you
-    should add a saturate here. But I personally think, that I looks quite nice,
-    if you get extremly bright spots when a light source is near a face, even is
-    the face is dark.
+    should add a saturate here. But I think, that it looks quite nice, if you
+    get extremely bright spots when a light source is near a face, even is the
+    face is dark.
     */
     float attenuation = 1.0 / (a + b * distance + c * distance * distance);
     return attenuation * diffuse;
@@ -53,10 +54,9 @@ float lit(float3 lightposition, float3 modelposition, float3 normal)
 /*
 Because we have extended the lighting equations in a separate function, the
 fragment shader looks clean. It would be simple to add more lights. The only
-limits here is that every GPU only supports a limited amount of uniforms and
-shader instructions. So you maybe can not add more hunderds of lights, besides
-that it takes an endless amount of time to do per pixel lighting with hundred
-lights.
+limits here is that every GPU only supports a limited number of uniforms and
+shader instructions. So you maybe cannot add hundreds of lights, besides that it
+takes an endless amount of time to do per pixel lighting with hundred lights.
 */
 void fshader(
     uniform float4 mspos_light0,

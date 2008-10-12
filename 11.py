@@ -1,6 +1,6 @@
 
 """
-Instead of only one light, we added here another two lights.
+Instead of only one light, we added here two another lights.
 """
 
 import sys

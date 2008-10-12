@@ -17,19 +17,19 @@ vertices. So a light has its own "model" space like any other node. When we move
 around a cube, we do not modify the cubes model space, nor do we change the
 model space of a light if we move the light around. Maybe you see already a new
 problem that arises. If we take the blindly take the light and the cubes and
-start to do some fancy lighting, we do not get a useful result. What we have to
+start to do some fancy lighting, we do not get an useful result. What we have to
 do first is to transform the cube and/or the light in a space where can do our
 calculations in respect to each other. Maybe you think: "Why do we not take the
 world space then?". World space sound nice because in this space, the distance
 between two nodes can be calculated easily if you use the length function. If
-you move the light 10 units further away from a node, the output of length to
+you move the light 10 units farther away from a node, the output of length to
 this light is increased by 10. Problem here is that we have to transform all
 model and all lights to world space. In our shaders we never have done this,
 because there was no need for it. But we always transformed our models from
 model space to clip space with the mat_modelproj matrix. You may ask then: "So
 why do we not do our lighting calculations in clip space". Problem is that clip
 space is in 2D and the length function does not work as intended, because we
-have applied the projection matrix. The further away the scene, the closer are
+have applied the projection matrix. The farther away the scene, the closer are
 the cubes on your screen. But should we change the lighting only because the
 cubes are far away or not? Ok, back to our world space. If we transform our
 model to world space, we also have to transform the normals. If you have rotated
@@ -52,7 +52,7 @@ sunset in your application you maybe encode your light position directly as
 constant into the shader. For this case it would be a bit cumbersome to apply
 the correct transformation, because you have to do anything on your own. Now we
 need to now we transform our light to model space. Long section, simple
-solution: You create a uniform called "mspos_light". That means that Panda3D
+solution: You create an uniform called "mspos_light". That means that Panda3D
 transform the position of the node with the name light into model space. Panda3D
 changes this matrix for each cube automagically.
 
@@ -78,10 +78,9 @@ vertex is (-6, 0).
 If you imagine this two directions (-1, 0) and (-6, 0) they both lay on each
 other, that means the angle between this two directions is 0 degree. If you have
 read the Wikipedia article about the dot product you may have seen a cosine
-there. If we now take the cosine of 0 degree we get 1. 1 is the maximum a
-cosine can yield, therefore 1 must mean maximal lighting. If you look back at
-our draft you can see that this is exactly what we want here. Here is another
-example.
+there. If we now take the cosine of 0 degree we get 1. 1 is the maximum a cosine
+can yield, therefore 1 must mean maximal lighting. If you look back at our draft
+you can see that this is exactly what we want here. Here is another example.
 
      ^
      |
@@ -106,7 +105,7 @@ dot(a, b) = length(a) * length(b) * cos(phi)
 
 Do you see the problem? We only care about cos(phi). Not even phi itself
 interests us. But if a and b are not normalized, the length of this two
-direction vectors may be large. With other words, the further away our light,
+direction vectors may be large. With other words, the farther away our light,
 the brighter our light shines. Normally we want the exact opposite, but in this
 example we say it is a point sunlight so we have no attenuation at all. If we
 normalize our vectors correctly, their length is by definition exactly 1, there
@@ -131,8 +130,7 @@ this shader so it works with world positions. I have written that there are some
 problems if we transform the normals, but for the moment forget this (it is only
 a problem in some circumstances). The following uniforms may help you:
 
-trans_model_to_world
-wspos_light
+trans_model_to_world wspos_light
 
 The uniform mspos_light is not needed anymore. Besides this two new uniforms,
 two new call to the function mul are needed (You may send me the result if you
@@ -144,8 +142,7 @@ output and compare it with the unmodified shader here. Only if there is no
 visual difference between them you have done everything right. After you have
 modified the shader, use the method setHpr (e.g. setH(90.0)) on any cube and
 look once more to you example (do not use setScale or setShear for this test).
-Still no difference?
-*/
+Still no difference? */
 void vshader(
     uniform float4x4 mat_modelproj,
     uniform float4 mspos_light,

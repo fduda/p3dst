@@ -35,12 +35,12 @@ void fshader(
 
 /*
 I have to admit here an unknowingness. GLSL does interpolate perspectively
-correct (based on the depth buffer the linear interpolation gets a correction),
-but I do not know in which circumstances this applies to Cg. It may be possible
-that I repeat the word linearly interpolated over and over again although it is
-not always exactly true. Both the GLSL manual and the Cg manual only have the
-word perspectively correction on one line, there is no explanation. If anyone
-has in depth information about this I am happy if you share this knowledge.
+correct (based on the depth the linear interpolation gets a correction), but I
+do not know in which circumstances this applies to Cg. It may be possible that I
+repeat the word linearly interpolated over and over again although it is not
+always exactly true. Both the GLSL manual and the Cg manual only have the word
+perspectively correction on one line, there is no explanation. If anyone has in
+depth information about this I am happy if you share this knowledge.
 
 Both GLSL and Cg support a keyword noproject to disable this correction. But
 Panda3D currently does not support it.
@@ -50,10 +50,12 @@ http://developer.download.nvidia.com/cg/Cg_2.0/2.0.0015/Cg-2.0_May2008_Reference
 
 The OpenGL function glHint has a parameter to enable or disable perspective
 correction (GL_PERSPECTIVE_CORRECTION_HINT), but maybe that only applies to
-fixed function pipeline. As of OpenGL 2.1 perspective correction should always
-be enabled according to the manual.
+fixed function pipeline.
 
 http://www.opengl.org/sdk/docs/man/xhtml/glHint.xml
+
+As of OpenGL 2.1 perspective correction should always be enabled according to
+the manual.
 
 I bet that it depends on the GPU vendors daily mood, the moon phase and the
 Google result to: "number of horns on a unicorn multiplied by the answer to
@@ -62,17 +64,16 @@ life, the universe and everything".
 
 /*
 First I like to explain why we need perspective correction. A scan line renderer
-like todays GPUs are, transforms all three points of a triangle from 3D to a 2D
-screen. After the transformation e.g. the linear interpolation of colors is
+like todays GPUs are, transforms all three points of a triangle from 3D space to
+a 2D screen. After the transformation e.g. the linear interpolation of colors is
 calculated. Only if we transform a triangle to our screen we know how much
-pixels the triangle will cover. If we like to interpolate in 3D we maybe
+pixels the triangle will cover. If we like to interpolate in 3D we may
 interpolate millions of position that are reduced to one pixel if the triangle
 is far away, this is obviously infeasible. Open the figures.svg of figures.png
 file and look at the figure 5.1. If you look at the first image you can see a
 quad that consists of two triangles. You can look at this image from two view
 points. First it is possible that is a perspective plane in 3D, second it is a
-trapezoid in 2D. Because we talk about linear interpolation in 2D, think of it
-as a trapezoid. There are two yellow lines in the image. This lines divide the
+trapezoid in 2D. There are two yellow lines in the image. This lines divide the
 trapezoid exactly in the center. Maybe you already see a problem, this is only
 true in 2D. In 3D the center of the trapezoid is a bit above the current center.
 Further on there are five marked intersections. We need this numbers for the
@@ -126,6 +127,5 @@ correction. The image 4 and 5 show you the problem if the GPU divides your
 quads, into automatically into triangles. If you draw a trapezoid in Blender
 e.g. and assign the trapezoid a texture and assign the following UV coordinates
 of a grid like texture to the four vertices: (0,0) (1,0) (0,1) (1,1) you can see
-the distortion more clearly. But this distortion has nothing to do with
-perspective and is only here to show the difference.
+the distortion more clearly.
 */
