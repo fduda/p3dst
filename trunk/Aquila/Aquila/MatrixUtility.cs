@@ -3,9 +3,9 @@ namespace Aquila
     public class MatrixUtility
     {
         // http://www.opengl.org/sdk/docs/man/xhtml/glTranslate.xml
-        public static Matrix4x4 Translate(Vector3 vector)
+        public static Matrix4 Translate(Vector3 vector)
         {
-            Matrix4x4 matrix = new Matrix4x4();
+            Matrix4 matrix = new Matrix4();
 
             double x = vector.X;
             double y = vector.Y;
@@ -20,9 +20,9 @@ namespace Aquila
         }
 
         // http://www.opengl.org/sdk/docs/man/xhtml/glRotate.xml
-        public static Matrix4x4 Rotate(double radians, Vector3 vector)
+        public static Matrix4 Rotate(double radians, Vector3 vector)
         {
-            Matrix4x4 matrix = new Matrix4x4();
+            Matrix4 matrix = new Matrix4();
 
             double x = vector.X;
             double y = vector.Y;
@@ -55,9 +55,9 @@ namespace Aquila
         }
 
         // http://www.opengl.org/sdk/docs/man/xhtml/gluLookAt.xml
-        public static Matrix4x4 LookAt(Vector3 eye, Vector3 center, Vector3 up)
+        public static Matrix4 LookAt(Vector3 eye, Vector3 center, Vector3 up)
         {
-            Matrix4x4 matrix = new Matrix4x4();
+            Matrix4 matrix = new Matrix4();
 
             Vector3 f = new Vector3(center.X - eye.X, center.Y - eye.Y, center.Z - eye.Z);
             f.Normalize();
@@ -91,9 +91,9 @@ namespace Aquila
         }
 
         // http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml
-        public static Matrix4x4 Perspective(double fieldOfView, double aspectRatio, double zNear, double zFar)
+        public static Matrix4 Perspective(double fieldOfView, double aspectRatio, double zNear, double zFar)
         {
-            Matrix4x4 matrix = new Matrix4x4();
+            Matrix4 matrix = new Matrix4();
 
             double f = Math.Cot(fieldOfView / 2.0);
 

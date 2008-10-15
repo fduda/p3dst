@@ -1,21 +1,31 @@
 namespace Aquila
 {
-    // TODO no depth buffer
-    // TODO no OpenGL fill rules, no fill rules at all
+    // TODO no OpenGL fill rule, no fill rule at all
+    // TODO Vector4 for depthBuffer is overkill, will change this later, or maybe we use it as stencil, and w buffer
     public class Aquila
     {
         private Texture2 colorBuffer;
+        private Texture2 depthBuffer;
 
         private int viewportX;
         private int viewportY;
         private int viewportWidth;
         private int viewportHeight;
 
-        public Aquila(Texture2 colorBuffer)
+        private bool perspectiveCorrection = true;
+
+        public Aquila(Texture2 colorBuffer, Texture2 depthBuffer)
         {
             this.colorBuffer = colorBuffer;
+            this.depthBuffer = depthBuffer;
         }
 
+        public void SetPerspectiveCorrection(bool enable)
+        {
+            this.perspectiveCorrection = enable;
+        }
+
+        // http://www.opengl.org/sdk/docs/man/xhtml/glViewport.xml
         private void SetViewport(int x, int y, int width, int height)
         {
             this.viewportX = x;
@@ -24,39 +34,18 @@ namespace Aquila
             this.viewportHeight = height;
         }
 
-        // http://www.opengl.org/sdk/docs/man/xhtml/glViewport.xml
-        private void ToViewport()
+        public delegate Vector4 VertexProgramDelegate<U>(U uniforms, Vector4[] vertices, Vector4[] varyings);
+        public delegate Vector4 FragmentProgramDelegate<U>(U uniforms, Vector4[] varyings);
+
+        public void DrawTriangles<U>(VertexProgramDelegate<U> vertexProgram, FragmentProgramDelegate<U> fragmentProgram, U uniforms, Vector4[][] vertices, int varyingCount)
         {
-            //
-        }
-
-        private Vector4 VertexProgramColor(object[] uniforms, Vector4 vertex, Vector4[] attributes, Vector4[] varyings)
-        {
-            Matrix4x4 modelViewProjection = (Matrix4x4)uniforms[0];
-            Vector4 position = vertex * modelViewProjection;
-
-            varyings[0] = attributes[0];
-
-            return position;
-        }
-
-        private Vector4 FragmentProgramColor(object[] uniforms, Vector4[] varyings)
-        {
-            Vector4 color = varyings[0];
-
-            return color;
-        }
-
-        public void Draw(Matrix4x4 modelViewProjection, Vector4[] vertices, Vector4[][] attributes)
-        {
-            object[] uniforms = new object[] { modelViewProjection };
-
+            // TODO -1.0 ok or not? if ok then implement SetViewport correctly
             double width = colorBuffer.Width - 1.0;
             double height = colorBuffer.Height - 1.0;
             double x = 0.0;
             double y = 0.0;
 
-            int varyingCount = 1;
+            // TODO manual loop unrolling at least for triangle?
 
             Vector4[] positions = new Vector4[3];
             Vector4[][] varyings = new Vector4[3][];
@@ -69,37 +58,34 @@ namespace Aquila
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Vector4 p0 = VertexProgramColor(uniforms, vertices[i + j], attributes[i + j], varyings[j]);
+                    Vector4 p0 = vertexProgram(uniforms, vertices[i + j], varyings[j]);
 
+                    // TODO homogenous divide function in Vector4?
                     Vector4 p1 = new Vector4();
                     p1.X = p0.X / p0.W;
                     p1.Y = p0.Y / p0.W;
                     p1.Z = p0.Z / p0.W;
-                    p1.W = p0.W;
+                    p1.W = p0.W; // TODO divdide here and multiply in DrawTriangle? is there a well defined way for homogenous divide?
 
+                    // TODO gluProject like method in Vector 4?
                     positions[j].X = (p1.X + 1.0) * (width / 2.0) + x;
                     positions[j].Y = (-p1.Y + 1.0) * (height / 2.0) + y;
                     positions[j].Z = (p1.Z + 1.0) / 2.0;
                     positions[j].W = p1.W;
-
-                    if (positions[j].Z > 1.0 || positions[j].Z < 0.0)
-                    {
-                    }
                 }
 
-                //DrawTriangle(positions[0], positions[1], positions[2], varyings[0][0], varyings[1][0], varyings[2][0]);
-                Vector4[] vs = new Vector4[] { varyings[0][0], varyings[1][0], varyings[2][0] };
-
-                DrawTriangleUnsorted(positions, vs);
+                Vector4[] colors = new Vector4[] { varyings[0][0], varyings[1][0], varyings[2][0] };
+                DrawTrianglesUnsorted(positions, colors);
 
                 for (int j = 0; j < 3; j++)
                 {
+                    //TODO move another method
                     //DrawDot(positions[j].X, positions[j].Y, positions[j].Z, uniforms, varyings[j]);
                 }
             }
         }
 
-        private void DrawDot(double x, double y, double z, object[] uniforms, Vector4[] varyings)
+        private void DrawDots(double x, double y, double z, object[] uniforms, Vector4[] varyings)
         {
             int width = this.colorBuffer.Width;
             int height = this.colorBuffer.Height;
@@ -116,7 +102,12 @@ namespace Aquila
             }
         }
 
-        private void DrawTriangleUnsorted(Vector4[] p, Vector4[] c)
+
+        /// <summary>
+        /// Sort the three vertices of a triangle along the y axis from top to
+        /// down. Simplifies the method that does the real work.
+        /// </summary>
+        private void DrawTrianglesUnsorted(Vector4[] p, Vector4[] c)
         {
             int i0 = 0;
             int i1 = 1;
@@ -135,11 +126,12 @@ namespace Aquila
                 Math.Swap(ref i0, ref i1);
             }
 
-            DrawTriangleSorted(p[i0], p[i1], p[i2], c[i0], c[i1], c[i2]);
+            DrawTrianglesSorted(p[i0], p[i1], p[i2], c[i0], c[i1], c[i2]);
         }
 
-        // TODO clean up this whole method and make it more generic
-        private void DrawTriangleSorted(Vector4 p0, Vector4 p1, Vector4 p2, Vector4 c0, Vector4 c1, Vector4 c2)
+        // some simple profiling test show me that the this method is not too slow even with 10000 triangles (20 fps), the app spends sometimes more than 50% in Clear and ToRGB methods.
+        // TODO clean up this whole method and make it more generic, looks horrible yet
+        private void DrawTrianglesSorted(Vector4 p0, Vector4 p1, Vector4 p2, Vector4 c0, Vector4 c1, Vector4 c2)
         {
             //Vector4 colorBackground = new Vector4(0.7, 0.8, 0.9, 1.0);
             //Vector4 colorWarn = new Vector4(0.0, 1.0, 0.0, 1.0);
@@ -148,8 +140,6 @@ namespace Aquila
 
             int width = this.colorBuffer.Width;
             int height = this.colorBuffer.Height;
-
-            bool perspectiveCorrection = true;
 
             //Texture2<Vector4> texture = new Texture2<Vector4>(200, 200);
             //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap("D:\\checkboard.bmp");
@@ -168,16 +158,12 @@ namespace Aquila
             double z2 = p2.Z;
             double w2 = p2.W;
 
-            if (perspectiveCorrection)
+            if (this.perspectiveCorrection)
             {
                 c0.Divide(w0);
                 c1.Divide(w1);
                 c2.Divide(w2);
             }
-
-            //z0 = z0 / w0;
-            //z1 = z1 / w1;
-            //z2 = z2 / w2;
 
             w0 = 1.0 / w0;
             w1 = 1.0 / w1;
@@ -201,6 +187,7 @@ namespace Aquila
 
             for (int y = y0; y < y1; y++)
             {
+                // TODO move this mul out of this loop makes the app sometimes slower, more investigation needed
                 int x0to1 = (int)(x1 + slope0to1 * (y - y1));
                 int x0to2 = (int)(x2 + slope0to2 * (y - y2));
 
@@ -254,7 +241,7 @@ namespace Aquila
                     double w = wmin + mw * (x - xmin);
                     Vector4 c = cmin + mcolor * (x - xmin);
 
-                    if (perspectiveCorrection)
+                    if (this.perspectiveCorrection)
                     {
                         c.Divide(w);
                     }
@@ -263,7 +250,11 @@ namespace Aquila
 
                     if ((x >= 0) && (y >= 0) && (x < width) && (y < height) && (z >= 0.0) && (z <= 1.0))
                     {
-                        colorBuffer.Raw[y, x] = c;
+                        if (z < depthBuffer.Raw[y, x].R)
+                        {
+                            colorBuffer.Raw[y, x] = c;
+                            depthBuffer.Raw[y, x].R = z;
+                        }
                     }
                 }
             }
@@ -323,7 +314,7 @@ namespace Aquila
                     double w = wmin + mw * (x - xmin);
                     Vector4 c = cmin + mcolor * (x - xmin);
 
-                    if (perspectiveCorrection)
+                    if (this.perspectiveCorrection)
                     {
                         c.Divide(w);
                     }
@@ -332,7 +323,11 @@ namespace Aquila
 
                     if ((x >= 0) && (y >= 0) && (x < width) && (y < height) && (z >= 0.0) && (z <= 1.0))
                     {
-                        colorBuffer.Raw[y, x] = c;
+                        if (z < depthBuffer.Raw[y, x].R)
+                        {
+                            colorBuffer.Raw[y, x] = c;
+                            depthBuffer.Raw[y, x].R = z;
+                        }
                     }
                 }
             }
