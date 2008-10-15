@@ -16,34 +16,22 @@ namespace Aquila
             Application.Run(new Sample());
         }
 
-        Stopwatch sw = new Stopwatch();
-        double angle = 0.0;
-        Vector4 colorBufferClear = new Vector4(0.7, 0.8, 0.9, 1.0);
-
-        Bitmap bitmap;
-        Texture2 colorBuffer;
+        private Stopwatch sw = new Stopwatch();
+        private double angle = 0.0;
+        private Bitmap bitmap;
+        private Vector4 clearColor = new Vector4(0.7, 0.8, 0.9, 1.0);
+        private Vector4 clearDepth = new Vector4(1.0, 0.0, 0.0, 0.0);
+        private Texture2 colorBuffer;
+        private Texture2 depthBuffer;
         private Aquila aquila;
-
-        Vector4[] vertices = new Vector4[6];
-        Vector4[][] attributes = new Vector4[6][];
-
-        Matrix4x4 projection = new Matrix4x4();
-        Matrix4x4 translation = new Matrix4x4();
-        Matrix4x4 rotation = new Matrix4x4();
-        Matrix4x4 modelViewProjection = new Matrix4x4();
-        Matrix4x4 system = new Matrix4x4();
+        private Vector4[][] vertices = new Vector4[6][];
+        private Matrix4 projection = new Matrix4();
+        private Matrix4 translation = new Matrix4();
+        private Matrix4 rotation = new Matrix4();
+        private Matrix4 modelViewProjection = new Matrix4();
 
         public Sample()
         {
-            /*
-            for (int i = -5; i <= 5; i++)
-            {
-                int x = i % (2 * 2);
-            }
-            */
-
-            //Test.T4();
-
             InitializeComponent();
 
             int width = 640;
@@ -51,131 +39,80 @@ namespace Aquila
 
             bitmap = new Bitmap(width, height);
             colorBuffer = new Texture2(width, height);
-            aquila = new Aquila(colorBuffer);
+            depthBuffer = new Texture2(width, height);
+            aquila = new Aquila(colorBuffer, depthBuffer);
 
             pictureBox1.Image = bitmap;
 
-            vertices[0] = new Vector4(-1.0, -1.0, -1.0, 1.0);
-            vertices[1] = new Vector4(+1.0, -1.0, -1.0, 1.0);
-            vertices[2] = new Vector4(+1.0, +1.0, -1.0, 1.0);
+            // UV alike
 
-            vertices[3] = new Vector4(-1.0, -1.0, -1.0, 1.0);
-            vertices[4] = new Vector4(+1.0, +1.0, -1.0, 1.0);
-            vertices[5] = new Vector4(-1.0, +1.0, -1.0, 1.0);
+            vertices[0] = new Vector4[] { new Vector4(-1.0, -1.0, -1.0, 1.0), new Vector4(0.0, 0.0, 0.0, 1.0) };
+            vertices[1] = new Vector4[] { new Vector4(+1.0, -1.0, -1.0, 1.0), new Vector4(0.0, 1.0, 0.0, 1.0) };
+            vertices[2] = new Vector4[] { new Vector4(+1.0, -1.0, +1.0, 1.0), new Vector4(1.0, 1.0, 0.0, 1.0) };
+            vertices[3] = new Vector4[] { new Vector4(-1.0, -1.0, -1.0, 1.0), new Vector4(0.0, 0.0, 0.0, 1.0) };
+            vertices[4] = new Vector4[] { new Vector4(+1.0, -1.0, +1.0, 1.0), new Vector4(1.0, 1.0, 0.0, 1.0) };
+            vertices[5] = new Vector4[] { new Vector4(-1.0, -1.0, +1.0, 1.0), new Vector4(1.0, 0.0, 0.0, 1.0) };
 
-            vertices[0] = new Vector4(-1.0, -1.0, -1.0, 1.0);
-            vertices[1] = new Vector4(+1.0, -1.0, -1.0, 1.0);
-            vertices[2] = new Vector4(+1.0, -1.0, +1.0, 1.0);
+            // gradient (perspective correction is better visible)
 
-            vertices[3] = new Vector4(-1.0, -1.0, -1.0, 1.0);
-            vertices[4] = new Vector4(+1.0, -1.0, +1.0, 1.0);
-            vertices[5] = new Vector4(-1.0, -1.0, +1.0, 1.0);
+            vertices[0] = new Vector4[] { new Vector4(-1.0, -1.0, -1.0, 1.0), new Vector4(1.0, 0.0, 0.0, 1.0) };
+            vertices[1] = new Vector4[] { new Vector4(+1.0, -1.0, -1.0, 1.0), new Vector4(1.0, 0.0, 0.0, 1.0) };
+            vertices[2] = new Vector4[] { new Vector4(+1.0, -1.0, +1.0, 1.0), new Vector4(0.0, 0.0, 1.0, 1.0) };
+            vertices[3] = new Vector4[] { new Vector4(-1.0, -1.0, -1.0, 1.0), new Vector4(1.0, 0.0, 0.0, 1.0) };
+            vertices[4] = new Vector4[] { new Vector4(+1.0, -1.0, +1.0, 1.0), new Vector4(0.0, 0.0, 1.0, 1.0) };
+            vertices[5] = new Vector4[] { new Vector4(-1.0, -1.0, +1.0, 1.0), new Vector4(0.0, 0.0, 1.0, 1.0) };
 
-            // UV like
+            // load external file
 
-            attributes[0] = new Vector4[] { new Vector4(0.0, 0.0, 0.0, 1.0) };
-            attributes[1] = new Vector4[] { new Vector4(0.0, 1.0, 0.0, 1.0) };
-            attributes[2] = new Vector4[] { new Vector4(1.0, 1.0, 0.0, 1.0) };
-
-            attributes[3] = new Vector4[] { new Vector4(0.0, 0.0, 0.0, 1.0) };
-            attributes[4] = new Vector4[] { new Vector4(1.0, 1.0, 0.0, 1.0) };
-            attributes[5] = new Vector4[] { new Vector4(1.0, 0.0, 0.0, 1.0) };
-
-            // Gradient
-
-            attributes[0] = new Vector4[] { new Vector4(1.0, 0.0, 0.0, 1.0) };
-            attributes[1] = new Vector4[] { new Vector4(1.0, 0.0, 0.0, 1.0) };
-            attributes[2] = new Vector4[] { new Vector4(0.0, 0.0, 1.0, 1.0) };
-
-            attributes[3] = new Vector4[] { new Vector4(1.0, 0.0, 0.0, 1.0) };
-            attributes[4] = new Vector4[] { new Vector4(0.0, 0.0, 1.0, 1.0) };
-            attributes[5] = new Vector4[] { new Vector4(0.0, 0.0, 1.0, 1.0) };
-
-            //TestAccurary();
-            //Test.T1();
-            //Test.T2();
-
-            //Vector4 v1 = new Vector4(1.0, 2.0, 3.0, 4.0);
-            //Vector4 v2 = v1 * 2.0;
-            //MessageBox.Show(v1.Pretty() + " " + v2.Pretty());
-            //v1.Multiply(2.0);
-            //MessageBox.Show(v1.Pretty() + " " + v2.Pretty());
-
-            //Matrix4x4 m = aquila.matrix;
-            //Vector4 color = new Vector4(0.1, 0.2, 0.4, 1.0);
-
-            //Matrix4x4 mat = new Matrix4x4();
-            //mat.CreateRotate(-Math.DegreeToRadian(90), new Vector3(1.0, 0.0, 0.0));
-            //MessageBox.Show(mat.Pretty());
-
-            //Vector3 vec1 = new Vector3(2.0, 0.0, 0.0);
-            //Vector3 vec2 = vec1;
-            //vec2.Normalize();
-            //MessageBox.Show(vec1.Pretty() + " " + vec2.Pretty());
-            //aquila.ClearcolorBuffer(c);
-
-            //RenderTest();
+            vertices = WavefrontObject.Load("cube.obj");
+            //vertices = WavefrontObject.Load("sphere.obj");
         }
 
-        private void RenderTest()
+        private Vector4 VertexProgramColor(Matrix4 modelViewProjection, Vector4[] vertices, Vector4[] varyings)
         {
-            for (int i = 0; i < 1000; i++)
-            {
-                Render();
-            }
-            Environment.Exit(1);
+            Vector4 position = modelViewProjection * vertices[0];
+            varyings[0] = vertices[1];
+            return position;
         }
 
+        // TODO not called yet
+        private Vector4 FragmentProgramColor(Matrix4 modelViewProjection, Vector4[] varyings)
+        {
+            Vector4 color = varyings[0];
+            return color;
+        }
+
+        // fov is not like Panda3D, currently don't know why
         private void Render()
         {
-            //Graphics g = Graphics.FromHwnd(panel1.Handle);
-            //g.DrawImage(bitmap, 0, 0);
-            //g.Dispose();
-
-            //angle += 0.05;
-
             double fov = Math.DegreeToRadian(45.0);
             double aspectRatio = (double)colorBuffer.Width / (double)colorBuffer.Height;
 
-            projection = MatrixUtility.Perspective(fov, aspectRatio, 3.5, 4.5);
-            //projection = MatrixUtility.Perspective(fov, aspectRatio, 3.5, 4.5);
-            //system = MatrixUtility.Rotate(Math.DegreeToRadian(90.0), new Vector3(1.0, 0.0, 0.0));
-            //translation = MatrixUtility.Translate(new Vector3(0.0, 4.0, 0.0));
-            //rotation = MatrixUtility.Rotate(angle, new Vector3(0.0, 0.0, 1.0));
+            // to test the near and far plane we limit the z range
+            projection = MatrixUtility.Perspective(fov, aspectRatio, 2.7, 5.3);
             translation = MatrixUtility.Translate(new Vector3(0.0, 0.0, -4.0));
             rotation = MatrixUtility.Rotate(angle, new Vector3(0.0, 1.0, 0.0));
 
             modelViewProjection.Identity();
             modelViewProjection.Multiply(projection);
-            //modelViewProjection.Multiply(system);
             modelViewProjection.Multiply(translation);
             modelViewProjection.Multiply(rotation);
 
-            label2.Text = system.Pretty();
-
-            colorBuffer.Clear(colorBufferClear);
-            aquila.Draw(modelViewProjection, vertices, attributes);
+            colorBuffer.Clear(clearColor);
+            depthBuffer.Clear(clearDepth);
+            aquila.DrawTriangles(VertexProgramColor, FragmentProgramColor, modelViewProjection, vertices, 1);
 
             TextureUtility.SaveToRGB(colorBuffer, bitmap);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            angle += System.Math.PI / 8.0;
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
+            angle += Math.DegreeToRadian(45.0);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             sw.Reset();
-
             sw.Start();
 
             Render();

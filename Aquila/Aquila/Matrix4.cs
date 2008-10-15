@@ -1,6 +1,6 @@
 namespace Aquila
 {
-    public struct Matrix4x4
+    public struct Matrix4
     {
         private double e00;
         private double e01;
@@ -115,7 +115,7 @@ namespace Aquila
             set { this.e33 = value; }
         }
 
-        public Matrix4x4(Matrix4x4 matrix)
+        public Matrix4(Matrix4 matrix)
         {
             this.e00 = matrix.e00; this.e01 = matrix.e01; this.e02 = matrix.e02; this.e03 = matrix.e03;
             this.e10 = matrix.e10; this.e11 = matrix.e11; this.e12 = matrix.e12; this.e13 = matrix.e13;
@@ -149,9 +149,9 @@ namespace Aquila
             this.e30 = 0.0; this.e31 = 0.0; this.e32 = 0.0; this.e33 = 1.0;
         }
 
-        public void Multiply(Matrix4x4 matrix)
+        public void Multiply(Matrix4 matrix)
         {
-            Matrix4x4 t = new Matrix4x4(this);
+            Matrix4 t = new Matrix4(this);
 
             this.e00 = t.e00 * matrix.e00 + t.e01 * matrix.e10 + t.e02 * matrix.e20 + t.e03 * matrix.e30;
             this.e01 = t.e00 * matrix.e01 + t.e01 * matrix.e11 + t.e02 * matrix.e21 + t.e03 * matrix.e31;
@@ -176,7 +176,7 @@ namespace Aquila
 
         public void Transpose()
         {
-            Matrix4x4 t = new Matrix4x4(this);
+            Matrix4 t = new Matrix4(this);
 
             this.e00 = t.e00; this.e01 = t.e10; this.e02 = t.e20; this.e03 = t.e30;
             this.e10 = t.e01; this.e11 = t.e11; this.e12 = t.e21; this.e13 = t.e31;
@@ -214,7 +214,7 @@ namespace Aquila
 
         private void Adjoint()
         {
-            Matrix4x4 t = new Matrix4x4(this);
+            Matrix4 t = new Matrix4(this);
         }
 
         private void Inverse()

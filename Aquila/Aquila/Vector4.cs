@@ -95,7 +95,7 @@ namespace Aquila
             set { this.e3 = value; }
         }
 
-        // TODO should we implement here 4*4*4*4 + 4*4*4 + 4*4 + 4 = 340 swizzling possibilities?
+        // TODO should we implement here all 3 * (4**4 + 4**3 + 4**2 + 4**1) = 1020 swizzling possibilities?
 
         public string Pretty()
         {
@@ -130,7 +130,8 @@ namespace Aquila
         /// <summary>
         /// The method is faster if we internally use the reciprocal from value.
         /// On the other hand we loose precision (See Test.cs). Therefore, if a
-        /// faster division is needed, the Multiply method should be used.
+        /// faster division is needed, the multiply method should be used by
+        /// the user of this class.
         /// </summary>
         public void Divide(double value)
         {
@@ -140,7 +141,12 @@ namespace Aquila
             this.e3 /= value;
         }
 
-        public void Transform(Matrix4x4 matrix)
+        /// <summary>
+        /// The transform method is here because we like to modify the vector
+        /// and not the matrix. Beside the operators most (all?) methods of the
+        /// two classes modify themselves.
+        /// </summary>
+        public void Transform(Matrix4 matrix)
         {
             double e0 = this.e0;
             double e1 = this.e1;
@@ -153,6 +159,7 @@ namespace Aquila
             this.e3 = matrix.E30 * e0 + matrix.E31 * e1 + matrix.E32 * e2 + matrix.E33 * e3;
         }
 
+        // TODO test how fast and or slow this indexer is. If it is to slow then remove it. If it is fast enough add one to Matrix4 and Vector3.
         public double this[int index]
         {
             get
@@ -199,7 +206,7 @@ namespace Aquila
             return result;
         }
 
-        public static Vector4 operator *(Vector4 vector, Matrix4x4 matrix)
+        public static Vector4 operator *(Matrix4 matrix, Vector4 vector)
         {
             vector.Transform(matrix);
             return vector;
