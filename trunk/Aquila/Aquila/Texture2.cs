@@ -3,7 +3,6 @@ namespace Aquila
     // TODO this class was once a generic but nprof does not work well with generics
     // TODO GetTexelRepeat, GetTexelRepeat Mirror
     // TODO Vector2 for GetTexel*
-    // TODO linear interpolation
     public class Texture2
     {
         private Vector4[,] buffer;
@@ -32,16 +31,18 @@ namespace Aquila
             get { return this.height; }
         }
 
+        /// <summary>
+        /// This method consumes ~7 ms on my 2 GHz CPU with a 640 x 480 buffer.
+        /// Try to avoid this method if possible. E.g. if your scene fills the
+        /// whole screen anyway, then there is no need to clear color buffer.
+        /// </summary>
         public void Clear(Vector4 value)
         {
-            unsafe
+            for (int y = 0; y < this.height; y++)
             {
-                for (int y = 0; y < this.height; y++)
+                for (int x = 0; x < this.width; x++)
                 {
-                    for (int x = 0; x < this.width; x++)
-                    {
-                        this.buffer[y, x] = value;
-                    }
+                    this.buffer[y, x] = value;
                 }
             }
         }
@@ -51,26 +52,26 @@ namespace Aquila
             this.border = border;
         }
 
-        public Vector4 GetTexel(double s, double t)
+        public Vector4 GetTexel(Vector2 vector)
         {
-            int x = (int)(this.widthTexel * s);
-            int y = (int)(this.heightTexel * t);
+            int x = (int)(this.widthTexel * vector.S);
+            int y = (int)(this.heightTexel * vector.T);
             return this.buffer[y, x];
         }
 
-        public Vector4 GetTexelClamp(double s, double t)
+        public Vector4 GetTexelClamp(Vector2 vector)
         {
-            int x = (int)(this.widthTexel * Math.Saturate(s));
-            int y = (int)(this.heightTexel * Math.Saturate(t));
+            int x = (int)(this.widthTexel * Math.Saturate(vector.S));
+            int y = (int)(this.heightTexel * Math.Saturate(vector.T));
             return this.buffer[y, x];
         }
 
-        public Vector4 GetTexelBorder(double s, double t)
+        public Vector4 GetTexelBorder(Vector2 vector)
         {
-            if ((s >= 0.0) && (s <= 1.0) && (t >= 0.0) && (t <= 1.0))
+            if ((vector.S >= 0.0) && (vector.S <= 1.0) && (vector.T >= 0.0) && (vector.T <= 1.0))
             {
-                int x = (int)(this.widthTexel * s);
-                int y = (int)(this.heightTexel * t);
+                int x = (int)(this.widthTexel * vector.S);
+                int y = (int)(this.heightTexel * vector.T);
                 return this.buffer[y, x];
             }
             else

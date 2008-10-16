@@ -8,7 +8,7 @@ Some facts (good and bad):
 
 - No OpenGL interface, but more than one idea is stolen from OpenGL. All default matrices and transformations are created the way like OpenGL does.
 - Every buffer is a texture, every texture is a buffer. You can modify and access them whenever you like.
-- The rasterizer tries to ressemble a todays GPU pipeline. Therefore there is a vertex program and a fragment program.
+- The rasterizer tries to reassemble a todays GPU pipeline. Therefore there is a vertex program and a fragment program.
 - All internal calculations are device independant. In a final step it is possible (but not necessary) to convert a texture into an image, and display or save this image.
 - No restrictions. Use whatever texture size you like, rectangular or not does not matter. Your vertex program and framgent can have as many uniforms, varyings and "instructions" as you like.
 - You have to restrict yourself or you write a shader that never would run on a GPU.
@@ -22,7 +22,8 @@ Things I like to add:
 - I would definitely add a lot more comments if the core design is stable.
 - Automatic support for left handed coordinate system. OpenGL has a default right handed coordinate system. Panda3D has a left handed coordinate system.
 - Linear interpolation for textures.
-- Depth buffer, and modifiable depth functions.
+- Add support for a geometry program.
 - Add some more performance tests. I still do not know when structs are more suitable and when not.
-- Add a Vector2 class. Eventually Matrix3 and Vector1.
-- Make the Vector4, Vector3 and Matrix4 classes more complete.
+- Add add Matrix3 (for normals) class and maybe a Vector1 class.
+- Make the Vector2, Vector3, Vector4 and Matrix4 classes more complete.
+- Try to remove as much short-life objects as possible (the GC should never be called ideally).
