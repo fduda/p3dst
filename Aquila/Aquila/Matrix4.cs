@@ -2,114 +2,114 @@ namespace Aquila
 {
     public struct Matrix4
     {
-        private double e00;
-        private double e01;
-        private double e02;
-        private double e03;
-        private double e10;
-        private double e11;
-        private double e12;
-        private double e13;
-        private double e20;
-        private double e21;
-        private double e22;
-        private double e23;
-        private double e30;
-        private double e31;
-        private double e32;
-        private double e33;
+        private float e00;
+        private float e01;
+        private float e02;
+        private float e03;
+        private float e10;
+        private float e11;
+        private float e12;
+        private float e13;
+        private float e20;
+        private float e21;
+        private float e22;
+        private float e23;
+        private float e30;
+        private float e31;
+        private float e32;
+        private float e33;
 
-        public double E00
+        public float E00
         {
             get { return this.e00; }
             set { this.e00 = value; }
         }
 
-        public double E01
+        public float E01
         {
             get { return this.e01; }
             set { this.e01 = value; }
         }
 
-        public double E02
+        public float E02
         {
             get { return this.e02; }
             set { this.e02 = value; }
         }
 
-        public double E03
+        public float E03
         {
             get { return this.e03; }
             set { this.e03 = value; }
         }
 
-        public double E10
+        public float E10
         {
             get { return this.e10; }
             set { this.e10 = value; }
         }
 
-        public double E11
+        public float E11
         {
             get { return this.e11; }
             set { this.e11 = value; }
         }
 
-        public double E12
+        public float E12
         {
             get { return this.e12; }
             set { this.e12 = value; }
         }
 
-        public double E13
+        public float E13
         {
             get { return this.e13; }
             set { this.e13 = value; }
         }
 
-        public double E20
+        public float E20
         {
             get { return this.e20; }
             set { this.e20 = value; }
         }
 
-        public double E21
+        public float E21
         {
             get { return this.e21; }
             set { this.e21 = value; }
         }
 
-        public double E22
+        public float E22
         {
             get { return this.e22; }
             set { this.e22 = value; }
         }
 
-        public double E23
+        public float E23
         {
             get { return this.e23; }
             set { this.e23 = value; }
         }
 
-        public double E30
+        public float E30
         {
             get { return this.e30; }
             set { this.e30 = value; }
         }
 
-        public double E31
+        public float E31
         {
             get { return this.e31; }
             set { this.e31 = value; }
         }
 
-        public double E32
+        public float E32
         {
             get { return this.e32; }
             set { this.e32 = value; }
         }
 
-        public double E33
+        public float E33
         {
             get { return this.e33; }
             set { this.e33 = value; }
@@ -133,7 +133,7 @@ namespace Aquila
                 this.e30, this.e31, this.e32, this.e33);
         }
 
-        public void Clear(double value)
+        public void Clear(float value)
         {
             this.e00 = value; this.e01 = value; this.e02 = value; this.e03 = value;
             this.e10 = value; this.e11 = value; this.e12 = value; this.e13 = value;
@@ -143,10 +143,10 @@ namespace Aquila
 
         public void Identity()
         {
-            this.e00 = 1.0; this.e01 = 0.0; this.e02 = 0.0; this.e03 = 0.0;
-            this.e10 = 0.0; this.e11 = 1.0; this.e12 = 0.0; this.e13 = 0.0;
-            this.e20 = 0.0; this.e21 = 0.0; this.e22 = 1.0; this.e23 = 0.0;
-            this.e30 = 0.0; this.e31 = 0.0; this.e32 = 0.0; this.e33 = 1.0;
+            this.e00 = 1.0f; this.e01 = 0.0f; this.e02 = 0.0f; this.e03 = 0.0f;
+            this.e10 = 0.0f; this.e11 = 1.0f; this.e12 = 0.0f; this.e13 = 0.0f;
+            this.e20 = 0.0f; this.e21 = 0.0f; this.e22 = 1.0f; this.e23 = 0.0f;
+            this.e30 = 0.0f; this.e31 = 0.0f; this.e32 = 0.0f; this.e33 = 1.0f;
         }
 
         public void Multiply(Matrix4 matrix)
@@ -184,7 +184,7 @@ namespace Aquila
             this.e30 = t.e03; this.e31 = t.e13; this.e32 = t.e23; this.e33 = t.e33;
         }
 
-        public void Divide(double value)
+        public void Divide(float value)
         {
             this.e00 /= value;
             this.e01 /= value;
@@ -207,9 +207,9 @@ namespace Aquila
             this.e33 /= value;
         }
 
-        private double Determinant()
+        private float Determinant()
         {
-            return 0.0;
+            return 0.0f;
         }
 
         private void Adjoint()
@@ -219,7 +219,7 @@ namespace Aquila
 
         private void Inverse()
         {
-            double determinant = Determinant();
+            float determinant = Determinant();
             Adjoint();
             Divide(determinant);
         }

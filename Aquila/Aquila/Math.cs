@@ -2,14 +2,14 @@ namespace Aquila
 {
     public class Math
     {
-        public static double DegreeToRadian(double angle)
+        public static float DegreeToRadian(float angle)
         {
-            return Math.PI * angle / 180.0;
+            return Math.PI * angle / 180.0f;
         }
 
-        public static double RadianToDegree(double angle)
+        public static float RadianToDegree(float angle)
         {
-            return angle * 180.0 / Math.PI;
+            return angle * 180.0f / Math.PI;
         }
 
         public static void Swap<T>(ref T left, ref T right)
@@ -20,7 +20,7 @@ namespace Aquila
             right = t;
         }
 
-        public static double Clamp(double value, double min, double max)
+        public static float Clamp(float value, float min, float max)
         {
             if (value < min)
             {
@@ -36,15 +36,15 @@ namespace Aquila
             }
         }
 
-        public static double Saturate(double value)
+        public static float Saturate(float value)
         {
-            if (value <= 0.0)
+            if (value <= 0.0f)
             {
-                return 0.0;
+                return 0.0f;
             }
-            else if (value >= 1.0)
+            else if (value >= 1.0f)
             {
-                return 1.0;
+                return 1.0f;
             }
             else
             {
@@ -52,45 +52,50 @@ namespace Aquila
             }
         }
 
-        public static double Sqrt(double value)
+        public static float Pow(double baze, double exponent)
         {
-            return System.Math.Sqrt(value);
+            return (float)System.Math.Pow(baze, exponent);
         }
 
-        public static double Sin(double value)
+        public static float Sqrt(float value)
         {
-            return System.Math.Sin(value);
+            return (float)System.Math.Sqrt(value);
         }
 
-        public static double Cos(double value)
+        public static float Sin(float value)
         {
-            return System.Math.Cos(value);
+            return (float)System.Math.Sin(value);
         }
 
-        public static double Tan(double value)
+        public static float Cos(float value)
         {
-            return System.Math.Tan(value);
+            return (float)System.Math.Cos(value);
         }
 
-        public static double Cot(double value)
+        public static float Tan(float value)
         {
-            return 1.0 / System.Math.Tan(value);
+            return (float)System.Math.Tan(value);
         }
 
-        public static bool IsAlmostEqual(double a, double b, double epsilon)
+        public static float Cot(float value)
         {
-            double delta = a - b;
+            return 1.0f / (float)System.Math.Tan(value);
+        }
+
+        public static bool IsAlmostEqual(float a, float b, float epsilon)
+        {
+            float delta = a - b;
             return (delta < epsilon) && (delta > -epsilon);
         }
 
-        public static bool IsAlmostEqual(double a, double b)
+        public static bool IsAlmostEqual(float a, float b)
         {
-            double delta = a - b;
+            float delta = a - b;
             return (delta < EPSILON) && (delta > -EPSILON);
         }
 
-        public static double PI = System.Math.PI;
+        public static float PI = (float)System.Math.PI;
 
-        public static double EPSILON = 1.0e-6;
+        public static float EPSILON = 1.0e-6f;
     }
 }

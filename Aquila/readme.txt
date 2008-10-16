@@ -1,6 +1,6 @@
 
 While writing the shader tutorials, I was not sure how the perspective interpolation exactly works on GPUs. Because  I was unable to find and answer that was satisfying (that does not mean that somewhere in the black hole internet there is one) I started my own rasterizer. I belong to the sort of persons which prefer to read code, than reading a technical or mathematical paper that does not care about the uncountable special cases.
-I second problem, I have, since I started to write my own shaders, is that I have not found any simple solution to develop a shader step by step and debug it. I like to write something to a console, write anything to a file, easily read and examine the Z buffer, everything I do normally.
+I second problem, I have, since I started to write my own shaders, is that I have not found any simple solution to develop a shader step by step and debug it. I like to write something to a console, write anything to a file, easily read and examine the depth buffer, everything I do normally.
 
 The mini project Aquila was born.
 
@@ -23,7 +23,8 @@ Things I like to add:
 - Automatic support for left handed coordinate system. OpenGL has a default right handed coordinate system. Panda3D has a left handed coordinate system.
 - Linear interpolation for textures.
 - Add support for a geometry program.
-- Add some more performance tests. I still do not know when structs are more suitable and when not.
+- Add some more performance tests. I still do not know when structs are more suitable and when not (eventuall modify Vector4, Matrix4 then).
 - Add add Matrix3 (for normals) class and maybe a Vector1 class.
 - Make the Vector2, Vector3, Vector4 and Matrix4 classes more complete.
+- Add a possibility to discard a fragment.
 - Try to remove as much short-life objects as possible (the GC should never be called ideally).

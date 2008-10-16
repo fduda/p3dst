@@ -2,12 +2,12 @@ namespace Aquila
 {
     public struct Vector4
     {
-        private double e0;
-        private double e1;
-        private double e2;
-        private double e3;
+        private float e0;
+        private float e1;
+        private float e2;
+        private float e3;
 
-        public Vector4(double e0, double e1, double e2, double e3)
+        public Vector4(float e0, float e1, float e2, float e3)
         {
             this.e0 = e0;
             this.e1 = e1;
@@ -23,73 +23,73 @@ namespace Aquila
             this.e3 = vector.e3;
         }
 
-        public double X
+        public float X
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double Y
+        public float Y
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double Z
+        public float Z
         {
             get { return this.e2; }
             set { this.e2 = value; }
         }
 
-        public double W
+        public float W
         {
             get { return this.e3; }
             set { this.e3 = value; }
         }
 
-        public double R
+        public float R
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double G
+        public float G
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double B
+        public float B
         {
             get { return this.e2; }
             set { this.e2 = value; }
         }
 
-        public double A
+        public float A
         {
             get { return this.e3; }
             set { this.e3 = value; }
         }
 
-        public double S
+        public float S
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double T
+        public float T
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double P
+        public float P
         {
             get { return this.e2; }
             set { this.e2 = value; }
         }
 
-        public double Q
+        public float Q
         {
             get { return this.e3; }
             set { this.e3 = value; }
@@ -103,7 +103,7 @@ namespace Aquila
                 this.GetType().Name, this.e0, this.e1, this.e2, this.e3);
         }
 
-        public void Add(double value)
+        public void Add(float value)
         {
             this.e0 += value;
             this.e1 += value;
@@ -111,7 +111,7 @@ namespace Aquila
             this.e3 += value;
         }
 
-        public void Subtract(double value)
+        public void Subtract(float value)
         {
             this.e0 -= value;
             this.e1 -= value;
@@ -119,7 +119,7 @@ namespace Aquila
             this.e3 -= value;
         }
 
-        public void Multiply(double value)
+        public void Multiply(float value)
         {
             this.e0 *= value;
             this.e1 *= value;
@@ -133,7 +133,7 @@ namespace Aquila
         /// faster division is needed, the multiply method should be used by
         /// the user of this class.
         /// </summary>
-        public void Divide(double value)
+        public void Divide(float value)
         {
             this.e0 /= value;
             this.e1 /= value;
@@ -148,10 +148,10 @@ namespace Aquila
         /// </summary>
         public void Transform(Matrix4 matrix)
         {
-            double e0 = this.e0;
-            double e1 = this.e1;
-            double e2 = this.e2;
-            double e3 = this.e3;
+            float e0 = this.e0;
+            float e1 = this.e1;
+            float e2 = this.e2;
+            float e3 = this.e3;
 
             this.e0 = matrix.E00 * e0 + matrix.E01 * e1 + matrix.E02 * e2 + matrix.E03 * e3;
             this.e1 = matrix.E10 * e0 + matrix.E11 * e1 + matrix.E12 * e2 + matrix.E13 * e3;
@@ -160,7 +160,7 @@ namespace Aquila
         }
 
         // TODO test how fast and or slow this indexer is. If it is to slow then remove it. If it is fast enough add one to Matrix4 and Vector3.
-        public double this[int index]
+        public float this[int index]
         {
             get
             {
@@ -212,24 +212,30 @@ namespace Aquila
             return vector;
         }
 
-        public static Vector4 operator *(Vector4 vector, double value)
+        public static Vector4 operator *(Vector4 vector, float value)
         {
             vector.Multiply(value);
             return vector;
         }
 
-        public static Vector4 operator /(Vector4 vector, double value)
+        public static Vector4 operator /(Vector4 vector, float value)
         {
             vector.Divide(value);
             return vector;
         }
 
+        /// <summary>
+        /// Do not know if there is a standardized way to assign w. We choose
+        /// 1.0 / w here. Has the advantage that we later only have can use a
+        /// mulitiplication instead a division.
+        /// </summary>
         internal void HomogenousDivide()
         {
-            double w = 1.0 / this.W;
+            float w = 1.0f / this.W;
             this.X *= w;
             this.Y *= w;
             this.Z *= w;
+            this.W = w;
         }
     }
 }
