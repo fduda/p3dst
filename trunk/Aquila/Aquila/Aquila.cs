@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Aquila
 {
     public interface Varying
@@ -5,12 +7,16 @@ namespace Aquila
         float[] CopyToArray();
         // TODO a new is needed in this function, maybe this is not a good idea
         void CopyFromArray(float[] values);
+
+        // TODO second possibility
+        //void CopyToArrayEx(float[] values);
     }
 
     public class MatrixUniform
     {
         public Matrix4 modelViewProjection;
     }
+
 
     public class PositionColorVertex
     {
@@ -24,6 +30,8 @@ namespace Aquila
         }
     }
 
+    // TODO what about unions?
+    // TODO internally save as array any only provide Vector4 properties? (first implement fragment shader)
     public class ColorVarying : Varying
     {
         public Vector4 color;
@@ -37,6 +45,16 @@ namespace Aquila
         {
             this.color = new Vector4(values[0], values[1], values[2], values[3]);
         }
+
+        /*
+        public void CopyToArrayEx(float[] values)
+        {
+            values[0] = this.color.R;
+            values[1] = this.color.G;
+            values[2] = this.color.B;
+            values[3] = this.color.A;
+        }
+        */
     }
 
     // TODO no OpenGL fill rule, no fill rule at all
@@ -93,6 +111,12 @@ namespace Aquila
                 varyings[i] = new W();
             }
 
+            float[] c0 = new float[4];
+            float[] c1 = new float[4];
+            float[] c2 = new float[4];
+
+            Vector4[] colors = new Vector4[3];
+
             for (int i = 0; i < vertices.Length; i += 3)
             {
                 for (int j = 0; j < 3; j++)
@@ -107,11 +131,18 @@ namespace Aquila
                     positions[j].W = p.W;
                 }
 
-                float[] c0 = varyings[0].CopyToArray();
-                float[] c1 = varyings[1].CopyToArray();
-                float[] c2 = varyings[2].CopyToArray();
+                c0 = varyings[0].CopyToArray();
+                c1 = varyings[1].CopyToArray();
+                c2 = varyings[2].CopyToArray();
+                //varyings[0].CopyToArrayEx(c0);
+                //varyings[1].CopyToArrayEx(c1);
+                //varyings[2].CopyToArrayEx(c2);
 
-                Vector4[] colors = new Vector4[] { new Vector4(c0[0], c0[1], c0[2], c0[3]), new Vector4(c1[0], c1[1], c1[2], c1[3]), new Vector4(c2[0], c2[1], c2[2], c2[3]) };
+                colors[0] = new Vector4(c0[0], c0[1], c0[2], c0[3]);
+                colors[1] = new Vector4(c1[0], c1[1], c1[2], c1[3]);
+                colors[2] = new Vector4(c2[0], c2[1], c2[2], c2[3]);
+
+                // = new Vector4[] { , ,  };
                 DrawTrianglesUnsorted(positions, colors);
             }
         }
