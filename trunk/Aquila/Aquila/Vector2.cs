@@ -1,51 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Aquila
 {
     public struct Vector2
     {
-        private double e0;
-        private double e1;
+        private float e0;
+        private float e1;
 
-        public double X
+        public float X
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double Y
+        public float Y
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double R
+        public float R
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double G
+        public float G
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double S
+        public float S
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double T
+        public float T
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public Vector2(double e0, double e1)
+        public Vector2(float e0, float e1)
         {
             this.e0 = e0;
             this.e1 = e1;

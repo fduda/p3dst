@@ -2,65 +2,65 @@ namespace Aquila
 {
     public struct Vector3
     {
-        private double e0;
-        private double e1;
-        private double e2;
+        private float e0;
+        private float e1;
+        private float e2;
 
-        public double X
+        public float X
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double Y
+        public float Y
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double Z
+        public float Z
         {
             get { return this.e2; }
             set { this.e2 = value; }
         }
 
-        public double R
+        public float R
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double G
+        public float G
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double B
+        public float B
         {
             get { return this.e2; }
             set { this.e2 = value; }
         }
 
-        public double S
+        public float S
         {
             get { return this.e0; }
             set { this.e0 = value; }
         }
 
-        public double T
+        public float T
         {
             get { return this.e1; }
             set { this.e1 = value; }
         }
 
-        public double P
+        public float P
         {
             get { return this.e2; }
             set { this.e2 = value; }
         }
 
-        public Vector3(double e0, double e1, double e2)
+        public Vector3(float e0, float e1, float e2)
         {
             this.e0 = e0;
             this.e1 = e1;
@@ -80,51 +80,51 @@ namespace Aquila
                 this.GetType().Name, this.e0, this.e1, this.e2);
         }
 
-        public void Add(double value)
+        public void Add(float value)
         {
             this.e0 += value;
             this.e1 += value;
             this.e2 += value;
         }
 
-        public void Subtract(double value)
+        public void Subtract(float value)
         {
             this.e0 -= value;
             this.e1 -= value;
             this.e2 -= value;
         }
 
-        public void Multiply(double value)
+        public void Multiply(float value)
         {
             this.e0 *= value;
             this.e1 *= value;
             this.e2 *= value;
         }
 
-        public void Divide(double value)
+        public void Divide(float value)
         {
             this.e0 *= value;
             this.e1 *= value;
             this.e2 *= value;
         }
 
-        public double SquaredLength()
+        public float SquaredLength()
         {
             return this.e0 * this.e0 + this.e1 * this.e1 + this.e2 * this.e2;
         }
 
-        public double Length()
+        public float Length()
         {
             return Math.Sqrt(this.e0 * this.e0 + this.e1 * this.e1 + this.e2 * this.e2);
         }
 
         public void Normalize()
         {
-            double length = Length();
-            Multiply(1.0 / length);
+            float length = Length();
+            Multiply(1.0f / length);
         }
 
-        public static double Dot(Vector3 vector1, Vector3 vector2)
+        public static float Dot(Vector3 vector1, Vector3 vector2)
         {
             return vector1.e0 * vector2.e0 + vector1.e1 * vector2.e1 + vector1.e2 * vector2.e2;
         }

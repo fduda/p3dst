@@ -1,5 +1,6 @@
 using Stopwatch = System.Diagnostics.Stopwatch;
 using Console = System.Console;
+using Random = System.Random;
 
 namespace Aquila
 {
@@ -7,20 +8,26 @@ namespace Aquila
     {
         public static void T1()
         {
-            System.Random r = new System.Random(123456789);
-
-            double sum1 = 0.0;
-            double sum2 = 0.0;
-            for (int i = 0; i < 10; i++)
+            for (int i = 1; i < 10000; i++)
             {
-                double x = System.Math.Pow(r.NextDouble(), r.NextDouble() * 100.0);
-                double y = System.Math.Pow(r.NextDouble(), r.NextDouble() * 100.0);
+                Random r = new Random(i);
 
-                sum1 += x / y;
-                sum2 += x * (1.0 / y);
+                float sum1 = 0.0f;
+                float sum2 = 0.0f;
+                for (int j = 0; j < 100; j++)
+                {
+                    float x = Math.Pow((float)r.NextDouble(), (float)r.NextDouble() * 5.0f);
+                    float y = Math.Pow((float)r.NextDouble(), (float)r.NextDouble() * 5.0f);
+
+                    sum1 += x / y;
+                    sum2 += x * (1.0f / y);
+                }
+
+                if ((sum1 - sum2) != 0.0)
+                {
+                    Console.WriteLine(string.Format("Sum1:{0} Sum2:{1} Sum1-Sum2:{2}", sum1, sum2, sum1 - sum2));
+                }
             }
-
-            Console.WriteLine(string.Format("Sum1:{0} Sum2:{1} Sum1-Sum2:{2}", sum1, sum2, sum1 - sum2));
         }
 
         public static void T2()
@@ -28,14 +35,14 @@ namespace Aquila
             Stopwatch sw1 = new Stopwatch();
             Stopwatch sw2 = new Stopwatch();
 
-            double a = 123.456789;
-            double b = 1.0 / a;
-            double sum1 = 0.0;
-            double sum2 = 0.0;
+            float a = 123.456789f;
+            float b = 1.0f / a;
+            float sum1 = 0.0f;
+            float sum2 = 0.0f;
 
             sw1.Start();
 
-            for (double c = 0.0; c < 10000.0; c += 0.0001)
+            for (float c = 0.0f; c < 1000.0f; c += 0.0001f)
             {
                 sum1 += c / a;
             }
@@ -44,7 +51,7 @@ namespace Aquila
 
             sw2.Start();
 
-            for (double c = 0.0; c < 10000.0; c += 0.0001)
+            for (float c = 0.0f; c < 1000.0f; c += 0.0001f)
             {
                 sum2 += c * b;
             }
@@ -60,21 +67,21 @@ namespace Aquila
             Stopwatch sw1 = new Stopwatch();
             Stopwatch sw2 = new Stopwatch();
 
-            double sum1 = 0;
-            double sum2 = 0;
+            float sum1 = 0;
+            float sum2 = 0;
 
             sw1.Start();
 
-            for (double i = -10.0; i < 10.0; i += 0.000001)
+            for (float i = -10.0f; i < 10.0f; i += 0.000001f)
             {
-                sum1 += System.Math.Max(System.Math.Min(i, 1.0), 0.0);
+                sum1 += System.Math.Max(System.Math.Min(i, 1.0f), 0.0f);
             }
 
             sw1.Stop();
 
             sw2.Start();
 
-            for (double i = -10.0; i < 10.0; i += 0.000001)
+            for (float i = -10.0f; i < 10.0f; i += 0.000001f)
             {
                 sum2 += Math.Saturate(i);
             }
@@ -87,12 +94,12 @@ namespace Aquila
 
         private struct SimpleVector4
         {
-            public float a;
-            public float b;
-            public float c;
-            public float d;
+            public double a;
+            public double b;
+            public double c;
+            public double d;
 
-            public SimpleVector4(float a, float b, float c, float d)
+            public SimpleVector4(double a, double b, double c, double d)
             {
                 this.a = a;
                 this.b = b;
@@ -116,8 +123,8 @@ namespace Aquila
             Vector4[] a2 = new Vector4[h * w];
             Vector4[,] a3 = new Vector4[w, h];
             SimpleVector4[,] a4 = new SimpleVector4[h, w];
-            Vector4 clear = new Vector4(1.0, 2.0, 3.0, 4.0);
-            SimpleVector4 testClear = new SimpleVector4(1.0f, 2.0f, 3.0f, 4.0f);
+            Vector4 clear = new Vector4(1.0f, 2.0f, 3.0f, 4.0f);
+            SimpleVector4 testClear = new SimpleVector4(1.0, 2.0, 3.0, 4.0);
 
             sw1.Start();
 
@@ -182,11 +189,10 @@ namespace Aquila
 
         public static void Main()
         {
-            //T1();
-            //T2();
-            //T3();
+            T1();
+            T2();
+            T3();
             T4();
-
 
 #if DEBUG
             Console.WriteLine("...");

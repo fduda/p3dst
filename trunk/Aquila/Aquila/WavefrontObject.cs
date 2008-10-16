@@ -9,16 +9,16 @@ namespace Aquila
     /// 
     /// http://www.royriggs.com/obj.html
     /// 
-    /// Currently this class only supports trinagulated meshes, without any edge
-    /// informations or back references. Therefore this it NOT a reference
-    /// implementation.
+    /// Currently this class only supports trinagulated meshes, without any
+    /// back references. Therefore this it NOT a reference implementation.
+    /// Vertex positions are translated to colors, one more fancy behaviour a
+    /// serious loader never would have.
     /// </summary>
     public class WavefrontObject
     {
-        // TODO Only triangulated obj files are supported
         public static PositionColorVertex[] Load(string filename)
         {
-            List<double> vertices = new List<double>();
+            List<float> vertices = new List<float>();
             List<int> faces = new List<int>();
 
             StreamReader sr = new StreamReader(filename);
@@ -33,9 +33,9 @@ namespace Aquila
 
                 if (parts[0] == "v")
                 {
-                    vertices.Add(double.Parse(parts[1]));
-                    vertices.Add(double.Parse(parts[2]));
-                    vertices.Add(double.Parse(parts[3]));
+                    vertices.Add(float.Parse(parts[1]));
+                    vertices.Add(float.Parse(parts[2]));
+                    vertices.Add(float.Parse(parts[3]));
                 }
                 else if (parts[0] == "f")
                 {
@@ -58,13 +58,13 @@ namespace Aquila
                 position.X = vertices[n + 0];
                 position.Y = vertices[n + 1];
                 position.Z = vertices[n + 2];
-                position.W = 1.0;
+                position.W = 1.0f;
 
                 Vector4 color = new Vector4();
-                color.R = Math.Saturate(position.X * 0.5 + 0.5);
-                color.G = Math.Saturate(position.Y * 0.5 + 0.5);
-                color.B = Math.Saturate(position.Z * 0.5 + 0.5);
-                color.A = 1.0;
+                color.R = Math.Saturate(position.X * 0.5f + 0.5f);
+                color.G = Math.Saturate(position.Y * 0.5f + 0.5f);
+                color.B = Math.Saturate(position.Z * 0.5f + 0.5f);
+                color.A = 1.0f;
 
                 result[i] = new PositionColorVertex(position, color);
             }

@@ -37,9 +37,9 @@ namespace Aquila
             this.sw.Stop();
         }
 
-        public double MilliSeconds()
+        public long MilliSeconds()
         {
-            return sw.Elapsed.TotalMilliseconds;
+            return sw.ElapsedMilliseconds;
         }
 
         public void Print()

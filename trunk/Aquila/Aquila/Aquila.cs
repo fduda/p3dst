@@ -1,11 +1,15 @@
 namespace Aquila
 {
-    // TODO better name
     public interface Varying
     {
-        double[] CopyToArray();
+        float[] CopyToArray();
         // TODO a new is needed in this function, maybe this is not a good idea
-        void CopyFromArray(double[] values);
+        void CopyFromArray(float[] values);
+    }
+
+    public class MatrixUniform
+    {
+        public Matrix4 modelViewProjection;
     }
 
     public class PositionColorVertex
@@ -24,23 +28,22 @@ namespace Aquila
     {
         public Vector4 color;
 
-        public double[] CopyToArray()
+        public float[] CopyToArray()
         {
-            return new double[] { this.color.R, this.color.G, this.color.B, this.color.A };
+            return new float[] { this.color.R, this.color.G, this.color.B, this.color.A };
         }
 
-        public void CopyFromArray(double[] values)
+        public void CopyFromArray(float[] values)
         {
             this.color = new Vector4(values[0], values[1], values[2], values[3]);
         }
     }
 
     // TODO no OpenGL fill rule, no fill rule at all
-    // TODO Vector4 for depthBuffer is overkill, will change this later, or maybe we use it as stencil, and w buffer
     public class Aquila
     {
-        private Texture2 colorBuffer;
-        private Texture2 depthBuffer;
+        private Texture2<Vector4> colorBuffer;
+        private Texture2<float> depthBuffer;
 
         private int viewportX;
         private int viewportY;
@@ -49,7 +52,7 @@ namespace Aquila
 
         private bool perspectiveCorrection = true;
 
-        public Aquila(Texture2 colorBuffer, Texture2 depthBuffer)
+        public Aquila(Texture2<Vector4> colorBuffer, Texture2<float> depthBuffer)
         {
             this.colorBuffer = colorBuffer;
             this.depthBuffer = depthBuffer;
@@ -75,16 +78,15 @@ namespace Aquila
         // currently I have no better idea than to create an empty type, or you have to define all types yourself, somehow C# can not inferre the type here
         public void DrawTriangles<U, V, W>(VertexProgramDelegate<U, V, W> vertexProgram, FragmentProgramDelegate<U, W> fragmentProgram, U uniform, V[] vertices, W any) where W : Varying, new()
         {
-            // TODO -1.0 ok or not? if ok then implement SetViewport correctly
-            double width = colorBuffer.Width - 1.0;
-            double height = colorBuffer.Height - 1.0;
-            double x = 0.0;
-            double y = 0.0;
+            // TODO -1.0f ok or not? if ok then implement SetViewport correctly
+            float width = colorBuffer.Width - 1.0f;
+            float height = colorBuffer.Height - 1.0f;
+            float x = 0.0f;
+            float y = 0.0f;
 
             // TODO manual loop unrolling at least for triangle?
 
             Vector4[] positions = new Vector4[3];
-            //Vector4[][] varyings = new Vector4[3][];
             W[] varyings = new W[3];
             for (int i = 0; i < 3; i++)
             {
@@ -95,48 +97,32 @@ namespace Aquila
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Vector4 p1 = vertexProgram(uniform, vertices[i + j], varyings[j]);
-                    p1.HomogenousDivide();
-                    //Vector4 p0 = new Vector4(0.0, 0.0, 0.0, 0.0);
+                    Vector4 p = vertexProgram(uniform, vertices[i + j], varyings[j]);
+                    p.HomogenousDivide();
 
-                    // TODO homogenous divide function in Vector4?
-                    //Vector4 p1 = new Vector4();
-                    //p1.X = p0.X / p0.W;
-                    //p1.Y = p0.Y / p0.W;
-                    //p1.Z = p0.Z / p0.W;
-                    //p1.W = p0.W; // TODO divdide here and multiply in DrawTriangle? is there a well defined way for homogenous divide?
-
-                    // TODO gluProject like method in Vector 4?
-                    positions[j].X = (p1.X + 1.0) * (width / 2.0) + x;
-                    positions[j].Y = (-p1.Y + 1.0) * (height / 2.0) + y;
-                    positions[j].Z = (p1.Z + 1.0) / 2.0;
-                    positions[j].W = p1.W;
+                    // TODO gluProject like method in Vector4?
+                    positions[j].X = (p.X + 1.0f) * (width / 2.0f) + x;
+                    positions[j].Y = (-p.Y + 1.0f) * (height / 2.0f) + y;
+                    positions[j].Z = (p.Z + 1.0f) / 2.0f;
+                    positions[j].W = p.W;
                 }
 
-                double[] c0 = varyings[0].CopyToArray();
-                double[] c1 = varyings[1].CopyToArray();
-                double[] c2 = varyings[2].CopyToArray();
+                float[] c0 = varyings[0].CopyToArray();
+                float[] c1 = varyings[1].CopyToArray();
+                float[] c2 = varyings[2].CopyToArray();
 
                 Vector4[] colors = new Vector4[] { new Vector4(c0[0], c0[1], c0[2], c0[3]), new Vector4(c1[0], c1[1], c1[2], c1[3]), new Vector4(c2[0], c2[1], c2[2], c2[3]) };
-                //Vector4[] colors = new Vector4[] { varyings[0][0], varyings[1][0], varyings[2][0] };
-                //Vector4[] colors = new Vector4[] { new Vector4(1.0, 0.0, 0.0, 1.0), new Vector4(0.0, 1.0, 0.0, 1.0), new Vector4(0.0, 0.0, 1.0, 0.0) };
                 DrawTrianglesUnsorted(positions, colors);
-
-                for (int j = 0; j < 3; j++)
-                {
-                    //TODO move another method
-                    //DrawDot(positions[j].X, positions[j].Y, positions[j].Z, uniforms, varyings[j]);
-                }
             }
         }
 
-        private void DrawDots(double x, double y, double z, object[] uniforms, Vector4[] varyings)
+        private void DrawDots(float x, float y, float z, object[] uniforms, Vector4[] varyings)
         {
             int width = this.colorBuffer.Width;
             int height = this.colorBuffer.Height;
 
             //Vector4 color = FragmentProgram(uniforms, varyings);
-            Vector4 colorBlack = new Vector4(0.0, 0.0, 0.0, 1.0);
+            Vector4 colorBlack = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
             int sx = (int)x;
             int sy = (int)y;
@@ -178,57 +164,57 @@ namespace Aquila
         // TODO clean up this whole method and make it more generic, looks horrible yet
         private void DrawTrianglesSorted(Vector4 p0, Vector4 p1, Vector4 p2, Vector4 c0, Vector4 c1, Vector4 c2)
         {
-            //Vector4 colorBackground = new Vector4(0.7, 0.8, 0.9, 1.0);
-            //Vector4 colorWarn = new Vector4(0.0, 1.0, 0.0, 1.0);
-            //Vector4 color = new Vector4(1.0, 0.0, 0.0, 1.0);
-            //Vector4 colorDot = new Vector4(0.0, 0.0, 0.0, 1.0);
+            //Vector4 colorBackground = new Vector4(0.7, 0.8, 0.9, 1.0f);
+            //Vector4 colorWarn = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+            //Vector4 color = new Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+            //Vector4 colorDot = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
             int width = this.colorBuffer.Width;
             int height = this.colorBuffer.Height;
 
-            //Texture2<Vector4> texture = new Texture2<Vector4>(200, 200);
+            //Texture2<Vector4><Vector4> texture = new Texture2<Vector4><Vector4>(200, 200);
             //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap("D:\\checkboard.bmp");
             //TextureUtility.LoadFromRGB(texture, bitmap);
 
             int x0 = (int)p0.X;
             int y0 = (int)p0.Y;
-            double z0 = p0.Z;
-            double w0 = p0.W;
+            float z0 = p0.Z;
+            float w0 = p0.W;
             int x1 = (int)p1.X;
             int y1 = (int)p1.Y;
-            double z1 = p1.Z;
-            double w1 = p1.W;
+            float z1 = p1.Z;
+            float w1 = p1.W;
             int x2 = (int)p2.X;
             int y2 = (int)p2.Y;
-            double z2 = p2.Z;
-            double w2 = p2.W;
+            float z2 = p2.Z;
+            float w2 = p2.W;
 
             if (this.perspectiveCorrection)
             {
-                c0.Divide(w0);
-                c1.Divide(w1);
-                c2.Divide(w2);
+                c0.Multiply(w0);
+                c1.Multiply(w1);
+                c2.Multiply(w2);
             }
 
-            w0 = 1.0 / w0;
-            w1 = 1.0 / w1;
-            w2 = 1.0 / w2;
+            //w0 = 1.0f / w0;
+            //w1 = 1.0f / w1;
+            //w2 = 1.0f / w2;
 
-            double slope0to1 = (double)(x0 - x1) / (double)(y0 - y1);
-            double slope0to2 = (double)(x0 - x2) / (double)(y0 - y2);
-            double slope1to2 = (double)(x1 - x2) / (double)(y1 - y2);
+            float slope0to1 = (float)(x0 - x1) / (float)(y0 - y1);
+            float slope0to2 = (float)(x0 - x2) / (float)(y0 - y2);
+            float slope1to2 = (float)(x1 - x2) / (float)(y1 - y2);
 
-            double zslope0to1 = (double)(z0 - z1) / (double)(y0 - y1);
-            double zslope0to2 = (double)(z0 - z2) / (double)(y0 - y2);
-            double zslope1to2 = (double)(z1 - z2) / (double)(y1 - y2);
+            float zslope0to1 = (float)(z0 - z1) / (float)(y0 - y1);
+            float zslope0to2 = (float)(z0 - z2) / (float)(y0 - y2);
+            float zslope1to2 = (float)(z1 - z2) / (float)(y1 - y2);
 
             Vector4 cslope0to1 = (c0 - c1) / (y0 - y1);
             Vector4 cslope0to2 = (c0 - c2) / (y0 - y2);
             Vector4 cslope1to2 = (c1 - c2) / (y1 - y2);
 
-            double wslope0to1 = (double)(w0 - w1) / (double)(y0 - y1);
-            double wslope0to2 = (double)(w0 - w2) / (double)(y0 - y2);
-            double wslope1to2 = (double)(w1 - w2) / (double)(y1 - y2);
+            float wslope0to1 = (float)(w0 - w1) / (float)(y0 - y1);
+            float wslope0to2 = (float)(w0 - w2) / (float)(y0 - y2);
+            float wslope1to2 = (float)(w1 - w2) / (float)(y1 - y2);
 
             for (int y = y0; y < y1; y++)
             {
@@ -236,23 +222,23 @@ namespace Aquila
                 int x0to1 = (int)(x1 + slope0to1 * (y - y1));
                 int x0to2 = (int)(x2 + slope0to2 * (y - y2));
 
-                double z0to1 = z1 + zslope0to1 * (y - y1);
-                double z0to2 = z2 + zslope0to2 * (y - y2);
+                float z0to1 = z1 + zslope0to1 * (y - y1);
+                float z0to2 = z2 + zslope0to2 * (y - y2);
 
-                Vector4 c0to1 = c1 + cslope0to1 * (double)(y - y1);
-                Vector4 c0to2 = c2 + cslope0to2 * (double)(y - y2);
+                Vector4 c0to1 = c1 + cslope0to1 * (float)(y - y1);
+                Vector4 c0to2 = c2 + cslope0to2 * (float)(y - y2);
 
-                double w0to1 = w1 + wslope0to1 * (y - y1);
-                double w0to2 = w2 + wslope0to2 * (y - y2);
+                float w0to1 = w1 + wslope0to1 * (y - y1);
+                float w0to2 = w2 + wslope0to2 * (y - y2);
 
                 int xmin;
                 int xmax;
-                double zmin;
-                double zmax;
+                float zmin;
+                float zmax;
                 Vector4 cmin;
                 Vector4 cmax;
-                double wmin;
-                double wmax;
+                float wmin;
+                float wmax;
 
                 if (x0to1 > x0to2)
                 {
@@ -278,27 +264,29 @@ namespace Aquila
                 }
 
                 Vector4 mcolor = (cmax - cmin) / (xmax - xmin);
-                double mz = (zmax - zmin) / (xmax - xmin);
-                double mw = (wmax - wmin) / (xmax - xmin);
+                float mz = (zmax - zmin) / (xmax - xmin);
+                float mw = (wmax - wmin) / (xmax - xmin);
                 for (int x = xmin; x < xmax; x++)
                 {
-                    double z = zmin + mz * (x - xmin);
-                    double w = wmin + mw * (x - xmin);
+                    float z = zmin + mz * (x - xmin);
+                    float w = wmin + mw * (x - xmin);
                     Vector4 c = cmin + mcolor * (x - xmin);
+
+                    w = 1.0f / w;
 
                     if (this.perspectiveCorrection)
                     {
-                        c.Divide(w);
+                        c.Multiply(w);
                     }
 
                     //Vector4 t = texture.GetCoordinate(c.X, c.Y);
 
-                    if ((x >= 0) && (y >= 0) && (x < width) && (y < height) && (z >= 0.0) && (z <= 1.0))
+                    if ((x >= 0) && (y >= 0) && (x < width) && (y < height) && (z >= 0.0f) && (z <= 1.0f))
                     {
-                        if (z < depthBuffer.Raw[y, x].R)
+                        if (z < depthBuffer.Raw[y, x])
                         {
                             colorBuffer.Raw[y, x] = c;
-                            depthBuffer.Raw[y, x].R = z;
+                            depthBuffer.Raw[y, x] = z;
                         }
                     }
                 }
@@ -309,23 +297,23 @@ namespace Aquila
                 int x1to2 = (int)(x2 + slope1to2 * (y - y2));
                 int x0to2 = (int)(x2 + slope0to2 * (y - y2));
 
-                double z1to2 = z2 + zslope1to2 * (y - y2);
-                double z0to2 = z2 + zslope0to2 * (y - y2);
+                float z1to2 = z2 + zslope1to2 * (y - y2);
+                float z0to2 = z2 + zslope0to2 * (y - y2);
 
-                Vector4 c1to2 = c2 + cslope1to2 * (double)(y - y2);
-                Vector4 c0to2 = c2 + cslope0to2 * (double)(y - y2);
+                Vector4 c1to2 = c2 + cslope1to2 * (float)(y - y2);
+                Vector4 c0to2 = c2 + cslope0to2 * (float)(y - y2);
 
-                double w1to2 = w2 + wslope1to2 * (y - y2);
-                double w0to2 = w2 + wslope0to2 * (y - y2);
+                float w1to2 = w2 + wslope1to2 * (y - y2);
+                float w0to2 = w2 + wslope0to2 * (y - y2);
 
                 int xmin;
                 int xmax;
-                double zmin;
-                double zmax;
+                float zmin;
+                float zmax;
                 Vector4 cmin;
                 Vector4 cmax;
-                double wmin;
-                double wmax;
+                float wmin;
+                float wmax;
 
                 if (x1to2 > x0to2)
                 {
@@ -351,27 +339,29 @@ namespace Aquila
                 }
 
                 Vector4 mcolor = (cmax - cmin) / (xmax - xmin);
-                double mz = (zmax - zmin) / (xmax - xmin);
-                double mw = (wmax - wmin) / (xmax - xmin);
+                float mz = (zmax - zmin) / (xmax - xmin);
+                float mw = (wmax - wmin) / (xmax - xmin);
                 for (int x = xmin; x < xmax; x++)
                 {
-                    double z = zmin + mz * (x - xmin);
-                    double w = wmin + mw * (x - xmin);
+                    float z = zmin + mz * (x - xmin);
+                    float w = wmin + mw * (x - xmin);
                     Vector4 c = cmin + mcolor * (x - xmin);
+
+                    w = 1.0f / w;
 
                     if (this.perspectiveCorrection)
                     {
-                        c.Divide(w);
+                        c.Multiply(w);
                     }
 
                     //Vector4 t = texture.GetCoordinate(c.X, c.Y);
 
-                    if ((x >= 0) && (y >= 0) && (x < width) && (y < height) && (z >= 0.0) && (z <= 1.0))
+                    if ((x >= 0) && (y >= 0) && (x < width) && (y < height) && (z >= 0.0f) && (z <= 1.0f))
                     {
-                        if (z < depthBuffer.Raw[y, x].R)
+                        if (z < depthBuffer.Raw[y, x])
                         {
                             colorBuffer.Raw[y, x] = c;
-                            depthBuffer.Raw[y, x].R = z;
+                            depthBuffer.Raw[y, x] = z;
                         }
                     }
                 }

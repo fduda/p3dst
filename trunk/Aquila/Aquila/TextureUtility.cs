@@ -2,7 +2,7 @@ namespace Aquila
 {
     public class TextureUtility
     {
-        public static void SaveToRGB(Texture2 texture, System.Drawing.Bitmap bitmap)
+        public static void SaveToRGB(Texture2<Vector4> texture, System.Drawing.Bitmap bitmap)
         {
             int width = texture.Width;
             int height = texture.Height;
@@ -36,7 +36,7 @@ namespace Aquila
         }
 
         // TODO unsafe version
-        public static void LoadFromRGB(Texture2 texture, System.Drawing.Bitmap bitmap)
+        public static void LoadFromRGB(Texture2<Vector4> texture, System.Drawing.Bitmap bitmap)
         {
             int width = texture.Width;
             int height = texture.Height;
@@ -46,10 +46,10 @@ namespace Aquila
                 for (int x = 0; x < width; x++)
                 {
                     System.Drawing.Color c = bitmap.GetPixel(x, y);
-                    double r = c.R / 255.0;
-                    double g = c.G / 255.0;
-                    double b = c.B / 255.0;
-                    double a = 1.0;
+                    float r = c.R / 255.0f;
+                    float g = c.G / 255.0f;
+                    float b = c.B / 255.0f;
+                    float a = 1.0f;
                     texture.Raw[y, x] = new Vector4(r, g, b, a);
                 }
             }
