@@ -3,11 +3,20 @@ using System.IO;
 
 namespace Aquila
 {
+    /// <summary>
+    /// The Wavefront Object file format is not that hard to understand.
+    /// Drawback is that is does not support per vertex colors.
+    /// 
+    /// http://www.royriggs.com/obj.html
+    /// 
+    /// Currently this class only supports trinagulated meshes, without any edge
+    /// informations or back references. Therefore this it NOT a reference
+    /// implementation.
+    /// </summary>
     public class WavefrontObject
     {
-        // TODO Maybe It is a good idea to define some a standard vertex shader and one with tons of vertex coords and the like. Arrays are somewhat unreadable. Such a class can the implement some kind of an interpolator.
         // TODO Only triangulated obj files are supported
-        public static Vector4[][] Load(string filename)
+        public static PositionColorVertex[] Load(string filename)
         {
             List<double> vertices = new List<double>();
             List<int> faces = new List<int>();
@@ -16,7 +25,7 @@ namespace Aquila
             while (!sr.EndOfStream)
             {
                 string s = sr.ReadLine();
-                if(s.StartsWith("#"))
+                if (s.StartsWith("#"))
                 {
                     continue;
                 }
@@ -38,21 +47,26 @@ namespace Aquila
             }
             sr.Close();
 
-            int count = faces.Count;
+            PositionColorVertex[] result = new PositionColorVertex[faces.Count];
 
-            Vector4[][] result = new Vector4[count][];
-
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < faces.Count; i++)
             {
                 // face numbering starts with 1 in obj files
                 int n = (faces[i] - 1) * 3;
-                double x = vertices[n + 0];
-                double y = vertices[n + 1];
-                double z = vertices[n + 2];
-                double r = Math.Saturate(x);
-                double g = Math.Saturate(y);
-                double b = Math.Saturate(z);
-                result[i] = new Vector4[] { new Vector4(x, y, z, 1.0), new Vector4(r, g, b, 1.0) };
+
+                Vector4 position = new Vector4();
+                position.X = vertices[n + 0];
+                position.Y = vertices[n + 1];
+                position.Z = vertices[n + 2];
+                position.W = 1.0;
+
+                Vector4 color = new Vector4();
+                color.R = Math.Saturate(position.X * 0.5 + 0.5);
+                color.G = Math.Saturate(position.Y * 0.5 + 0.5);
+                color.B = Math.Saturate(position.Z * 0.5 + 0.5);
+                color.A = 1.0;
+
+                result[i] = new PositionColorVertex(position, color);
             }
 
             return result;

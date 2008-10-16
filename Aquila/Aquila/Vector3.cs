@@ -24,6 +24,42 @@ namespace Aquila
             set { this.e2 = value; }
         }
 
+        public double R
+        {
+            get { return this.e0; }
+            set { this.e0 = value; }
+        }
+
+        public double G
+        {
+            get { return this.e1; }
+            set { this.e1 = value; }
+        }
+
+        public double B
+        {
+            get { return this.e2; }
+            set { this.e2 = value; }
+        }
+
+        public double S
+        {
+            get { return this.e0; }
+            set { this.e0 = value; }
+        }
+
+        public double T
+        {
+            get { return this.e1; }
+            set { this.e1 = value; }
+        }
+
+        public double P
+        {
+            get { return this.e2; }
+            set { this.e2 = value; }
+        }
+
         public Vector3(double e0, double e1, double e2)
         {
             this.e0 = e0;

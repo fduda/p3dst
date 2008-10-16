@@ -1,5 +1,40 @@
 namespace Aquila
 {
+    // TODO better name
+    public interface Varying
+    {
+        double[] CopyToArray();
+        // TODO a new is needed in this function, maybe this is not a good idea
+        void CopyFromArray(double[] values);
+    }
+
+    public class PositionColorVertex
+    {
+        public Vector4 position;
+        public Vector4 color;
+
+        public PositionColorVertex(Vector4 position, Vector4 color)
+        {
+            this.position = position;
+            this.color = color;
+        }
+    }
+
+    public class ColorVarying : Varying
+    {
+        public Vector4 color;
+
+        public double[] CopyToArray()
+        {
+            return new double[] { this.color.R, this.color.G, this.color.B, this.color.A };
+        }
+
+        public void CopyFromArray(double[] values)
+        {
+            this.color = new Vector4(values[0], values[1], values[2], values[3]);
+        }
+    }
+
     // TODO no OpenGL fill rule, no fill rule at all
     // TODO Vector4 for depthBuffer is overkill, will change this later, or maybe we use it as stencil, and w buffer
     public class Aquila
@@ -34,10 +69,11 @@ namespace Aquila
             this.viewportHeight = height;
         }
 
-        public delegate Vector4 VertexProgramDelegate<U>(U uniforms, Vector4[] vertices, Vector4[] varyings);
-        public delegate Vector4 FragmentProgramDelegate<U>(U uniforms, Vector4[] varyings);
+        public delegate Vector4 VertexProgramDelegate<U, V, W>(U uniform, V vertex, W varying);
+        public delegate Vector4 FragmentProgramDelegate<U, W>(U uniform, W varying);
 
-        public void DrawTriangles<U>(VertexProgramDelegate<U> vertexProgram, FragmentProgramDelegate<U> fragmentProgram, U uniforms, Vector4[][] vertices, int varyingCount)
+        // currently I have no better idea than to create an empty type, or you have to define all types yourself, somehow C# can not inferre the type here
+        public void DrawTriangles<U, V, W>(VertexProgramDelegate<U, V, W> vertexProgram, FragmentProgramDelegate<U, W> fragmentProgram, U uniform, V[] vertices, W any) where W : Varying, new()
         {
             // TODO -1.0 ok or not? if ok then implement SetViewport correctly
             double width = colorBuffer.Width - 1.0;
@@ -48,24 +84,27 @@ namespace Aquila
             // TODO manual loop unrolling at least for triangle?
 
             Vector4[] positions = new Vector4[3];
-            Vector4[][] varyings = new Vector4[3][];
+            //Vector4[][] varyings = new Vector4[3][];
+            W[] varyings = new W[3];
             for (int i = 0; i < 3; i++)
             {
-                varyings[i] = new Vector4[varyingCount];
+                varyings[i] = new W();
             }
 
             for (int i = 0; i < vertices.Length; i += 3)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Vector4 p0 = vertexProgram(uniforms, vertices[i + j], varyings[j]);
+                    Vector4 p1 = vertexProgram(uniform, vertices[i + j], varyings[j]);
+                    p1.HomogenousDivide();
+                    //Vector4 p0 = new Vector4(0.0, 0.0, 0.0, 0.0);
 
                     // TODO homogenous divide function in Vector4?
-                    Vector4 p1 = new Vector4();
-                    p1.X = p0.X / p0.W;
-                    p1.Y = p0.Y / p0.W;
-                    p1.Z = p0.Z / p0.W;
-                    p1.W = p0.W; // TODO divdide here and multiply in DrawTriangle? is there a well defined way for homogenous divide?
+                    //Vector4 p1 = new Vector4();
+                    //p1.X = p0.X / p0.W;
+                    //p1.Y = p0.Y / p0.W;
+                    //p1.Z = p0.Z / p0.W;
+                    //p1.W = p0.W; // TODO divdide here and multiply in DrawTriangle? is there a well defined way for homogenous divide?
 
                     // TODO gluProject like method in Vector 4?
                     positions[j].X = (p1.X + 1.0) * (width / 2.0) + x;
@@ -74,7 +113,13 @@ namespace Aquila
                     positions[j].W = p1.W;
                 }
 
-                Vector4[] colors = new Vector4[] { varyings[0][0], varyings[1][0], varyings[2][0] };
+                double[] c0 = varyings[0].CopyToArray();
+                double[] c1 = varyings[1].CopyToArray();
+                double[] c2 = varyings[2].CopyToArray();
+
+                Vector4[] colors = new Vector4[] { new Vector4(c0[0], c0[1], c0[2], c0[3]), new Vector4(c1[0], c1[1], c1[2], c1[3]), new Vector4(c2[0], c2[1], c2[2], c2[3]) };
+                //Vector4[] colors = new Vector4[] { varyings[0][0], varyings[1][0], varyings[2][0] };
+                //Vector4[] colors = new Vector4[] { new Vector4(1.0, 0.0, 0.0, 1.0), new Vector4(0.0, 1.0, 0.0, 1.0), new Vector4(0.0, 0.0, 1.0, 0.0) };
                 DrawTrianglesUnsorted(positions, colors);
 
                 for (int j = 0; j < 3; j++)

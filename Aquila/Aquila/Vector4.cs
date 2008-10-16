@@ -223,5 +223,13 @@ namespace Aquila
             vector.Divide(value);
             return vector;
         }
+
+        internal void HomogenousDivide()
+        {
+            double w = 1.0 / this.W;
+            this.X *= w;
+            this.Y *= w;
+            this.Z *= w;
+        }
     }
 }
