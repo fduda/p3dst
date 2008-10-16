@@ -29,6 +29,7 @@ namespace Aquila
         private Matrix4 rotation = new Matrix4();
         private Matrix4 modelViewProjection = new Matrix4();
         private PositionColorVertex[] vertices = new PositionColorVertex[6];
+        private float movingAverage = 100.0f;
 
         public Sample()
         {
@@ -126,7 +127,10 @@ namespace Aquila
 
             sw.Stop();
 
-            label2.Text = sw.Elapsed.TotalMilliseconds + " ms";
+            float current = (float) sw.Elapsed.TotalMilliseconds;
+            movingAverage += (current - movingAverage) / 10.0f;
+
+            label2.Text = (int) current + " ms " + (int)movingAverage + " ms";
 
             pictureBox1.Invalidate();
         }
