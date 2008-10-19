@@ -1,6 +1,6 @@
 namespace Aquila
 {
-    public struct Vector4
+    public struct Vector4 : LinearInterpolation<Vector4>
     {
         private float e0;
         private float e1;
@@ -94,8 +94,6 @@ namespace Aquila
             get { return this.e3; }
             set { this.e3 = value; }
         }
-
-        // TODO should we implement here all 3 * (4**4 + 4**3 + 4**2 + 4**1) = 1020 swizzling possibilities?
 
         public string Pretty()
         {
@@ -212,6 +210,18 @@ namespace Aquila
             return vector;
         }
 
+        public static Vector4 operator +(Vector4 vector, float value)
+        {
+            vector.Add(value);
+            return vector;
+        }
+
+        public static Vector4 operator -(Vector4 vector, float value)
+        {
+            vector.Subtract(value);
+            return vector;
+        }
+
         public static Vector4 operator *(Vector4 vector, float value)
         {
             vector.Multiply(value);
@@ -225,17 +235,27 @@ namespace Aquila
         }
 
         /// <summary>
-        /// Do not know if there is a standardized way to assign w. We choose
-        /// 1.0 / w here. Has the advantage that we later only have can use a
-        /// mulitiplication instead a division.
+        /// I Do not know if there is a standardized way to assign w. We choose
+        /// 1.0 / w here. Has the advantage that we later only can use a
+        /// mulitiplication instead of a division.
         /// </summary>
         internal void HomogenousDivide()
         {
             float w = 1.0f / this.W;
-            this.X *= w;
-            this.Y *= w;
-            this.Z *= w;
-            this.W = w;
+            this.e0 *= w;
+            this.e1 *= w;
+            this.e2 *= w;
+            this.e3 = w;
+        }
+
+        public void LinearInterpolate(Vector4 vector1, Vector4 vector2, float control)
+        {
+            float c1 = 1.0f - control;
+            float c2 = control;
+            this.e0 = vector1.e0 * c1 + vector2.e0 * c2;
+            this.e1 = vector1.e1 * c1 + vector2.e1 * c2;
+            this.e2 = vector1.e2 * c1 + vector2.e2 * c2;
+            this.e3 = vector1.e3 * c1 + vector2.e3 * c2;
         }
     }
 }

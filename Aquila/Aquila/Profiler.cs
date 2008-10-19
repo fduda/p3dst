@@ -1,30 +1,62 @@
-using Stopwatch = System.Diagnostics.Stopwatch;
-using Console = System.Console;
-
-// TODO is it possible to only map List<T>?
 using System.Collections.Generic;
 
 namespace Aquila
 {
-    // TODO only an idea for a hierarchical profiler (more or less like pstats in P3D)
-    class Profiler
+    public class Profiler
     {
-        private string name;
-        List<Profiler> profilers = new List<Profiler>();
-        Stopwatch sw = new Stopwatch();
+        static Profiler instance = new Profiler();
 
-        public Profiler(string name)
+        private Profiler()
+        {
+            //
+        }
+
+        public static Profiler Instance
+        {
+            get { return instance; }
+        }
+
+        List<Timer> timers = new List<Timer>();
+
+        public void Reset()
+        {
+            foreach (Timer timer in timers)
+            {
+                timer.Reset();
+            }
+        }
+
+        public string Overview()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+            foreach (Timer timer in timers)
+            {
+                sb.Append(string.Format("{0}: {1:0.0} ms\n", timer.Name, timer.MilliSeconds));
+            }
+            return sb.ToString();
+        }
+
+        public Timer CreateTimer(string name)
+        {
+            Timer timer = new Timer(name);
+            timers.Add(timer);
+            return timer;
+        }
+    }
+
+    public class Timer
+    {
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        string name;
+
+        public Timer(string name)
         {
             this.name = name;
         }
 
-        public void Reset()
+        public string Name
         {
-            this.sw.Reset();
-            foreach (Profiler profiler in this.profilers)
-            {
-                profiler.Reset();
-            }
+            get { return this.name; }
         }
 
         public void Start()
@@ -37,25 +69,14 @@ namespace Aquila
             this.sw.Stop();
         }
 
-        public long MilliSeconds()
+        public void Reset()
         {
-            return sw.ElapsedMilliseconds;
+            this.sw.Reset();
         }
 
-        public void Print()
+        public float MilliSeconds
         {
-            Console.WriteLine(this.name + " " + MilliSeconds());
-            foreach (Profiler profiler in this.profilers)
-            {
-                profiler.Print();
-            }
-        }
-
-        public Profiler Add(string name)
-        {
-            Profiler profiler = new Profiler(name);
-            this.profilers.Add(profiler);
-            return profiler;
+            get { return (float)this.sw.Elapsed.TotalMilliseconds; }
         }
     }
 }
