@@ -1,6 +1,6 @@
 namespace Aquila
 {
-    public struct Matrix4
+    public class Matrix4
     {
         private float e00;
         private float e01;
@@ -113,6 +113,11 @@ namespace Aquila
         {
             get { return this.e33; }
             set { this.e33 = value; }
+        }
+
+        public Matrix4()
+        {
+            //
         }
 
         public Matrix4(Matrix4 matrix)

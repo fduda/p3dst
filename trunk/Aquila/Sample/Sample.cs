@@ -19,17 +19,20 @@ namespace Aquila
         private Stopwatch sw = new Stopwatch();
         private float angle = 0.0f;
         private Bitmap bitmap;
-        private Vector4 clearColor = new Vector4(0.7f, 0.8f, 0.9f, 1.0f);
-        private float clearDepth = 1.0f; // TODO 1.0f is default OpenGL Z, should the user care about this?
         private Texture2<Vector4> colorBuffer;
-        private Texture2<float> depthBuffer;
+        private Texture2<Vector1> depthBuffer;
         private Aquila aquila;
         private Matrix4 perspective = new Matrix4();
         private Matrix4 translation = new Matrix4();
         private Matrix4 rotation = new Matrix4();
         private Matrix4 modelViewProjection = new Matrix4();
-        private PositionColorVertex[] vertices = new PositionColorVertex[6];
-        private float movingAverage = 100.0f;
+        //private PositionColorVertex[] vertices = new PositionColorVertex[6];
+        private PositionNormalTexcoordVertex[] vertices;
+        private Texture2<Vector4> texture;
+
+        //private float movingAverage = 100.0f;
+        private Profiler profiler = Profiler.Instance;
+        private Timer timer = Profiler.Instance.CreateTimer("Sample");
 
         public Sample()
         {
@@ -40,49 +43,72 @@ namespace Aquila
 
             bitmap = new Bitmap(width, height);
             colorBuffer = new Texture2<Vector4>(width, height);
-            depthBuffer = new Texture2<float>(width, height);
+            depthBuffer = new Texture2<Vector1>(width, height);
             aquila = new Aquila(colorBuffer, depthBuffer);
+
+            //Bitmap textureBitmap = new Bitmap("../../../../circle.png");
+            Bitmap textureBitmap = new Bitmap("../../../../arrow.png");
+            texture = new Texture2<Vector4>(textureBitmap.Width, textureBitmap.Height);
+            TextureUtility.LoadFromRGB(texture, textureBitmap);
 
             pictureBox1.Image = bitmap;
 
             // colorized so colors could be used as texture coordinates
 
+            /*
             vertices[0] = new PositionColorVertex(new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
             vertices[1] = new PositionColorVertex(new Vector4(+1.0f, -1.0f, -1.0f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f));
             vertices[2] = new PositionColorVertex(new Vector4(+1.0f, -1.0f, +1.0f, 1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f));
             vertices[3] = new PositionColorVertex(new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
             vertices[4] = new PositionColorVertex(new Vector4(+1.0f, -1.0f, +1.0f, 1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f));
             vertices[5] = new PositionColorVertex(new Vector4(-1.0f, -1.0f, +1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-
+            */
+ 
             // gradient (perspective correction is better visible)
 
+            /*
             vertices[0] = new PositionColorVertex(new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
             vertices[1] = new PositionColorVertex(new Vector4(+1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
             vertices[2] = new PositionColorVertex(new Vector4(+1.0f, -1.0f, +1.0f, 1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f));
             vertices[3] = new PositionColorVertex(new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
             vertices[4] = new PositionColorVertex(new Vector4(+1.0f, -1.0f, +1.0f, 1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f));
             vertices[5] = new PositionColorVertex(new Vector4(-1.0f, -1.0f, +1.0f, 1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+            */
 
             // load external file
 
-            //vertices = WavefrontObject.Load("cube.obj"); // 36 vertices
-            //vertices = WavefrontObject.Load("sphere.obj"); // 15000 vertices
-            vertices = WavefrontObject.Load("monkey.obj"); // 188000 vertices
+            vertices = WavefrontObject.LoadPosition("cube.obj"); // 36 vertices
+            //vertices = WavefrontObject.LoadPosition("sphere.obj"); // 15000 vertices
+            //vertices = WavefrontObject.LoadPosition("monkey.obj"); // 188000 vertices
 
             label1.Text = vertices.Length + " vertices";
         }
 
-        private Vector4 VertexProgramColor(MatrixUniform uniform, PositionColorVertex vertex, ColorVarying varying)
+        private Vector4 VertexProgramSimple(Matrix4 modelViewProjection, PositionColorVertex vertex, ColorVarying varying)
         {
-            Vector4 position = uniform.modelViewProjection * vertex.position;
+            Vector4 position = modelViewProjection * vertex.position;
             varying.color = vertex.color;
             return position;
         }
 
-        // TODO not called yet
-        private Vector4 FragmentProgramColor(MatrixUniform uniform, ColorVarying varying)
+        private Vector4 FragmentProgramSimple(Matrix4 modelViewProjection, ColorVarying varying)
         {
             Vector4 color = varying.color;
+            return color;
+        }
+
+        private Vector4 VertexProgramModel(Matrix4 modelViewProjection, PositionNormalTexcoordVertex vertex, NormalTexcoordVarying varying)
+        {
+            Vector4 position = modelViewProjection * vertex.position;
+            //varying.normal = vertex.normal;
+            varying.texcoord = vertex.texcoord;
+            return position;
+        }
+
+        private Vector4 FragmentProgramModel(Matrix4 modelViewProjection, NormalTexcoordVarying varying)
+        {
+            //Vector4 color = new Vector4(varying.texcoord.S, varying.texcoord.T, 0.0f, 1.0f);
+            Vector4 color = texture.GetTexel(varying.texcoord);
             return color;
         }
 
@@ -102,15 +128,14 @@ namespace Aquila
             modelViewProjection.Multiply(translation);
             modelViewProjection.Multiply(rotation);
 
-            colorBuffer.Clear(clearColor);
-            depthBuffer.Clear(clearDepth);
+            aquila.ClearColor();
+            aquila.ClearDepth();
 
-            MatrixUniform uniform = new MatrixUniform();
-            uniform.modelViewProjection = modelViewProjection;
-
-            aquila.DrawTriangles(VertexProgramColor, FragmentProgramColor, uniform, vertices, new ColorVarying());
+            aquila.DrawTriangles(VertexProgramModel, FragmentProgramModel, modelViewProjection, vertices, new NormalTexcoordVarying());
+            //aquila.DrawTriangles(VertexProgramSimple, FragmentProgramSimple, modelViewProjection, vertices, new ColorVarying());
 
             TextureUtility.SaveToRGB(colorBuffer, bitmap);
+            //TextureUtility.SaveToRGB(depthBuffer, bitmap);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -120,19 +145,27 @@ namespace Aquila
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            sw.Reset();
-            sw.Start();
+            profiler.Reset();
+
+            timer.Start();
 
             Render();
 
-            sw.Stop();
 
-            float current = (float) sw.Elapsed.TotalMilliseconds;
-            movingAverage += (current - movingAverage) / 10.0f;
-
-            label2.Text = (int) current + " ms " + (int)movingAverage + " ms";
+            //float current = (float) sw.Elapsed.TotalMilliseconds;
+            //movingAverage += (current - movingAverage) / 10.0f;
+            //label2.Text = (int) current + " ms " + (int)movingAverage + " ms";
 
             pictureBox1.Invalidate();
+
+            timer.Stop();
+
+            richTextBox1.Text = profiler.Overview();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

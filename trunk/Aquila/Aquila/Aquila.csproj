@@ -45,6 +45,8 @@
     <Compile Include="Profiler.cs" />
     <Compile Include="Texture2.cs" />
     <Compile Include="TextureUtility.cs" />
+    <Compile Include="Vector1.cs" />
+    <Compile Include="Format.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />

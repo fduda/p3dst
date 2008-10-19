@@ -1,6 +1,6 @@
 namespace Aquila
 {
-    public struct Vector3
+    public struct Vector3 : LinearInterpolation<Vector3>
     {
         private float e0;
         private float e1;
@@ -136,6 +136,15 @@ namespace Aquila
             result.e1 = vector1.e2 * vector2.e0 + vector1.e0 * vector2.e2;
             result.e2 = vector1.e0 * vector2.e1 + vector1.e1 * vector2.e0;
             return result;
+        }
+
+        public void LinearInterpolate(Vector3 vector1, Vector3 vector2, float control)
+        {
+            float c1 = 1.0f - control;
+            float c2 = control;
+            this.e0 = vector1.e0 * c1 + vector2.e0 * c2;
+            this.e1 = vector1.e1 * c1 + vector2.e1 * c2;
+            this.e2 = vector1.e2 * c1 + vector2.e2 * c2;
         }
     }
 }

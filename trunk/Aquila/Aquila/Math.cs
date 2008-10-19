@@ -36,6 +36,22 @@ namespace Aquila
             }
         }
 
+        public static int Clamp(int value, int min, int max)
+        {
+            if (value < min)
+            {
+                return min;
+            }
+            else if (value > max)
+            {
+                return max;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
         public static float Saturate(float value)
         {
             if (value <= 0.0f)
@@ -94,8 +110,18 @@ namespace Aquila
             return (delta < EPSILON) && (delta > -EPSILON);
         }
 
-        public static float PI = (float)System.Math.PI;
+        public const float PI = (float)System.Math.PI;
 
-        public static float EPSILON = 1.0e-6f;
+        public const float EPSILON = 1.0e-6f;
+
+        public static float Floor(float value)
+        {
+            return (float) System.Math.Floor(value);
+        }
+
+        public static float Ceiling(float value)
+        {
+            return (float)System.Math.Ceiling(value);
+        }
     }
 }
