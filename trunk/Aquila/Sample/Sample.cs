@@ -29,6 +29,7 @@ namespace Aquila
         //private PositionColorVertex[] vertices = new PositionColorVertex[6];
         private PositionNormalTexcoordVertex[] vertices;
         private Texture2<Vector4> texture;
+        private MatrixTextureUniform uniform = new MatrixTextureUniform();
 
         //private float movingAverage = 100.0f;
         private Profiler profiler = Profiler.Instance;
@@ -77,9 +78,9 @@ namespace Aquila
 
             // load external file
 
-            vertices = WavefrontObject.LoadPosition("cube.obj"); // 36 vertices
-            //vertices = WavefrontObject.LoadPosition("sphere.obj"); // 15000 vertices
-            //vertices = WavefrontObject.LoadPosition("monkey.obj"); // 188000 vertices
+            vertices = WavefrontObject.Load("cube.obj"); // 36 vertices
+            //vertices = WavefrontObject.Load("sphere.obj"); // 15000 vertices
+            //vertices = WavefrontObject.Load("monkey.obj"); // 188000 vertices
 
             label1.Text = vertices.Length + " vertices";
         }
@@ -97,18 +98,19 @@ namespace Aquila
             return color;
         }
 
-        private Vector4 VertexProgramModel(Matrix4 modelViewProjection, PositionNormalTexcoordVertex vertex, NormalTexcoordVarying varying)
+        private Vector4 VertexProgramModel(MatrixTextureUniform uniform, PositionNormalTexcoordVertex vertex, NormalTexcoordVarying varying)
         {
-            Vector4 position = modelViewProjection * vertex.position;
+            Vector4 position = uniform.matrix * vertex.position;
             //varying.normal = vertex.normal;
             varying.texcoord = vertex.texcoord;
             return position;
         }
 
-        private Vector4 FragmentProgramModel(Matrix4 modelViewProjection, NormalTexcoordVarying varying)
+        private Vector4 FragmentProgramModel(MatrixTextureUniform uniform, NormalTexcoordVarying varying)
         {
             //Vector4 color = new Vector4(varying.texcoord.S, varying.texcoord.T, 0.0f, 1.0f);
-            Vector4 color = texture.GetTexel(varying.texcoord);
+            Vector4 color = uniform.texture.GetTexel(varying.texcoord);
+            //Vector4 color = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
             return color;
         }
 
@@ -119,8 +121,8 @@ namespace Aquila
             float aspectRatio = (float)colorBuffer.Width / (float)colorBuffer.Height;
 
             // to test the near and far plane we limit the z range
-            perspective = MatrixUtility.Perspective(fov, aspectRatio, 2.7f, 5.3f);
-            translation = MatrixUtility.Translate(new Vector3(0.0f, 0.0f, -4.0f));
+            perspective = MatrixUtility.Perspective(fov, aspectRatio, 3.7f, 6.3f);
+            translation = MatrixUtility.Translate(new Vector3(0.0f, 0.0f, -5.0f));
             rotation = MatrixUtility.Rotate(angle, new Vector3(0.0f, 1.0f, 0.0f));
 
             modelViewProjection.Identity();
@@ -128,10 +130,13 @@ namespace Aquila
             modelViewProjection.Multiply(translation);
             modelViewProjection.Multiply(rotation);
 
+            uniform.matrix = modelViewProjection;
+            uniform.texture = texture;
+
             aquila.ClearColor();
             aquila.ClearDepth();
 
-            aquila.DrawTriangles(VertexProgramModel, FragmentProgramModel, modelViewProjection, vertices, new NormalTexcoordVarying());
+            aquila.DrawTriangles(VertexProgramModel, FragmentProgramModel, uniform, vertices, new NormalTexcoordVarying());
             //aquila.DrawTriangles(VertexProgramSimple, FragmentProgramSimple, modelViewProjection, vertices, new ColorVarying());
 
             TextureUtility.SaveToRGB(colorBuffer, bitmap);
@@ -150,7 +155,6 @@ namespace Aquila
             timer.Start();
 
             Render();
-
 
             //float current = (float) sw.Elapsed.TotalMilliseconds;
             //movingAverage += (current - movingAverage) / 10.0f;

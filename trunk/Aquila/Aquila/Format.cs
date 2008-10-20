@@ -9,6 +9,11 @@ namespace Aquila
         public Matrix4 matrix;
         public Texture2<Vector4> texture;
 
+        public MatrixTextureUniform()
+        {
+            //
+        }
+
         public MatrixTextureUniform(Matrix4 matrix, Texture2<Vector4> texture)
         {
             this.matrix = matrix;
