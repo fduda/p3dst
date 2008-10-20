@@ -9,13 +9,15 @@ namespace Aquila
         int Elements();
     }
 
-    // TODO That interface is a bit odd, because C# does not allow static methods in interfaces (the CLR does btw)
+    /// <summary>
+    /// This interface is a bit odd, because C# does not allow static methods in
+    /// interfacess (the CLR does BTW).
+    /// </summary>
     public interface LinearInterpolation<T>
     {
         void LinearInterpolate(T vector1, T vector2, float control);
     }
 
-    // TODO no OpenGL fill rule, no fill rule at all
     public class Aquila
     {
         private Texture2<Vector4> colorBuffer;
@@ -37,6 +39,8 @@ namespace Aquila
         {
             this.colorBuffer = colorBuffer;
             this.depthBuffer = depthBuffer;
+
+            SetViewport(0, 0, colorBuffer.Width, colorBuffer.Height);
         }
 
         public void SetPerspectiveCorrection(bool enable)
@@ -73,24 +77,33 @@ namespace Aquila
             this.viewportHeight = height;
         }
 
+        private void Viewport(ref Vector4 vector)
+        {
+            vector.X = (vector.X + 1.0f) * (this.viewportWidth * 0.5f) + this.viewportX;
+            vector.Y = (-vector.Y + 1.0f) * (this.viewportHeight * 0.5f) + this.viewportY;
+            vector.Z = (vector.Z + 1.0f) * 0.5f;
+            //vector.W = vector.W;
+        }
+
         public delegate Vector4 VertexProgramDelegate<U, V, W>(U uniform, V vertex, W varying);
         public delegate Vector4 FragmentProgramDelegate<U, W>(U uniform, W varying);
 
-        // currently I have no better idea than to create an empty type, or you have to define all types yourself, somehow C# can not inferre the type here
-        public void DrawTriangles<U, V, W>(VertexProgramDelegate<U, V, W> vertexProgram, FragmentProgramDelegate<U, W> fragmentProgram, U uniform, V[] vertices, W any) where W : Varying, new()
+        // Currently I have no better idea than to create an empty type, or you have to define all types yourself, somehow C# can not inferre the type here.
+
+        /// <summary>
+        /// Every parameter should be obvious (if you know OpenGL/DirectX a bit)
+        /// except the varying parameter. This parameter is only here, so the C#
+        /// can inferre the type of W automatically. If we omit this type here,
+        /// you the specify all types for DrawTriangles by yourself.
+        /// </summary>
+        public void DrawTriangles<U, V, W>(VertexProgramDelegate<U, V, W> vertexProgram, FragmentProgramDelegate<U, W> fragmentProgram, U uniform, V[] vertices, W varying) where W : Varying
         {
             timerDrawTriangles.Start();
-
-            // TODO -1.0f ok or not? if ok then implement SetViewport correctly
-            float width = colorBuffer.Width - 1.0f;
-            float height = colorBuffer.Height - 1.0f;
-            float x = 0.0f;
-            float y = 0.0f;
 
             Vector4[] positions = new Vector4[3];
 
             float[][] varyings = new float[3][];
-            int length = any.Elements();
+            int length = varying.Elements();
             for (int i = 0; i < 3; i++)
             {
                 varyings[i] = new float[length];
@@ -100,16 +113,10 @@ namespace Aquila
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Vector4 p = vertexProgram(uniform, vertices[i + j], any);
-                    p.HomogenousDivide();
-
-                    // TODO gluProject like method in Vector4?
-                    positions[j].X = (p.X + 1.0f) * (width * 0.5f) + x;
-                    positions[j].Y = (-p.Y + 1.0f) * (height * 0.5f) + y;
-                    positions[j].Z = (p.Z + 1.0f) * 0.5f;
-                    positions[j].W = p.W;
-
-                    any.Store(varyings[j]);
+                    positions[j] = vertexProgram(uniform, vertices[i + j], varying);
+                    positions[j].HomogenousDivide();
+                    Viewport(ref positions[j]);
+                    varying.Store(varyings[j]);
                 }
 
                 // Sort the three vertices of a triangle along the y axis from top to down. Simplifies the method that does the real work.
@@ -131,15 +138,17 @@ namespace Aquila
                     Math.Swap(ref i0, ref i1);
                 }
 
-                RasterizeTriangle(positions[i0], positions[i1], positions[i2], varyings[i0], varyings[i1], varyings[i2], uniform, fragmentProgram, any);
+                RasterizeTriangle(positions[i0], positions[i1], positions[i2], varyings[i0], varyings[i1], varyings[i2], uniform, fragmentProgram, varying);
             }
 
             timerDrawTriangles.Stop();
         }
 
-        private void RasterizeTriangle<U, W>(Vector4 p0, Vector4 p1, Vector4 p2, float[] v0, float[] v1, float[] v2, U uniforms, FragmentProgramDelegate<U, W> fragmentProgram, W any) where W : Varying, new()
+        private void RasterizeTriangle<U, W>(Vector4 p0, Vector4 p1, Vector4 p2, float[] v0, float[] v1, float[] v2, U uniforms, FragmentProgramDelegate<U, W> fragmentProgram, W varying) where W : Varying
         {
-            int length = any.Elements();
+            // TODO no OpenGL fill convention
+
+            int length = varying.Elements();
 
             int width = this.colorBuffer.Width;
             int height = this.colorBuffer.Height;
@@ -288,8 +297,8 @@ namespace Aquila
                     {
                         if (z < depthBuffer.GetPixel(x, y).X)
                         {
-                            any.Load(v);
-                            colorBuffer.SetPixel(x, y, fragmentProgram(uniforms, any));
+                            varying.Load(v);
+                            colorBuffer.SetPixel(x, y, fragmentProgram(uniforms, varying));
                             depthBuffer.SetPixel(x, y, new Vector1(z));
                         }
                     }
@@ -363,8 +372,8 @@ namespace Aquila
                     {
                         if (z < depthBuffer.GetPixel(x, y).X)
                         {
-                            any.Load(v);
-                            colorBuffer.SetPixel(x, y, fragmentProgram(uniforms, any));
+                            varying.Load(v);
+                            colorBuffer.SetPixel(x, y, fragmentProgram(uniforms, varying));
                             depthBuffer.SetPixel(x, y, new Vector1(z));
                         }
                     }

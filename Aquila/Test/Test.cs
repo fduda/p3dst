@@ -6,15 +6,17 @@ namespace Aquila
 {
     public class Test
     {
-        public static void T1()
+        public static void TestReciprocalAccuracy()
         {
+            Console.WriteLine("TestReciprocalAccuracy");
+
             for (int i = 1; i < 10000; i++)
             {
                 Random r = new Random(i);
 
                 float sum1 = 0.0f;
                 float sum2 = 0.0f;
-                for (int j = 0; j < 100; j++)
+                for (int j = 0; j < 1000; j++)
                 {
                     float x = Math.Pow((float)r.NextDouble(), (float)r.NextDouble() * 5.0f);
                     float y = Math.Pow((float)r.NextDouble(), (float)r.NextDouble() * 5.0f);
@@ -30,8 +32,10 @@ namespace Aquila
             }
         }
 
-        public static void T2()
+        public static void TestDivisionVsMultiply()
         {
+            Console.WriteLine("TestDivisionVsMultiply");
+
             Stopwatch sw1 = new Stopwatch();
             Stopwatch sw2 = new Stopwatch();
 
@@ -62,8 +66,10 @@ namespace Aquila
                 sum1, sum2, sw1.ElapsedMilliseconds, sw2.ElapsedMilliseconds));
         }
 
-        public static void T3()
+        public static void TestSysCallVsCall()
         {
+            Console.WriteLine("TestSysCallVsCall");
+
             Stopwatch sw1 = new Stopwatch();
             Stopwatch sw2 = new Stopwatch();
 
@@ -92,14 +98,14 @@ namespace Aquila
                 sum1, sum2, sw1.ElapsedMilliseconds, sw2.ElapsedMilliseconds));
         }
 
-        private struct SimpleVector4
+        private struct DoubleVector4
         {
             public double a;
             public double b;
             public double c;
             public double d;
 
-            public SimpleVector4(double a, double b, double c, double d)
+            public DoubleVector4(double a, double b, double c, double d)
             {
                 this.a = a;
                 this.b = b;
@@ -108,8 +114,10 @@ namespace Aquila
             }
         }
 
-        public static void T4()
+        public static void TestFloatArrayVsDoubleArray()
         {
+            Console.WriteLine("TestFloatArrayVsDoubleArray");
+
             Stopwatch sw1 = new Stopwatch();
             Stopwatch sw2 = new Stopwatch();
             Stopwatch sw3 = new Stopwatch();
@@ -122,9 +130,9 @@ namespace Aquila
             Vector4[,] a1 = new Vector4[h, w];
             Vector4[] a2 = new Vector4[h * w];
             Vector4[,] a3 = new Vector4[w, h];
-            SimpleVector4[,] a4 = new SimpleVector4[h, w];
+            DoubleVector4[,] a4 = new DoubleVector4[h, w];
             Vector4 clear = new Vector4(1.0f, 2.0f, 3.0f, 4.0f);
-            SimpleVector4 testClear = new SimpleVector4(1.0, 2.0, 3.0, 4.0);
+            DoubleVector4 testClear = new DoubleVector4(1.0, 2.0, 3.0, 4.0);
 
             sw1.Start();
 
@@ -187,12 +195,67 @@ namespace Aquila
                 sw1.ElapsedMilliseconds, sw2.ElapsedMilliseconds, sw3.ElapsedMilliseconds, sw4.ElapsedMilliseconds));
         }
 
+        public static void TestVectorIndexerVsVectorProperty()
+        {
+            Console.WriteLine("TestVectorIndexerVsVectorProperty");
+
+            Stopwatch sw1 = new Stopwatch();
+            Stopwatch sw2 = new Stopwatch();
+
+            int n = 10000000;
+            float f1 = 0.00001f;
+            float f2 = 0.00003f;
+            float f3 = 0.00005f;
+            float f4 = 0.00007f;
+
+            Vector4[] v = new Vector4[n];
+
+            float sum1 = 0;
+            float sum2 = 0;
+
+            sw1.Start();
+
+            for (int i = 0; i < n; i++)
+            {
+                v[i][0] = i * f1;
+                v[i][1] = i * f2;
+                v[i][2] = i * f3;
+                v[i][3] = i * f4;
+            }
+            for (int i = 0; i < n; i++)
+            {
+                sum1 += v[i][0] + v[i][1] + v[i][2] + v[i][3];
+            }
+
+            sw1.Stop();
+
+            sw2.Start();
+
+            for (int i = 0; i < n; i++)
+            {
+                v[i].R = i * f1;
+                v[i].G = i * f2;
+                v[i].B = i * f3;
+                v[i].A = i * f4;
+            }
+            for (int i = 0; i < n; i++)
+            {
+                sum2 += v[i].R + v[i].G + v[i].B + v[i].A;
+            }
+
+            sw2.Stop();
+
+            Console.WriteLine(string.Format("Sum1:{0} Sum2:{1} t1:{2}[ms] t2:{3}[ms]",
+                sum1, sum2, sw1.ElapsedMilliseconds, sw2.ElapsedMilliseconds));
+        }
+
         public static void Main()
         {
-            T1();
-            T2();
-            T3();
-            T4();
+            TestReciprocalAccuracy();
+            //TestDivisionVsMultiply();
+            //TestSysCallVsCall();
+            //TestFloatArrayVsDoubleArray();
+            //TestVectorIndexerVsVectorProperty();
 
 #if DEBUG
             Console.WriteLine("...");

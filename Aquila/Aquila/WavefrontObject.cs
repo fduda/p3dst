@@ -16,7 +16,7 @@ namespace Aquila
     /// </summary>
     public class WavefrontObject
     {
-        public static PositionNormalTexcoordVertex[] LoadPosition(string filename)
+        public static PositionNormalTexcoordVertex[] Load(string filename)
         {
             List<float> vertices = new List<float>();
             List<float> normals = new List<float>();

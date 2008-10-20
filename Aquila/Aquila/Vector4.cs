@@ -127,9 +127,9 @@ namespace Aquila
 
         /// <summary>
         /// The method is faster if we internally use the reciprocal from value.
-        /// On the other hand we loose precision (See Test.cs). Therefore, if a
-        /// faster division is needed, the multiply method should be used by
-        /// the user of this class.
+        /// On the other hand we loose precision (see TestReciprocalAccuracy) in
+        /// some rare circumstances. Therefore, if a faster division is needed,
+        /// the multiply method should be used by the user of this class.
         /// </summary>
         public void Divide(float value)
         {
@@ -157,7 +157,11 @@ namespace Aquila
             this.e3 = matrix.E30 * e0 + matrix.E31 * e1 + matrix.E32 * e2 + matrix.E33 * e3;
         }
 
-        // TODO test how fast and or slow this indexer is. If it is to slow then remove it. If it is fast enough add one to Matrix4 and Vector3.
+        /// <summary>
+        /// Indexer is approximatly twice as slow as accessing the properties
+        /// directly. Run TestVectorIndexerVsVectorProperty. Try to avoid it if
+        /// possible.
+        /// </summary>
         public float this[int index]
         {
             get
