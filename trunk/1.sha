@@ -27,12 +27,13 @@ You cannot multiply a float3 with a matrix that consists of float4. It is more
 or less like the fourth value in colors, the alpha component. Often you do not
 need this, but you can do some cool things with it.
 
-Back to topic. The only thing we are doing here is to assign the variable
-l_position a constant float4. In C/C++/C# you cannot assign arrays to arrays the
-way we do it here, but in Cg this is possible, for this fixed sized arrays. Can
-we rename the variable l_position? No we cannot. This is a requirement from
-Panda3D. Look up this name in the "List of Possible Shader Inputs" in the
-manual.
+Back to topic. The only thing we are doing here is to assign the variable 
+l_position a constant float4. In C/C++/C# you cannot assign arrays to arrays the 
+way we do it here, but in Cg this is possible, for this fixed sized arrays. Can 
+we rename the variable l_position? The l_ prefix means, that the content of 
+l_position is linearly interpolated (more to that later). But the word position 
+is only a convention (which you can change if you like). Look up this name in 
+the "List of Possible Shader Inputs" in the manual.
 
 Why do I have to write "out" in front of l_position? In C/C++/C# every function
 has at most one return value. But shaders often need to return more than one
