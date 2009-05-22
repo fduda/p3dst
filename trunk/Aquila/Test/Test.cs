@@ -252,10 +252,10 @@ namespace Aquila
         public static void Main()
         {
             TestReciprocalAccuracy();
-            //TestDivisionVsMultiply();
-            //TestSysCallVsCall();
-            //TestFloatArrayVsDoubleArray();
-            //TestVectorIndexerVsVectorProperty();
+            TestDivisionVsMultiply();
+            TestSysCallVsCall();
+            TestFloatArrayVsDoubleArray();
+            TestVectorIndexerVsVectorProperty();
 
 #if DEBUG
             Console.WriteLine("...");
