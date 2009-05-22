@@ -31,16 +31,16 @@ specialized shaders which you apply carefully to your scene. The Auto Shader of
 Panda3D is an example of this. It may be possible that each node has another
 shader. You do not see this because they are generated on the fly.
 
-Before you read on, maybe modify the sample 0.py and add a CartoonInk post
-process filter to your scene. setCartoonInk is method of the class
-CommonFilters. Post processing means, that after your image is rendered and
-ready to display, you start to modify the each pixel. More precisely: You modify
-ALL pixels visible on the screen. At least on my computer the FPS varies greatly
-if I have a small window or if I have a large window. A post process vertex
-shader only needs to process four vertices (the corners of the window) but
-millions of pixels, therefore this is an example where only the fragment shader
-is limiting the performance of your application (if you are not crazy and write
-your SETI client into the vertex shader).
+Before you read on, maybe modify the sample 0.py and add a CartoonInk post 
+process filter to your scene. setCartoonInk is a method of the class 
+CommonFilters. Post processing means, that after your image is rendered and 
+ready to display, you start to modify each pixel once more. More precisely: You 
+modify ALL pixels visible on the screen. At least on my computer the FPS varies 
+greatly if I have a small window or if I have a large window. A post process 
+vertex shader only needs to process four vertices (the corners of the window) 
+but millions of pixels, therefore this is an example where only the fragment 
+shader is limiting the performance of your application (if you are not crazy and 
+write your SETI client into the vertex shader).
 */
 
 /*
@@ -68,18 +68,18 @@ we only try to understand what all this keywords means. At least I hope, that
 you understand that Panda3D only sends us the raw vtx_position from the egg
 file.
 
-Next what means this "uniform". "uniform" is like the keyword "in", but this
-uniform is the same for every call to vshader for one cube. While vtx_position
-changes on every of the 24 calls to vshader, mat_modelproj does not change. You
-can pass an uniform to the vhader or to the fshader, but not every uniform is
-useful in both. We will see later that Panda3D has to modify the mat_modelproj
-uniform for every cube. More precisly think of an "uniform" as something that is
-initialized by the environment. The environment is Panda3D or you. You may ask
-the following: But vtx_position is also from the environment? That is half of
-the truth. If Panda3D has to deliver each and every vertex to the shader the
-application would be slow. Panda3D only says to the GPU: "Hey dear GPU. Here is
-a list of vertices, they are ordered like this and like that, please process
-them". An "uniform" in contrast has to be set by you or Panda3D, the GPU never
+Next what means this "uniform". "uniform" is like the keyword "in", but this 
+uniform is the same for every call to vshader for one cube. While vtx_position 
+changes on every of the 24 calls to vshader, mat_modelproj does not change. You 
+can pass an uniform to the vhader or to the fshader, but not every uniform is 
+useful in both. We will see later that Panda3D has to modify the mat_modelproj 
+uniform for every cube. More precisely think of an "uniform" as something that 
+is initialized by the environment. The environment is Panda3D or you. You may 
+ask the following: But vtx_position is also from the environment? That is half 
+of the truth. If Panda3D has to deliver each and every vertex to the shader the 
+application would be slow. Panda3D only says to the GPU: "Hey dear GPU. Here is 
+a list of vertices, they are ordered like this and like that, please process 
+them". An "uniform" in contrast has to be set by you or Panda3D, the GPU never 
 modifies an "uniform".
 
 The type float4x4 is a fixed size array type with 4 * 4 floats or in other words
@@ -108,8 +108,8 @@ thing but this is not true (and that is a good thing, because it gives us the
 possibility to do calculations that are not perspectively correct).
 
 mat_modelproj is a composite from a so called modelview matrix, and from a so
-called projection matrix. There is a second vertex shader in this sample that is
-a bit more complex but does the same thing. The only difference is the
+called projection matrix. There are other vertex shaders in this sample that are
+a bit more complex but do the same thing. The only difference is the
 composition of this two matrices.
 
 Ok therefore we need to understand what this modelview matrix is first. I repeat
@@ -129,7 +129,7 @@ all this information in a 4x4 matrix. Think of a 4x4 matrix as a pool that
 stores positions, rotations, shears and translations, and maybe some fancy
 things no one can imagine. But do not think of it as a divine thing, you cannot
 do everything this are only 16 floats. The Python sample that loads this shader
-has some lines, which if disabled, can show you the modelview matrix of every
+has some lines, which if enabled, can show you the modelview matrix of every
 node. If you read those matrices carefully you see that only one number differs
 for each of the three cubes. If you are brave, try to use setScale (only with
 one parameter, not three) in Python on one of your cubes and look at the
@@ -158,10 +158,10 @@ this by ourselves. With a call to setFov Panda3D generates internally a correct
 projection matrix. This projection matrix is a bit harder to understand, because
 if you look at the matrix it is not obvious what happens. The method
 getProjectionMat of the class PerspectiveLens or the same method of the
-OrthographicLens class may help. If your application uses PerspectiveLens (this
-examples does because that is the default) just have to remember that anyone has
-to care, that a face that is further away has to be smaller than a face that is
-nearer to the viewer. This information is stored in the projection matrix.
+OrthographicLens class may help. If your application uses PerspectiveLens (this 
+examples does because that is the default) you just have to remember that anyone 
+has to care, that a face that is further away has to be smaller than a face that 
+is nearer to the viewer. This information is stored in the projection matrix.
 
 Now we have both those matrices. One cool thing about matrices is the following
 possibility. You can apply the modelview matrix to every vertex and then apply
@@ -180,11 +180,11 @@ void vshader(
 
 /*
 DIRTY
-We have an alternative vertex shader that does the exactly same thing as his
-predecessor, but this time we create the mat_modelproj on our own. The downside
-of this version is that it is never as fast as the preceding version.
-You dont need to understand all of them, we will later talk in more detail about
-so called spaces.
+We have alternative vertex shaders that do the exactly same thing as his 
+predecessor, but this time we create the mat_modelproj on our own. The downside 
+of this version is that it is never as fast as the preceding version. You dont 
+need to understand all of them, we will later talk in more detail about so 
+called spaces.
 */
 // void vshader(
 //    uniform float4x4 mat_modelview,
@@ -222,7 +222,7 @@ so called spaces.
 /*
 Our fshader is called for every pixel that needs to be drawn into the color
 buffer. We then calculate a color and assign it to the o_color variable. The GPU
-then creates a color based on the chosen color depth, and then overwrites the
+then creates a color, based on the chosen color depth, and then overwrites the
 color buffer with this new information. The word overwriting is carefully chosen
 here. It may be possible, that in your scene all three cubes are not next to
 each other, but in front of each other. There are 2 possible scenarios. First
@@ -230,9 +230,10 @@ the rearmost cube is drawn, and at last the foremost cube is drawn. In this case
 it is possible that one pixel need to be overdrawn up to three times. The second
 scenario is that first the foremost cube is drawn and at last the rearmost cube.
 In this case the the depth buffer of you GPU discards all pixels of the cubes
-behind the first one, so the fshader needs not be called for this discarded
-pixels. There is third scenario where you have alpha transparency, in this case
-you have to fully draw all the cubes, independent of their order.
+behind the first one, so the fshader needs not be called for this discarded 
+pixels. There is third scenario where you have alpha transparency, in this case 
+you have to fully draw all the cubes, independent of their order (you 
+respectively Panda3D should order them manually).
 */
 void fshader(
     out float4 o_color : COLOR)
@@ -243,7 +244,7 @@ void fshader(
     there is still no input we cannot do cool things here, but at least we can
     see a color, because the vertex shader now works. One more thing that is
     typical to shaders, the shader itself does not know which pixel it is
-    drawing. If you need this information you have to generated it yourself
+    drawing. If you need this information you have to generate it yourself
     (which we are not able to do know).
     */
     o_color = float4(1.0, 0.0, 1.0, 1.0);
@@ -252,15 +253,15 @@ void fshader(
 
     /*
     DIRTY
-    Here we calculate more constant colors, but this time with the help of a
-    function. Cg include some function that help to do basic math that is often
-    used in 3D graphic applications. Most of this function you can write in Cg
-    yourself, but they are often slower then. Try as often as possible to use
-    included functions.
+    Here we calculate more constant colors, but this time with the help of a 
+    function. Cg includes some functions that help to do basic math that is 
+    often used in 3D graphic applications. Most of this function you can write 
+    in Cg yourself, but they are often slower then. Try as often as possible to 
+    use included functions.
 
-    lerp is an example of such an included function. It linearly interpolates the
-    first two parameters. The third parameters says how near or far away from
-    the first and second parameter you like a value to be calculated by the
+    lerp is an example of such an included function. It linearly interpolates 
+    the first two parameters. The third parameters says how near or far away 
+    from the first and second parameter you like a value to be calculated by the 
     function. A reference of all Cg functions is available on:
 
     http://http.developer.nvidia.com/CgTutorial/cg_tutorial_appendix_e.html
@@ -296,6 +297,6 @@ http://people.hofstra.edu/Stefan_Waner/realWorld/tutorialsf1/frames3_2.html
 
 One question that may arise. Why is a 3x3 matrix not enough, for a vector three
 dimensions are enough? One possible answer is: You cannot do any translations
-(setPos) with a 3x3 matrix. If you understand this answer fully, then you maybe
+(setPos) with a 3x3 matrix. If you understand this answer fully, then you
 understand matrices quite good.
 */

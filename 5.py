@@ -52,14 +52,15 @@ scene like this.
 
 Some facts: The new panda3drocks uniform, you can see below, has an alpha
 component with a value lesser than 1.0. The background in this scene is black.
-Back facing triangles are not drawn. What we conclude from this. If the GPU has
+Back facing triangles are not drawn. What we conclude from this? If the GPU has
 to draw the first cube, the only two colors on the screen are black (0.0, 0.0,
 0.0) and a dark purple (0.1, 0.0, 0.1). If the GPU has to draw the second cube,
 and they are not side by side, a new purple (theoretically 0.19, 0.0, 0.19,
-practically ~0.18, 0.0, ~0.18) appears that is brighter than its predecessor.
-The more triangles are on top of one another the brighter the scene. Or in other
-words, the brighter the scene the more the fragment shader needs to be called.
-Something you should try to avoid.
+practically ~0.18, 0.0, ~0.18) appears that is brighter than its predecessor 
+(see below for a more detailled explanation). The more triangles are on top of 
+one another the brighter the scene. Or in other words, the brighter the scene 
+the more the fragment shader needs to be called. Something you should try to 
+avoid.
 """
 #root.setTransparency(True)
 #root.setShaderInput("panda3drocks", 1.0, 0.0, 1.0, 0.1)

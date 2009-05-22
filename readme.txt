@@ -9,9 +9,9 @@ http://www.python.org/doc/
 
 If should be able to write a simple math program in C/C++ or C#. Do not
 underestimate this. If you start writing your own shaders without any prior
-knowledge about a C like language it is as hard as if you start writing a
+knowledge about a C like language, it is as hard as if you start writing a
 Panda3D application without knowing anything about Python. If you do not know
-anything about C it has at least three advantges to learn it first. Python
+anything about C it has at least three advantages to learn it first. Python
 extensions are often written in C. You learn a programming language where you
 have to explicitly declare the types of variables. With C you get a tool to
 rewrite your time critical Python snippets.
@@ -37,7 +37,6 @@ well, how the depth buffer works.
 
 http://www.panda3d.net/wiki/index.php/Depth_Test_and_Depth_Write
 
-
 Read the first chapter from NVIDIAs Cg Tutorial. You do not have to understand
 it fully, but at least you know who invented Cg, and what it is for.
 
@@ -52,7 +51,6 @@ http://developer.nvidia.com
 Always have the following page handy:
 
 http://www.panda3d.org/wiki/index.php/List_of_Possible_Shader_Inputs
-
 
 [Tutorials]
 

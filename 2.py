@@ -1,7 +1,7 @@
 
 """
 The first useful sample. After this tutorial we are able to draw our cubes,
-which looks like cubes. With our knowledge we are not able to color them
+which look like cubes. With our knowledge we are not able to color them
 correctly, but we can do some nice stuff and see the result. If everything is
 black this time, something must be wrong.
 """
@@ -59,8 +59,8 @@ DIRTY
 Do you like to see the model matrix of each cube? You may only understand this
 if you read the comment for vshader in 2.sha.
 """
-for cube in cubes:
-    print cube.getMat()
+#for cube in cubes:
+#    print cube.getMat()
 
 base.accept("escape", sys.exit)
 base.accept("o", base.oobe)

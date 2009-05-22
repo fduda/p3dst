@@ -18,12 +18,11 @@ Some facts (good and bad):
 - Although it would be possible to add all swizzling possibilites like in GLSL and or Cg in C# that would add an trendemous amount of methods to all classes.
 - Only floating point Textures/Buffers. HDR should be no problem.
 
-Things I like to add:
+Missing things:
 
-- I would definitely add a lot more comments if the core design is stable.
 - Automatic support for left handed coordinate system. OpenGL has a default right handed coordinate system. Panda3D has a left handed coordinate system.
 - Add support for a geometry program.
 - Add some more performance tests. I still do not know when structs are more suitable and when not (eventuall modify Vector4, Matrix4 then).
-- Add Matrix3 (for normals)
+- Add Matrix3 (for normals).
 - Add a possibility to discard a fragment.
-- Try to remove as much short-life objects as possible (the GC should never be called ideally).
+- Try to remove as much short-life objects as possible (the GC should never be called ideally, at least not in a tight loop).

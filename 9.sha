@@ -5,55 +5,55 @@ We now try to implement what was written in the introduction in 8.py. To
 summarize: We like to calculate our lighting equation for each vertex. For this
 we need the position of the light and the normal of the vertex.
 
-To achieve this task we need to first talk about spaces. As you already should
-now, the vertex shader is feed with the raw vertices (vtx_vertices) from the egg
-file, the normals that are introduced here are also unmodified (vtx_normal).
-Each cube has his own model space. Maybe you have read the example 2.sha more
-closely and have seen that there is a second, commented, vertex shader. In this
-shader the most elaborate version transform each vertex from model space to
-world space, then from world space to view space and last to the so called clip
-space. The light itself is a node like any other, but without any assigned
-vertices. So a light has its own "model" space like any other node. When we move
-around a cube, we do not modify the cubes model space, nor do we change the
-model space of a light if we move the light around. Maybe you see already a new
-problem that arises. If we take the blindly take the light and the cubes and
-start to do some fancy lighting, we do not get an useful result. What we have to
-do first is to transform the cube and/or the light in a space where can do our
-calculations in respect to each other. Maybe you think: "Why do we not take the
-world space then?". World space sound nice because in this space, the distance
-between two nodes can be calculated easily if you use the length function. If
-you move the light 10 units farther away from a node, the output of length to
-this light is increased by 10. Problem here is that we have to transform all
-model and all lights to world space. In our shaders we never have done this,
-because there was no need for it. But we always transformed our models from
-model space to clip space with the mat_modelproj matrix. You may ask then: "So
-why do we not do our lighting calculations in clip space". Problem is that clip
-space is in 2D and the length function does not work as intended, because we
-have applied the projection matrix. The farther away the scene, the closer are
-the cubes on your screen. But should we change the lighting only because the
-cubes are far away or not? Ok, back to our world space. If we transform our
-model to world space, we also have to transform the normals. If you have rotated
-your model e.g. the normals of your model also have to be rotated. This may lead
-to a problem, that needs some in depth matrix math. In the next sample I try to
-explain what the problem is, but for the moment we stick to another possibility.
-Instead of transforming your cubes and lights into world space, we can transform
-the lights into model space. But because each cube has its own model space, we
-need to transform each light into each cubes model space. This sounds
-complicated, but remember, until yet, every transformation we have done, we have
-done with a matrix, and Pand3D never forsake us. I have already written that
-there is problem if we need to transform normals. But with this version, we do
-not need to modify the normals because we transform the light position to the
-cubes model space. One more question we may answer here: "We do talk about this
-world space transformations if it calls for problems anyway?". The answer
-depends on what you like to do. In more complicated shaders you often need to
-transform your vertices anyway into world space e.g. for reflections. The other
-problems if you e.g. have a static light e.g. a sun. If there is no sunrise and
-sunset in your application you maybe encode your light position directly as
-constant into the shader. For this case it would be a bit cumbersome to apply
-the correct transformation, because you have to do anything on your own. Now we
-need to now we transform our light to model space. Long section, simple
-solution: You create an uniform called "mspos_light". That means that Panda3D
-transform the position of the node with the name light into model space. Panda3D
+To achieve this task we need to first talk about spaces. As you already should 
+now, the vertex shader is feed with the raw vertices (vtx_vertices) from the egg 
+file, the normals that are introduced here are also unmodified (vtx_normal). 
+Each cube has his own model space. Maybe you have read the example 2.sha more 
+closely and have seen that there is a second, commented, vertex shader. In this 
+shader the most elaborate version transform each vertex from model space to 
+world space, then from world space to view space and last to the so called clip 
+space. The light itself is a node like any other, but without any assigned 
+vertices. So a light has its own "model" space like any other node. When we move 
+around a cube, we do not modify the cubes model space, nor do we change the 
+model space of a light if we move the light around. Maybe you see already a new 
+problem that arises. If we blindly take the light and the cubes and start to do 
+some lighting, we do not get an useful result. What we have to do first is to 
+transform the cube and/or the light in a space where we can do our calculations 
+in respect to each other. Maybe you think: "Why do we not take the world space 
+then?". World space sound nice because in this space, the distance between two 
+nodes can be calculated easily if you use the length function. If you move the 
+light 10 units farther away from a node, the output of length to this light is 
+increased by 10. Problem here is that we have to transform all model and all 
+lights to world space. In our shaders we never have done this, because there was 
+no need for it. But we always transformed our models from model space to clip 
+space with the mat_modelproj matrix. You may ask then: "So why do we not do our 
+lighting calculations in clip space". Problem is that clip space is in 2D and 
+the length function does not work as intended, because we have applied the 
+projection matrix. The farther away the scene, the closer are the cubes on your 
+screen. But should we change the lighting only because the cubes are far away or 
+not? Of course not. Ok, back to our world space. If we transform our model to 
+world space, we also have to transform the normals. If you have rotated your 
+model e.g. the normals of your model also have to be rotated. This may lead to a 
+problem, that needs some in depth matrix math. In the next sample I try to 
+explain what the problem is, but for the moment we stick to another possibility. 
+Instead of transforming your cubes and lights into world space, we can transform 
+the lights into model space. But because each cube has its own model space, we 
+need to transform each light into each cubes model space. This sounds 
+complicated, but remember, until yet, every transformation we have done, we have 
+done with a matrix, and Pand3D never forsake us. I have already written that 
+there is problem if we need to transform normals. But with this version, we do 
+not need to modify the normals because we transform the light position to the 
+cubes model space. One more question we may answer here: "We do talk about this 
+world space transformations if it calls for problems anyway?". The answer 
+depends on what you like to do. In more complicated shaders you often need to 
+transform your vertices anyway into world space e.g. for reflections. The other 
+problem is if you e.g. have a static light e.g. a sun. If there is no sunrise 
+and sunset in your application you maybe encode your light position directly as 
+constant into the shader. For this case it would be a bit cumbersome to apply 
+the correct transformation, because you have to do anything on your own. Now we 
+need to now we transform our light to model space. Long section, simple 
+solution: You create an uniform called "mspos_light". That means that Panda3D 
+transform the position of the node with the name light into model space. Panda3D 
 changes this matrix for each cube automagically.
 
 Now it is a good time to read some more information about spaces and the
@@ -137,12 +137,13 @@ two new call to the function mul are needed (You may send me the result if you
 like).
 
 you only need to modify the vertex shader for this. You do not have to touch the
-python sample. If you have modified the vertex shader make screen shot of our
+python sample. If you have modified the vertex shader, make screen shot of our
 output and compare it with the unmodified shader here. Only if there is no
 visual difference between them you have done everything right. After you have
 modified the shader, use the method setHpr (e.g. setH(90.0)) on any cube and
-look once more to you example (do not use setScale or setShear for this test).
-Still no difference? */
+look once more to your example (do not use setScale or setShear for this test).
+Still no difference?
+*/
 void vshader(
     uniform float4x4 mat_modelproj,
     uniform float4 mspos_light,
@@ -166,7 +167,7 @@ void vshader(
 /*
 If something has to be explained here, then something went wrong.
 
-Because all the work is done in the vertex shader, this form if lighting is
+Because all the work is done in the vertex shader, this form of lighting is
 called per vertex lighting.
 */
 void fshader(
