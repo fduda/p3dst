@@ -57,7 +57,7 @@ model for the GPU it assigns every triangle, that belongs to the same polygon,
 the same normal.
 
 That is not the whole truth, in fact, the GPU likes to have a normal for every
-vertex. Why this is a good idea is shown by another example. Open the enclosed
+vertex. Why this is a good idea, is shown by another example. Open the enclosed
 figures.svg or figures.png and look at figure 8-1. If we have a cube, there are
 at least two possibilities to assign normals. The visual difference you may see
 later is that the left cube has sharp edges, while the right cube has smooth

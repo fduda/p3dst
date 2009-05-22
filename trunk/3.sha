@@ -9,11 +9,11 @@ In the last shader examples you may have never seen that there was any linear
 interpolation, but there was. If we only draw one triangle on the screen we only
 need three vertices. So vshader is called three times. If this triangle is large
 our fshader is called 100'000 times and more. What happens here between? The GPU
-starts to render a triangle (that is one thing a GPU can without any help). But
-how does the GPU connect e.g. vertex 1 with vertex 2? It only does linear
-interpolation between the two vertices. That is the reason why we always see a
-straight line between two vertices, never any curves or the like. If you like to
-draw a sphere you have to approximate the sphere with simple triangles, although
+starts to render a triangle (that is one thing a GPU can do without any help). 
+But how does the GPU connect e.g. vertex 1 with vertex 2? It only does linear 
+interpolation between the two vertices. That is the reason why we always see a 
+straight line between two vertices, never any curves or the like. If you like to 
+draw a sphere you have to approximate the sphere with simple triangles, although 
 this is rather inefficient (but it is simple and generic).
 
 There is one more thing we were not talking about much. With our vertex shader
@@ -89,7 +89,7 @@ void fshader(
     this version is inefficient. That there is no visible difference is a good
     sign, that we can do our work in the vertex shader. Maybe it is even a
     better answer than the more correct answer that says that because our
-    modification does not involve any nonlinearity we do not have to do it the
+    modification does not involve any non-linearity we do not have to do it the
     fragment shader. If it is not visible why should I waste GPU cycles,
     although it is not correct at all? Mathematicians would disagree, I guess.
     */

@@ -37,7 +37,7 @@ This vertex shader has a new output l_my. The first time in all those tutorials
 this is not a predefined Panda3D variable. In the simplest form we pass a
 constant value to this variable. This variable is then linearly interpolated and
 passed to the fragment shader. If it is a constant value then there is no
-interpolation at all, but the GPUs does not know this (maybe the Cg compiler
+interpolation at all, but the GPU does not know this (maybe the Cg compiler
 optimizes this away, but I am not sure about this). In the fragment shader we
 assign this value immediately to the o_color, therefore every change to the
 vertex shader should immediately be visible on your screen. There is only one
@@ -72,8 +72,8 @@ void vshader(
     When you have once more look at the egg file you will see that the vertex
     coordinates of the cube ranges from -1.0 to 1.0. If we apply these
     coordinates to color directly, what we have done, we have, negative colors.
-    Negative values are clamped to 0.0 by the GPU (the poeple working with the
-    LHC maybe are the only ones ever seen an anti red). But we can help ourself
+    Negative values are clamped to 0.0 by the GPU (the people working with the
+    LHC maybe are the only ones ever seen an anti red). But we can help our self
     and let it look a bit nicer. The first step is that we divide every
     component by two, therefore the range is reduced from -0.5 to 0.5. Second
     step is to add 0.5 to every component. Now the range is from 0.0 to 1.0,
@@ -94,10 +94,9 @@ void vshader(
     /*
     DIRTY
     In a previous example we said that you can think of float4 as array with 4
-    floats. This is still true, but it is an array and at the same time it
-    behaves like multiple C structs at the same time. In the following example
-    all cubes have a cyan color.
-    In Cg this fancy thing is called swizzling.
+    floats. This is still true, but it is an array and at the same time it 
+    behaves like a C union/struct. In the following example all cubes have a 
+    cyan color. In Cg this is called swizzling.
     */
     //l_my.rg = float2(0.0, 1.0);
     //l_my[2] = 1.0;
@@ -113,7 +112,7 @@ void vshader(
     f[3] = f.a = f.w
 
     Cg itself does not care if something is called r oder x. These names are
-    only for carbon based life forms.
+    only helpful for carbon based life forms.
     */
     //l_my.xz = float2(1.0, 0.0);
     //l_my.g = 1.0;

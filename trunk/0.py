@@ -165,7 +165,7 @@ Use oobe mode to move around the camera.
 base.accept("o", base.oobe)
 
 """
-Start an interval that rotates all cubes independent.
+Start an interval that rotates all cubes independently.
 """
 
 def animate(t):

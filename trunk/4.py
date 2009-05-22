@@ -37,11 +37,11 @@ Uncomment this line only after you read the comment in the shader.
 Each one of the three cubes has a different position. Before Panda3D sends the
 vertices to the graphic card it sends a matrix to the GPU that instructs the GPU
 to move all vertices to the new position (only if there is no shader, with a
-shader we have to do this on our as you already know). The advantage is that
+shader we have to do this on our, as you already know). The advantage is that
 Panda3D can send the exact same vertices to the GPU for all three cubes. After
-calling flattenLight we have different situation. Panda3D applies this move
+calling flattenLight we have a different situation. Panda3D applies this move
 command on itself to the vertices. Prior to this modification every cube need
-his own set vertices, because they cannot share their vertices anymore. The
+his own set of vertices, because they cannot share their vertices anymore. The
 output of the call to render.analyze may help to see what happens. Advantage in
 this case is that Panda3D does not have to send the GPU a command to move the
 object around. But the vertices now have new values, so the output of shader may
@@ -55,6 +55,7 @@ l_my = vtx_position * 0.5 + 0.5;
 
 Try to understand where and why the output differs.
 """
+#render.analyze()
 #print cubes[0].getX()
 #root.flattenLight()
 #render.analyze()

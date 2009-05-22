@@ -1,31 +1,33 @@
 //Cg
 
 /*
-Beside that we have moved most of the source from the vertex shader to the
-fragment shader, there is nothing new here. I like to talk about a generic
-problem about normalization of normals (not about direction vectors). As I
-already explained, one reason why normalization, is because the dot product only
-yields useful results for lighting equations if vectors are normalized.
+Beside that we have moved most of the source from the vertex shader to the 
+fragment shader, there is nothing new here. I like to talk about a generic 
+problem. Normalization of normals (not about direction vectors). As I already 
+explained, one reason why normalization as useful, is because the dot product 
+only yields correct results for the diffuse lighting equation if vectors are 
+normalized.
 
-We start with our first problem, that we sometimes need to do our calculations in
-world space. It is possible that a cube has is rotated. Therefore we need to
-rotate the normals too. The most obvious, but wrong, idea is to transform the
-normals with the modelview matrix, like the vertices. Open the figures.svg or
-figures.png once more. In figure 10-1 we have a face that consists of two
-vertices. Both vertices have a normal. Given that you apply a non uniform
-setScale to your model. With non uniform we mean, that you do not scale your
-model in each direction with the same scale. In the second picture in figure
-10-1 we have a modelview matrix that only scale our model in one direction. If
-you know apply the same matrix to your model, the normals look like the red
-normals. Even if you normalize them, they look at the wrong direction. If you
-apply a better matrix to the normals, they would look like in the third image in
-figure 10-1.
+We start with our first problem, that we sometimes need to do our calculations 
+in world space. It is possible that a cube has is rotated. Therefore we need to 
+rotate the normals too. The most obvious, but wrong, idea is to transform the 
+normals with the modelview matrix, like the vertices. Open the figures.svg or 
+figures.png once more. In figure 10-1 we have a face that consists of two 
+vertices. Both vertices have a normal. Given that you apply a non uniform 
+setScale to your model. With non uniform we mean, that you do not scale your 
+model in each direction with the same scale. In the second picture in figure 
+10-1 we have a modelview matrix that only scale our model in one direction (non 
+uniform). If you know apply the same matrix to your model, the normals look like 
+the red normals. Even if you normalize them, they look at the wrong direction. 
+If you apply a better matrix to the normals, they would look like in the third 
+image in figure 10-1.
+
 There are two possibilities. Never apply non uniform scaling to your models. If
 you can avoid using setScale at all, you maybe even do not need a call to
 normalize if you like to use your modelview matrix. It is a bit to much math
 here if I like to explain how you have to build our own correct normalization
 matrix. Google for the term gl_NormalMatrix. The OpenGL Shading Language GLSL
-has matrix that solves exactly this problems, and it is not too much magic to
+has a matrix that solves exactly this problems, and it is not too much magic to
 recreate it in Panda3D after you understand the math behind it. The main reason
 why I have added this chapter is that you are warned. It is easy to add subtle
 (the normals are not completely wrong in the figure even with a non uniform
@@ -84,11 +86,10 @@ We do the same calculations here as in the vertex shader in the previous sample.
 You may ask: "We have the same equations here, and only moved around some
 code?". We are a bit lazy here. The calculation of the direction vector
 introduces no nonlinearity so it is possible to move this calculation entirely
-to the vertex shader (try it on your own, I have not done it here because it
-makes things more complex). The problem here is the dot function with the
-cosine. If we we calculate the cosine in the vertex shader, the GPU than
-interpolate it and we finally use it in the fragment shader, the result is not
-exactly the cosine, as if we calculate it in the fragment shader.
+to the vertex shader (try it on your own). The problem here is the dot function 
+with the cosine. If we we calculate the cosine in the vertex shader, the GPU 
+than interpolate it and we finally use it in the fragment shader, the result is 
+not exactly the cosine, as if we calculate it in the fragment shader.
 
 If you are able to move only the direction calculation to the vertex shader,
 without introducing any visual artifacts, I probably can not teach you anything

@@ -63,21 +63,21 @@ life, the universe and everything".
 */
 
 /*
-First I like to explain why we need perspective correction. A scan line renderer
-like todays GPUs are (in contrast to a ray tracer), transforms all three points
-of a triangle from 3D space to a 2D screen. After the transformation e.g. the
-linear interpolation of colors is calculated. Only if we transform a triangle to
-our screen we know how much pixels the triangle will cover. If we like to
-interpolate in 3D we may interpolate millions of position that are reduced to
-one pixel if the triangle is far away, this is obviously infeasible. Open the
-figures.svg of figures.png file and look at the figure 5.1. If you look at the
-first image you can see a quad that consists of two triangles. You can look at
-this image from two view points. First it is possible that is a perspective
-plane in 3D, second it is a trapezoid in 2D. There are two yellow lines in the
-image. This lines divide the trapezoid exactly in the center. Maybe you already
-see a problem, this is only true in 2D. In 3D the center of the trapezoid is a
-bit above the current center. Further on there are five marked intersections. We
-need this numbers for the later images:
+However I like to explain why we need perspective correction. A scan line 
+renderer like today GPUs are (in contrast to a ray tracer), transforms all three 
+points of a triangle from 3D space to a 2D screen. After the transformation e.g. 
+the linear interpolation of colors is calculated. Only if we transform a 
+triangle to our screen we know how much pixels the triangle will cover. If we 
+like to interpolate in 3D we may interpolate millions of position that are 
+reduced to one pixel if the triangle is far away, this is obviously infeasible. 
+Open the figures.svg of figures.png file and look at the figure 5.1. If you look 
+at the first image you can see a quad that consists of two triangles. You can 
+look at this image from two view points. First it is possible that is a 
+perspective plane in 3D, second it is a trapezoid in 2D. There are two yellow 
+lines in the image. This lines divide the trapezoid exactly in the center. Maybe 
+you already see a problem, this is only true in 2D. In 3D the center of the 
+trapezoid is a bit above the current center. Further on there are five marked 
+intersections. We need this numbers for the later images:
 
 1: Exact 2D center for the top line.
 2: Exact 2D center for the left line.
@@ -122,15 +122,19 @@ line.
 In the fifth image you can see the final result. Maybe it is not that obvious
 but the green line, tries to show how the 50% line looks like.
 
-You can reproduce this problem if you draw a rectangle yourself and apply the
-perspective transformation on the vertices by yourselfe. The rectangle looks
-like a trapezoid then. If you draw a trapezoid in Blender e.g. and assign a
-texture with the following UV coordinates (of a grid like image) to the four
-vertices: (0,0) (1,0) (0,1) (1,1) you can see the distortion more clearly. The
-two files perspective-correction.blend and perspective-correction.jpg show you
-the result more clearly. You can see one more fancy thing with this example. The
-preview in Blender is renderer with OpenGL while the Blender itself has its own
-renderer for production quality images. The internal renderer and OpenGL divide
-a quad in two different ways into triangles. That is the reason why the vertical
-line on the trapezoid does is twisted in two different directions.
+You can reproduce this problem if you draw a rectangle yourself in a 3D 
+application and apply the perspective transformation on the vertices by 
+yourself. The rectangle looks like a trapezoid then. If you draw a trapezoid in 
+Blender e.g. and assign a texture with the following UV coordinates (of a grid 
+like image) to the four vertices: (0,0) (1,0) (0,1) (1,1) you can see the 
+distortion more clearly. The two files perspective-correction.blend and 
+perspective-correction.jpg show you the result more clearly. You can see one 
+more fancy thing with this example. The preview in Blender is renderer with 
+OpenGL while the Blender itself has its own renderer for production quality 
+images. The internal renderer and OpenGL divide a quad in two different ways 
+into triangles. That is the reason why the vertical line on the trapezoid does 
+is twisted in two different directions.
+
+Conclusion: The linear interpolation needs a correction factor (based on the Z 
+buffer), so final images are not distorted in an unnatural way.
 */

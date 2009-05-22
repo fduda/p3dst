@@ -11,7 +11,7 @@ textures, there are 1D textures and 3D textures. One fragment/pixel on a texture
 is often called a texel. UV coordinates address a texel on a 2D texture. It is
 like if your home made RPG is only flat and needs no Z coordinate to position
 your character, then you need only XY. XY in texture language means UV. If you
-use a 3D texture there is an additional W parameter which leads to UVW
+use a 3D texture, there is an additional W parameter which leads to UVW
 coordinates.
 */
 
@@ -43,9 +43,10 @@ already written you may abuse a texture for function evaluation. It may be
 possible that this function has too many values, therefore our texture is too
 large. Here it may possible that we can simplify the function and only create a
 texture with some support values. This support values have to leave the vertex
-shader and get linearly interpolated. This linear interpolation may lead to
-inaccuracies, but hopefully they are good enough so no one can spot the
-difference.
+shader and get linearly interpolated. This linear interpolation may lead to 
+inaccuracies, but hopefully they are good enough so no one can spot the 
+difference (each OpenGL version has it own limitations how much textures fetches 
+are allowed in vertex shader, DirectX maybe have this limitations as well).
 */
 void vshader(
     uniform float4x4 mat_modelproj,
@@ -65,9 +66,9 @@ void vshader(
 
     You have access to a matrix that only contains the modelview
     transformations, without the projection as with the modelproj matrix. If you
-    calculate the texture coordinates based on this transformation (this is a
-    form of texture generation), the texture should always be at the same
-    location, move around the scene to see what happens exactly.
+    calculate the texture coordinates based on this transformation (this is a 
+    form of texture coordinate generation), the texture should always be at the 
+    same location, move around the scene to see what happens exactly.
     */
     //l_my = mul(mat_modelview, vtx_position);
 }
@@ -92,13 +93,12 @@ on this input the GPU fetches a texel from the texture. How it is interpolated
 depends on the settings on the texture unit which you have to apply in the
 Python code. setWrapU and setWrapV are two examples (if you store function
 values in texture then carefully chose the texture filtering options). Sometimes
-it also depends on some graphic driver settings. Often graphic drivers have
-often to override any application setting, in our case they do not care what
-Panda3D or we like.
+it also depends on some graphic driver settings. Graphic drivers can override 
+any application setting.
 
-If you enable anisotropic filtering there are some hidden parameters to tex2D.
-Especially for anisotropic filtering the results depends on the vendors
-implementation. ATI and NVIDIA both harmlessly blamed each other for their GPUs
+If you enable anisotropic filtering there are some hidden parameters to tex2D. 
+Especially for anisotropic filtering the results depends on the vendors 
+implementation. ATI and NVIDIA both harmlessly blamed each other for their GPUs 
 worse texture filtering capabilities.
 */
 void fshader(
