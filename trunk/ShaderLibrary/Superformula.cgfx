@@ -50,15 +50,15 @@ Here method 2 is implemented.
 
 TODO
 
-AFAIK it should be possible to generate more vertices than there were in
-the input stream (e.g. tesselation). But somehow it seems that
-it impossible with with FX Composer. That was the main reason why method
-2 is implemented.
+AFAIK it should be possible to generate more vertices than there were in the
+input stream (e.g. tesselation). But somehow it seems that it impossible with FX
+Composer (or I am too stupid to do it correctly). That was the main reason why
+method 2 is implemented.
 
 TODO
 
 Why is there a little hole in the middle of the object?
-Has the umodified sphere a (invisible) hole aswell?
+Has the umodified sphere a (invisible) hole?
 */
 TRIANGLE void GeometryProgram(AttribArray<float3> positionObject : TEXCOORD0) {
 	for (int i = 0; i < positionObject.length; i++) {
@@ -74,7 +74,7 @@ TRIANGLE void GeometryProgram(AttribArray<float3> positionObject : TEXCOORD0) {
 
 		p = float3(p.x * rrho * rphi, p.y * rphi, p.z * rrho * rphi);
 
-    	emitVertex(mul(WorldViewProjection, float4(p, 1.0)) : POSITION, p : TEXCOORD0);
+		emitVertex(mul(WorldViewProjection, float4(p, 1.0)) : POSITION, p : TEXCOORD0);
 	}
 }
 
