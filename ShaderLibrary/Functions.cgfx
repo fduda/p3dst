@@ -149,7 +149,7 @@ float DiffuseOrenNayar(float3 n, float3 l, float3 e, float roughness) {
 	float a = 1.0 - 0.5 * (roughnesssquare / (roughnesssquare + 0.33));
 	float b = 0.45 * (roughnesssquare / (roughnesssquare + 0.09));
 	float alpha = max(aen, aln);
-	float beta  = min(aen, aln);
+	float beta = min(aen, aln);
 	float phi = dot(e - n * en, l - n * ln);
 	return saturate(ln * (a + b * max(0.0, phi) * sin(alpha) * tan(beta)));
 }
@@ -157,7 +157,7 @@ float DiffuseOrenNayar(float3 n, float3 l, float3 e, float roughness) {
 /*
 Standard Blinn has no refraction (Blender uses something something different for
 Blinn). Mathematically Phong is more correct and Blinn is faster, but according
-to the second paper, Blinn is physically more correct aswell.
+to the second paper, Blinn is physically more correct.
 
 http://en.wikipedia.org/wiki/Blinn
 http://people.csail.mit.edu/wojciech/BRDFValidation/index.html
@@ -238,7 +238,7 @@ most lighting equations.
 Like in SpecularPhong the reflection/refraction vector could be calculated in
 the vertex shader if there is no normal mapping.
 
-Cube maps (and volume maps aswell) in the DDS (Direct Draw Surface) format for
+Cube maps (and volume maps likewise) in the DDS (Direct Draw Surface) format for
 FX Composer can be generated with the following tool.
 
 http://developer.nvidia.com/object/nv_texture_tools.html

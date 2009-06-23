@@ -36,6 +36,12 @@ void VertexProgram(in VertexIn i, out VertexOutFragmentIn o) {
 	o.texcoord = i.texcoord;
 }
 
+/*
+The DDS format was primarily created for Direct3D/DirectDraw. The problem is
+that with OpenGL everything is inverted. One effect is, that 2D textured are
+mirrored. Seems that another effect is that in 3D textures the third coordinate
+is mirrored likewise.
+*/
 void FragmentProgram(in VertexOutFragmentIn i, out FragmentOut o) {
 	o.color = tex3D(VolumeSampler, float3(i.texcoord, ObjectVolumeLayer));
 }
