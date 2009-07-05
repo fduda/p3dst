@@ -116,7 +116,7 @@ samplerCUBE EnvironmentSampler = sampler_state {
 //#define NORMAL_MAPPING
 //#define PARALLAX_MAPPING
 
-//#define REFLECTION	
+//#define REFLECTION
 //#define REFLECTION_REFRACTION
 //#define REFLECTION_REFRACTION_RGB
 
@@ -177,19 +177,20 @@ be noted, that it was designed to support a unlimited amount of lights. There
 are no TEXCOORD registers with light dependent parameters e.g.
 
 The bad news are, that this shader supports more light parameters than are
-supported by FX Composer. Most application still only
-offer light parameters as in the old age of fixed function pipelines
-(instead of arbitrary name/value pairs).
+supported by FX Composer. Most application still only offer light parameters as
+in the old age of fixed function pipelines (instead of arbitrary name/value
+pairs).
 
-Each map (Gloss, Albedo, ...) has a seperate texture. In a realworld application it may be a
-good idea to merge as much maps as possible. In normal maps it is possible to omit one component
-at all and calculate it at runtime (z = sqrt(1.0 - x*x - y*y)).
+Each map (Gloss, Albedo, ...) has a seperate texture. In a realworld application
+it may be a good idea to merge as much maps as possible. In normal maps it is
+possible to omit one component at all and calculate it at runtime (z = sqrt(1.0
+- x*x - y*y)).
 
 TODO
 
 Theoretically there is no specular light, when there is no diffuse light. But
-simply disabling it (as in some NVIDIA examples) results in hard edges, which do not
-look that nice IMO. Multiplying with diffuseFactor?
+simply disabling it (as in some NVIDIA examples) results in hard edges, which do
+not look that nice IMO. Multiplying with diffuseFactor?
 */
 void FragmentProgram(in VertexOutFragmentIn i, out FragmentOut o) {
 	float4 color = BaseColor;
@@ -291,9 +292,9 @@ void FragmentProgram(in VertexOutFragmentIn i, out FragmentOut o) {
 	specular *= attenuation;
 	specular *= gloss;
 	color += specular;
-	
+
 	float4 environment = float4(0.0, 0.0, 0.0, 0.0);
-#ifdef REFLECTION	
+#ifdef REFLECTION
 	environment = Reflection(i.positionWorld.xyz - eyeWorld, normalWorld, EnvironmentSampler);
 #endif
 #ifdef REFLECTION_REFRACTION
@@ -303,11 +304,11 @@ void FragmentProgram(in VertexOutFragmentIn i, out FragmentOut o) {
 	environment = ReflectionRefractionRGB(i.positionWorld.xyz - eyeWorld, normalWorld, EnvironmentSampler, ObjectEnvironmentRefractionRatioR, ObjectEnvironmentRefractionRatioG, ObjectEnvironmentRefractionRatioB, ObjectEnvironmentFresnelOffset, ObjectEnvironmentFresnelScale, ObjectEnvironmentFresnelPower);
 #endif
 	color += ObjectEnvironmentScale * environment;
-	
-#ifdef TONE_MAPPING	
+
+#ifdef TONE_MAPPING
 	color.rgb = SimpleToneMapping(color.rgb);
 #endif
-	
+
 	o.color = color;
 }
 
